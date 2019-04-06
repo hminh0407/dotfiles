@@ -1,0 +1,53 @@
+session_name: spring_ms
+windows:
+- window_name: config
+  focus: true
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/nashtech/reservation_system_poc
+  panes:
+    - focus: true
+    - shell_command:
+        - cd config-server
+    - shell_command:
+        - cd eurekaserver
+    - shell_command:
+        - cd website
+- window_name: service
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/nashtech/reservation_system_poc
+  panes:
+    - shell_command:
+        - cd book
+    - shell_command:
+        - cd checkin
+    - shell_command:
+        - cd fares
+    - shell_command:
+        - cd search
+- window_name: gateway
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/nashtech/reservation_system_poc
+  panes:
+    - shell_command:
+        - cd book-apigateway
+    - shell_command:
+        - cd checkin-apigateway
+    - shell_command:
+        - cd fares-apigateway
+    - shell_command:
+        - cd search-apigateway
+- window_name: aws
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/nashtech/reservation_system_poc
+  panes:
+    - shell_command:
+        - aws-util.sh ec2 ssh
+    - shell_command:
+        - aws-util.sh ec2 ssh
+    - shell_command:
+        - aws-util.sh ec2 ssh
+

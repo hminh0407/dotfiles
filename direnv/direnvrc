@@ -1,0 +1,43 @@
+### Python virutalenv config ###
+
+layout_virtualenv() {
+  local venv_path="$1"
+  source ${venv_path}/bin/activate
+}
+
+layout_virtualenvwrapper() {
+  local venv_path="${WORKON_HOME}/$1"
+  layout_virtualenv $venv_path
+}
+
+### Alias support ###
+
+# allow to setup alias in .envrc file.
+# Detail can be found in http://www.dreisbach.us/articles/a-favorite-development-tool-direnv/
+export_alias() {
+  local name=$1
+  shift
+  local alias_dir=$PWD/.direnv/aliases
+  local target="$alias_dir/$name"
+  mkdir -p "$alias_dir"
+  PATH_add "$alias_dir"
+  echo "#!/bin/bash" > "$target"
+  echo "$@" >> "$target"
+  chmod +x "$target"
+}
+
+# allow to setup bash function in .envrc file.
+# Detail can be found in https://github.com/direnv/direnv/issues/73#issuecomment-152284914
+export_function() {
+  local name=$1
+  local alias_dir=$PWD/.direnv/aliases
+  mkdir -p "$alias_dir"
+  PATH_add "$alias_dir"
+  local target="$alias_dir/$name"
+  if declare -f "$name" >/dev/null; then
+    echo "#!/usr/bin/env bash" > "$target"
+    declare -f "$name" >> "$target" 2>/dev/null
+    echo "$name" >> "$target"
+    chmod +x "$target"
+  fi
+}

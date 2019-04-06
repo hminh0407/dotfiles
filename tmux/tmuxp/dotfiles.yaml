@@ -1,0 +1,20 @@
+session_name: dotfiles
+windows:
+- window_name: dotfiles
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/.dotfiles
+  panes:
+    -
+- window_name: wiki
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/vimwiki
+  panes:
+    -
+- window_name: s-doc
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/sdoc
+  panes:
+    -

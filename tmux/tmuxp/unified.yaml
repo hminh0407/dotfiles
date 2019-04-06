@@ -1,0 +1,38 @@
+session_name: unified
+windows:
+- window_name: communique
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/communique
+  panes:
+    -
+- window_name: collection-engine
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/collection-engine
+  panes:
+    -
+- window_name: data-collectors
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/data-collector
+  panes:
+    -
+- window_name: spark-apps
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/spark-apps
+  panes:
+    -
+- window_name: datalake
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/datalake
+  panes:
+    -
+- window_name: data-warehouse
+  layout: tiled
+  shell_command_before:
+    - cd ${HOME}/workspace/unified/data-warehouse
+  panes:
+    -

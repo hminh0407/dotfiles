@@ -1,8 +1,33 @@
+# Make sure that the files use the correct indentation or else install script will fail
+# Check for more detail: https://github.com/anishathalye/dotbot/issues/8
+- defaults:
+    link:
+        create: true
+        relink: true
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
 - clean: ['~']
 
 - link:
-    ~/.profile: profile
-    ~/.bashrc: bashrc
-    ~/.bash_logout: bash_logout
+    ~/.config/nvim/init.vim       : nvim/init.vim
+    ~/.config/nvim/conf           : nvim/conf
+    ~/.config/nvim/after/ftplugin : nvim/ftplugin
+    ~/.config/nvim/snippets       : nvim/snippets
+    ~/.tmux.conf                  : tmux/tmux.conf
+    ~/.tmuxp                      : tmux/tmuxp
+    ~/.direnvrc                   : direnv/direnvrc
+    ~/.gitconfig                  : git/gitconfig
+    ~/.gitignore                  : git/gitignore
+    ~/.tigrc                      : git/tigrc
+    ~/.zshrc                      : zsh/zshrc
+    ~/.oh-my-zsh/custom/:
+        glob: true
+        path: zsh/custom/*
 
-
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+    - ['find . -type f -iname "*.sh" -exec chmod +x {} \;', Make scripts executable]
+    - [./ubuntu/provision.sh, Ubuntu Provisioning]
