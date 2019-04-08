@@ -215,7 +215,8 @@
         let g:vimwiki_ext = '.md'
         let g:vimwiki_folding = 'expr'
 
-        nmap <tab> <Plug>VimwikiNextLink
+        nmap <leader>wn <Plug>VimwikiNextLink
+        nmap <leader>wp <Plug>VimwikiPrevLink
 
         function! VimwikiLinkHandler(link)
           " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
