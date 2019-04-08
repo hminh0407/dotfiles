@@ -1,6 +1,9 @@
 # general
 export HIST_IGNORE_ALL_DUPS='true'
 
+# mycli & pgcli
+export PAGER='nvim -'
+
 # tmux
 export DISABLE_AUTO_TITLE='true' # tmuxp integration
 

@@ -19,6 +19,16 @@
         map <C-B><C-W> :bd        <CR>
         map <C-B><C-A> :bufdo bd  <CR>
         map <C-B><C-O> :only      <CR>
+
+        set nowrap " do not wrap long line
+        " Scroll 20 characters to the right
+        nnoremap <C-L> 20zl
+        " Scroll 20
+        nnoremap <C-H> 20zh
+        " Scroll down 5 characters
+        nnoremap <C-J> 3<C-E>
+        " Scroll up 5 characters
+        nnoremap <C-K> 3<C-Y>
     " }
 
     " Folding {

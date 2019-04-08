@@ -50,20 +50,27 @@ ubuntu-provision () {
 		sudo apt-get update -y
 		sudo apt-get install -y --no-install-recommends apt-fast
     fi
+
     # install apt packages
-    apt-fast install --no-install-recommends -y                                                 \
+    apt-fast install --no-install-recommends -y                                                         \
 		snapd gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome ibus ibus-teni \
 		zsh curl exuberant-ctags silversearcher-ag httpie rename ncdu wget xclip                \
 		neovim tmux tig                                                                         \
 		direnv supervisor                                                                       \
 		autossh docker-compose make                                                             \
-		buku ca-certificates python3-urllib3 python3-cryptography python3-bs4                   \
+		buku ca-certificates                                                                    \
+		python-dev                                                                              \
 		oracle-java8-set-default npm                                                            \
 		mpv nautilus-dropbox vifm
+
     # install snap packages
     snap install docker postman tldr
-	# snap install communitheme clementine
-	sudo apt autoremove # clear installation cache
+    # snap install communitheme clementine
+    sudo apt autoremove # clear installation cache
+
+    # install python packages
+    sudo pip install mycli pgcli
+
     # setup ibus input
     ibus restart
     # to setup vietnamese keyboard follow instruction on
@@ -158,7 +165,8 @@ tmux-config () {
 		# install plugins
 		~/.tmux/plugins/tpm/bin/install_plugins
 		# install tmuxp & plugins
-		sudo -H pip3 install tmuxp
+		# sudo -H pip3 install tmuxp
+		sudo pip install tmuxp
 		~/.tmux/plugins/tpm/scripts/install_plugins.sh
 	fi
 }
