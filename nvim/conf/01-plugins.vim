@@ -90,6 +90,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
   Plug 'w0rp/ale'                    " syntax linting
   Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
+  Plug 'baverman/vial'               " framework to write plugins in Python
+  Plug 'baverman/vial-http'          " (currently the best), rest client for vim https://github.com/baverman/vial-http
+  " Plug 'diepm/vim-rest-console'      " rest client for vim https://github.com/diepm/vim-rest-console
+  " Plug 'sharat87/roast.vim'          " (new, not mature yet) rest client for vim https://github.com/sharat87/roast.vim
 
   " Snippets
   Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim

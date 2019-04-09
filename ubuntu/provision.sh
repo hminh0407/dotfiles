@@ -250,9 +250,8 @@ wine-install () {
 
 NOTICE "### Start Ubuntu Provisioning ###"
 
-ubuntu-provision
+# ubuntu-provision
 zsh-install
-bat-install
 cheatsh-install
 java-config
 nvim-config
