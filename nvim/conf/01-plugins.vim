@@ -89,6 +89,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
   Plug 'w0rp/ale'                    " syntax linting
+  Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
 
   " Snippets
   Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim

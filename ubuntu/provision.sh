@@ -55,6 +55,7 @@ ubuntu-provision () {
     apt-fast install --no-install-recommends -y                                                         \
 		snapd gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome ibus ibus-teni \
 		zsh curl exuberant-ctags silversearcher-ag httpie rename ncdu wget xclip                \
+		xsel rlwrap                                                                             \
 		neovim tmux tig                                                                         \
 		direnv supervisor                                                                       \
 		autossh docker-compose make                                                             \
@@ -108,6 +109,11 @@ bat-install () {
     else
 		echoServiceStatus "BAT" "installed"
     fi
+}
+
+cheatsh-install () {
+    mkdir -p ~/bin/ && curl https://cht.sh/:cht.sh > ~/bin/cht.sh
+    chmod +x ~/bin/cht.sh
 }
 
 java-config () {
@@ -247,6 +253,7 @@ NOTICE "### Start Ubuntu Provisioning ###"
 ubuntu-provision
 zsh-install
 bat-install
+cheatsh-install
 java-config
 nvim-config
 pet-install
