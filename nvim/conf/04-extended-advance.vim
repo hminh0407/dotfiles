@@ -48,7 +48,7 @@
     let g:formatter_yapf_style = 'pep8'
   " }
 
-  " dadbod {
+  " Dadbod {
   " map C-Q to execute selection. In order for this to work $DATABASE_URL must be set
   " check fore more detail: https://github.com/tpope/vim-dadbod/issues/33
     " nmap <expr> <C-Q> db#op_exec()

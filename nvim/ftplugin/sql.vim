@@ -1,4 +1,6 @@
 " Settings sql
+" auto set dir to current file if file is in folder "*dadbod*"
+autocmd BufEnter * if expand("%:p:h") =~ 'dadbod' | silent! lcd %:p:h | endif
 " }
 
 " Plugin Settings {

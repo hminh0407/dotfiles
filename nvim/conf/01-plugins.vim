@@ -80,8 +80,11 @@ call plug#begin('~/.local/share/nvim/plugged')
   " sudo pip install setuptools --upgrade
   " sudo pip install python-language-server
 
-  " Database connection
+  " Dadbod (Database connection)
   " Plug 'tpope/vim-dadbod' " has not support async yet https://github.com/tpope/vim-dadbod
+
+  " Direnv
+  " Plug 'direnv/direnv.vim' " integrate with direnv https://github.com/direnv/direnv.vim
 
   " Language support
   Plug 'Chiel92/vim-autoformat'      " auto format code

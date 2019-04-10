@@ -1,20 +1,20 @@
 session_name: dotfiles
+start_directory: "${HOME}"
 windows:
 - window_name: dotfiles
   layout: tiled
-  shell_command_before:
-    - cd ${HOME}/.dotfiles
+  start_directory: .dotfiles
   panes:
     -
 - window_name: wiki
+  focus: true
   layout: tiled
-  shell_command_before:
-    - cd ${HOME}/vimwiki
+  start_directory: vimwiki
   panes:
     -
-- window_name: s-doc
+      focus: true
+- window_name: vimwiki-resources
   layout: tiled
-  shell_command_before:
-    - cd ${HOME}/workspace/sdoc
+  start_directory: vimwiki-resources
   panes:
     -
