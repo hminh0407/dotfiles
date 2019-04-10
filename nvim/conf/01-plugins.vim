@@ -86,6 +86,9 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Direnv
   " Plug 'direnv/direnv.vim' " integrate with direnv https://github.com/direnv/direnv.vim
 
+  " Graphviz
+  Plug 'wannesm/wmgraphviz.vim' " graphviz dot support for vim https://github.com/wannesm/wmgraphviz.vim
+
   " Language support
   Plug 'Chiel92/vim-autoformat'      " auto format code
   Plug 'janko-m/vim-test'            " unit test tool

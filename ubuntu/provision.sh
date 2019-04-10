@@ -55,13 +55,13 @@ ubuntu-provision () {
     apt-fast install --no-install-recommends -y                                                         \
 		snapd gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome ibus ibus-teni \
 		zsh curl exuberant-ctags silversearcher-ag httpie rename ncdu wget xclip                \
-		xsel rlwrap                                                                             \
-		neovim tmux tig                                                                         \
+		neovim tmux tig graphviz                                                                \
 		direnv supervisor                                                                       \
 		autossh docker-compose make                                                             \
 		buku ca-certificates                                                                    \
 		python-dev                                                                              \
-		oracle-java8-set-default npm                                                            \
+		oracle-java8-set-default                                                                \
+		npm                                                                                     \
 		mpv nautilus-dropbox vifm
 
     # install snap packages
@@ -109,11 +109,6 @@ bat-install () {
     else
 		echoServiceStatus "BAT" "installed"
     fi
-}
-
-cheatsh-install () {
-    mkdir -p ~/bin/ && curl https://cht.sh/:cht.sh > ~/bin/cht.sh
-    chmod +x ~/bin/cht.sh
 }
 
 java-config () {
@@ -252,7 +247,6 @@ NOTICE "### Start Ubuntu Provisioning ###"
 
 # ubuntu-provision
 zsh-install
-cheatsh-install
 java-config
 nvim-config
 pet-install
