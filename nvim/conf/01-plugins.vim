@@ -30,7 +30,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'airblade/vim-gitgutter' " show git diff for each line
 
   " Markdown
-  Plug 'tyru/open-browser.vim', {'for': 'markdown'} " open uri with system browser, work well with previm
+  Plug 'tyru/open-browser.vim' " open uri with system browser, work well with previm
   Plug 'kannokanno/previm'    , {'for': 'markdown'} " support mermaid (https://github.com/previm/previm)
   " does not need this plugin as folding has already been supported in vim-wiki
   " Plug 'nelstrom/vim-markdown-folding' , {'for': 'markdown'} " folding support for markdown
@@ -87,7 +87,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Plug 'direnv/direnv.vim' " integrate with direnv https://github.com/direnv/direnv.vim
 
   " Graphviz
-  Plug 'wannesm/wmgraphviz.vim' " graphviz dot support for vim https://github.com/wannesm/wmgraphviz.vim
+  " Plug 'wannesm/wmgraphviz.vim' " graphviz dot support for vim https://github.com/wannesm/wmgraphviz.vim
 
   " Language support
   Plug 'Chiel92/vim-autoformat'      " auto format code
@@ -96,10 +96,14 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
   Plug 'w0rp/ale'                    " syntax linting
   Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
+
+  " Rest API
   Plug 'baverman/vial'               " framework to write plugins in Python
   Plug 'baverman/vial-http'          " (currently the best), rest client for vim https://github.com/baverman/vial-http
-  " Plug 'diepm/vim-rest-console'      " rest client for vim https://github.com/diepm/vim-rest-console
-  " Plug 'sharat87/roast.vim'          " (new, not mature yet) rest client for vim https://github.com/sharat87/roast.vim
+
+  " Plantuml
+  Plug 'aklt/plantuml-syntax'             " syntax support for plantuml
+  Plug 'weirongxu/plantuml-previewer.vim' " preview plantuml in browser https://github.com/weirongxu/plantuml-previewer.vim
 
   " Snippets
   Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim
