@@ -1,4 +1,5 @@
 # Key map {
     # D to delete file in status view with confirm
     bind status D ?@rm %(file)
+    bind status E !:edit %(file)
 # }
