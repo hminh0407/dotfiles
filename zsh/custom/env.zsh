@@ -20,3 +20,6 @@ export FZF_DEFAULT_COMMAND="ag -g ''"
 # Press F1 to open the file with less without leaving fzf
 # Press CTRL-Y to copy the line to clipboard without leaving fzf (requires xclip)
 export FZF_DEFAULT_OPTS="--color=16 --bind 'f1:execute(less -f {}),ctrl-y:execute-silent(echo {} | xclip -selection c)'"
+
+# java
+export MAVEN_OPTS="-Xms1024m -Xmx4096m -XX:PermSize=1024m"

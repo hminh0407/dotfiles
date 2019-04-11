@@ -69,6 +69,11 @@
         " set paste                 " Paste from window or from Vim
     " }
 
+    " Mapping {
+        map <A-a> <C-a>
+        map <A-x> <C-x>
+    " }
+
     " Performance Tweak {
         " suggestion from https://stackoverflow.com/a/7187629
         set nocursorcolumn
