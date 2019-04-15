@@ -1,0 +1,88 @@
+### ACTIVITY DIAGRAM ###
+snippet actCond
+	@startuml
+		start
+
+		if (Condition?) then (true)
+		    :ProcessTrue;
+		elseif (ConditionB?) then (true)
+			:ProcessB;
+		else (false)
+		    :ProcessFalse;
+		endif
+
+		stop
+	@enduml
+
+snippet actLoop
+	@startuml
+		start
+
+		while (data available?)	is (yes)
+		  :read data;
+		  :generate diagrams;
+		endwhile (empty)
+
+		stop
+	@enduml
+
+snippet actParallel
+	@startuml
+	start
+
+	if (multiprocessor?) then (yes)
+	  fork
+		:Treatment 1;
+	  fork again
+		:Treatment 2;
+	  end fork
+	else (monoproc)
+	  :Treatment 1;
+	  :Treatment 2;
+	endif
+
+	stop
+	@enduml
+
+snippet actNote
+	@startuml
+	start
+
+	#Red:foo1;
+	floating note left: This is a note
+	#AAAAAA:foo2;
+	note right
+	  This note is on several
+	  //lines// and can
+	  contain <b>HTML</b>
+	  ====
+	  * Calling the method ""foo()"" is prohibited
+	end note
+
+	stop
+	@enduml
+
+snippet actGroup
+	@startuml
+	start
+
+	partition Initialization {
+		:read config file;
+		:init internal variable;
+	}
+
+	stop
+	@enduml
+
+snippet actNode
+	@startuml
+	start
+
+		:StartProcess;
+		:(Data) Input/Output/
+		:Send Signal>
+		:ExternalProcess|
+		:Receive Signal<
+
+	stop
+	@enduml

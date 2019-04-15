@@ -55,7 +55,7 @@ ubuntu-provision () {
     apt-fast install --no-install-recommends -y                                                         \
 		snapd gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome ibus ibus-teni \
 		zsh curl exuberant-ctags silversearcher-ag httpie rename ncdu wget xclip                \
-		neovim tmux tig                                                                         \
+		neovim tmux tig graphviz                                                                \
 		direnv supervisor                                                                       \
 		autossh docker-compose make                                                             \
 		buku ca-certificates                                                                    \
