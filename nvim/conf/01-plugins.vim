@@ -103,7 +103,8 @@ call plug#begin('~/.local/share/nvim/plugged')
 
   " Plantuml
   Plug 'aklt/plantuml-syntax'             " syntax support for plantuml
-  Plug 'weirongxu/plantuml-previewer.vim' " preview plantuml in browser https://github.com/weirongxu/plantuml-previewer.vim
+  " It's better to open with chromium and plantuml support extensions
+  " Plug 'weirongxu/plantuml-previewer.vim' " preview plantuml in browser https://github.com/weirongxu/plantuml-previewer.vim
 
   " Snippets
   Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim
