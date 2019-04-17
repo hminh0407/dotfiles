@@ -17,8 +17,9 @@
         map <C-B><C-J> :bnext     <CR>
         map <C-B><C-K> :bprevious <CR>
         map <C-B><C-W> :bd        <CR>
-        map <C-B><C-A> :bufdo bd  <CR>
-        map <C-B><C-O> :only      <CR>
+        " map <C-B><C-A> :bufdo bd  <CR>
+        " close all other buffers. equipvalence to ':NERDTreeClose | w | %bd | e# | bd#'
+        map <silent> <C-B><C-O> :NERDTreeClose <bar> w <bar> %bd <bar> e# <bar> bd#<CR>
 
         set nowrap " do not wrap long line
         " Scroll 20 characters to the right

@@ -16,6 +16,7 @@
     ~/.config/nvim/conf           : nvim/conf
     ~/.config/nvim/after/ftplugin : nvim/ftplugin
     ~/.config/nvim/snippets       : nvim/snippets
+    ~/.config/pgcli/conf          : pgcli/config
     ~/.tmux.conf                  : tmux/tmux.conf
     ~/.tmuxp                      : tmux/tmuxp
     ~/.direnvrc                   : direnv/direnvrc
