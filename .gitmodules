@@ -1,6 +1,6 @@
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
-[submodule "b-log"]
-	path = b-log
-	url = https://github.com/idelsink/b-log.git
+[submodule "scripts/b-log"]
+	path = scripts/b-log
+	url = git@github.com:idelsink/b-log.git

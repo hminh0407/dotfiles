@@ -41,6 +41,14 @@ isServiceExist () {
     false
 }
 
+function sourceBash {
+    # It is not easy to source bash file with bash_source using zsh properly. Check below stackoverflow link
+    # https://unix.stackexchange.com/questions/479092/how-can-i-source-a-bash-script-containing-bash-source-from-zsh-shell/837256
+    local bashSource="${1}"
+    . <(awk '{gsub(/\${BASH_SOURCE\[0\]}/, FILENAME); print}' $bashSource)
+}
+
+
 if isServiceExist direnv; then
     eval "$(direnv hook zsh)"
 fi

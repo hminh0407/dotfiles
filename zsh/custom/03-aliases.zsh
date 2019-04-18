@@ -5,20 +5,27 @@
 # the more the explicitly alias can be the better for readability and history search
 
 # =====================================================================================================================
+# LIBRARY
+# =====================================================================================================================
+
+# ${(%):-%N} is equivalent of BASH_SOURCE[0] in zsh
+sourceBash $(dirname ${(%):-%N})/scripts/base.sh
+
+# =====================================================================================================================
 # FUNCTION
 # =====================================================================================================================
 
 ### utils ###
 # check if a shell service exist
-isServiceExist () {
-    local service="$1"
-    # check if service exist and not an alias by checking its execute file location
-    if service_loc="$(type -p "${service}")" || [[ -z $service_loc ]]; then
-        return
-    fi
-    # a proper way to use bash function that return boolean: https://stackoverflow.com/a/43840545
-    false
-}
+# isServiceExist () {
+#     local service="$1"
+#     # check if service exist and not an alias by checking its execute file location
+#     if service_loc="$(type -p "${service}")" || [[ -z $service_loc ]]; then
+#         return
+#     fi
+#     # a proper way to use bash function that return boolean: https://stackoverflow.com/a/43840545
+#     false
+# }
 
 ### alias ###
 alias llink="la | grep '\->'" # list all link
