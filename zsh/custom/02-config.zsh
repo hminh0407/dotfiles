@@ -30,23 +30,14 @@
 # INTEGRATION
 # =====================================================================================================================
 
-isServiceExist () {
-    [ -z "$1" ] && { logParamMissing "service"; exit 1; }
-    local service="$1"
-    # check if service exist and not an alias by checking its execute file location
-    if service_loc="$(type -p "${service}")" || [[ -z $service_loc ]]; then
-        return
-    fi
-    # a proper way to use bash function that return boolean: https://stackoverflow.com/a/43840545
-    false
-}
-
 function sourceBash {
     # It is not easy to source bash file with bash_source using zsh properly. Check below stackoverflow link
     # https://unix.stackexchange.com/questions/479092/how-can-i-source-a-bash-script-containing-bash-source-from-zsh-shell/837256
     local bashSource="${1}"
     . <(awk '{gsub(/\${BASH_SOURCE\[0\]}/, FILENAME); print}' $bashSource)
 }
+
+sourceBash $(dirname ${(%):-%N})/scripts/base.sh
 
 
 if isServiceExist direnv; then
