@@ -13,8 +13,24 @@ source $(dirname ${BASH_SOURCE[0]})/b-log/b-log.sh
 LOG_LEVEL_ALL
 
 # =====================================================================================================================
-# FUNCTION
+# LOG FUNCTION
 # =====================================================================================================================
+
+echoServiceStatus() {
+    local serviceName="${1}"
+    local status="${2}"
+    case ${status} in
+        new)
+            NOTICE "Installing ${serviceName}"
+            ;;
+        installed)
+            NOTICE "Already Installed ${serviceName}"
+            ;;
+        *)
+            ERROR "Usage: $0 {new|installed}"
+            exit 1
+    esac
+}
 
 logParamMissing () {
     local paramName="${1}"

@@ -23,3 +23,7 @@ export FZF_DEFAULT_OPTS="--color=16 --bind 'f1:execute(less -f {}),ctrl-y:execut
 
 # java
 export MAVEN_OPTS="-Xms1024m -Xmx4096m -XX:PermSize=1024m"
+
+### EXTEND SECTION ###
+# Below this section is configuration extened by script
+

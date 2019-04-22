@@ -34,3 +34,5 @@
     - [./ubuntu/provision.sh, Ubuntu Provisioning]
     - ['yes | cp -rf zsh/custom/* ${HOME}/.oh-my-zsh/custom', Setup custom zsh scripts]
     - ['yes | cp -rf scripts ${HOME}/.oh-my-zsh/custom', Setup library for custom zsh scripts]
+    - ["echo 'export UBUNTU_PROVISIONED=true' >> ${HOME}/.oh-my-zsh/custom/01-env.zsh", mark as already provisioned]
+    - ['source ${HOME}/.zshrc', source zsh shell]

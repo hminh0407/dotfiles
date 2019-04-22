@@ -13,33 +13,16 @@
 declare BAT_VERSION="0.6.1"
 declare PET_VERSION="0.3.2"
 
+declare ZSH_CUSTOM="${HOME}/.oh-my-zsh/custom"
+declare ZSH_ENV="${ZSH_CUSTOM}/01-env.zsh"
+
 LOG_LEVEL_ALL
-
-# =====================================================================================================================
-# UTIL FUNCTION
-# =====================================================================================================================
-
-echoServiceStatus() {
-    local serviceName="${1}"
-    local status="${2}"
-    case ${status} in
-        new)
-            NOTICE "Installing ${serviceName}"
-            ;;
-        installed)
-            NOTICE "Already Installed ${serviceName}"
-            ;;
-        *)
-            ERROR "Usage: $0 {new|installed}"
-            exit 1
-    esac
-}
 
 # =====================================================================================================================
 # FUNCTION
 # =====================================================================================================================
 
-ubuntu-provision () {
+function provision() {
     # install apt-fast
     if isServiceExist apt-fast; then
         sudo add-apt-repository -y ppa:apt-fast/stable
@@ -78,7 +61,7 @@ ubuntu-provision () {
     # https://github.com/teni-ime/ibus-teni/wiki/H%C6%B0%E1%BB%9Bng-d%E1%BA%ABn-c%E1%BA%A5u-h%C3%ACnh#2-add-an-input-source-vietnameseteni
 }
 
-zsh-install () {
+function zsh_install () {
     if !isServiceExist zsh; then
         echoServiceStatus "ZSH" "new"
 
@@ -98,7 +81,7 @@ zsh-install () {
     fi
 }
 
-bat-install () {
+function bat_install () {
     if !isServiceExist bat; then
         echoServiceStatus "BAT" "new"
 
@@ -110,7 +93,16 @@ bat-install () {
     fi
 }
 
-java-config () {
+function calibre_install () {
+    if !isServiceExist calibre; then
+        echoServiceStatus "Calibre" "new"
+        sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
+    else
+        echoServiceStatus "Calibre" "installed"
+    fi
+}
+
+function java_config () {
     if !isServiceExist java; then
         NOTICE "JAVA - Setting up"
 
@@ -120,7 +112,7 @@ java-config () {
     fi
 }
 
-nvim-config () {
+function nvim_config () {
     if !isServiceExist nvim; then
         NOTICE "NVIM - Setting up"
 
@@ -137,7 +129,7 @@ nvim-config () {
     fi
 }
 
-pet-install () {
+function pet_install () {
     if !isServiceExist pet; then
         echoServiceStatus "PET" "new"
 
@@ -152,7 +144,7 @@ pet-install () {
     fi
 }
 
-tmux-config () {
+function tmux_config () {
     if !isServiceExist tmux; then
         NOTICE "TMUX - Setting up"
 
@@ -171,7 +163,7 @@ tmux-config () {
     fi
 }
 
-wine-install () {
+function wine_install () {
     # enable x86 architecture support
     sudo dpkg --add-architecture i386
     # install wine
@@ -181,7 +173,7 @@ wine-install () {
     sudo apt-get update && apt-fast install -y --install-recommends winehq-stable
 }
 
-# vim-install () {
+# vim_install () {
 #     # requre python and pip installed
 #     # gui-vim should be installed instead of terminal vim because it support clipboard
 #     if isServiceExist apt; then
@@ -242,11 +234,24 @@ wine-install () {
 # MAIN
 # =====================================================================================================================
 
-NOTICE "### Start Ubuntu Provisioning ###"
+function main() {
+    case "${UBUNTU_PROVISIONED}" in
+        (true)
+            echoServiceStatus 'Ubuntu Provision' 'installed'
+            ;;
+        (*)
+            NOTICE "### Start Ubuntu Provisioning ###"
+            provision
+            NOTICE "### Complete Ubuntu Provision ###"
+            ;;
+    esac
 
-ubuntu-provision
-zsh-install
-java-config
-nvim-config
-pet-install
-tmux-config
+    zsh_install
+    java_config
+    nvim_config
+    pet_install
+    tmux_config
+    calibre_install
+}
+
+main
