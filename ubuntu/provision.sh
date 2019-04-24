@@ -48,6 +48,7 @@ function provision() {
 
     # install snap packages
     snap install docker postman tldr
+    snap install hub --classic
     # snap install communitheme clementine
     sudo apt autoremove # clear installation cache
 
