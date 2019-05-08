@@ -97,9 +97,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'w0rp/ale'                    " syntax linting
   Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
 
-  " Rest API
-  Plug 'baverman/vial'               " framework to write plugins in Python
-  Plug 'baverman/vial-http'          " (currently the best), rest client for vim https://github.com/baverman/vial-http
+  " Http Client
+  " Plug 'baverman/vial'               " framework to write plugins in Python
+  " Plug 'baverman/vial-http'          " (currently the best), rest client for vim https://github.com/baverman/vial-http
+  Plug 'diepm/vim-rest-console'      " http client for vim https://github.com/diepm/vim-rest-console
 
   " Plantuml
   Plug 'aklt/plantuml-syntax'             " syntax support for plantuml
