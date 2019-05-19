@@ -5,6 +5,7 @@
 # =====================================================================================================================
 
 source $(dirname ${BASH_SOURCE[0]})/b-log/b-log.sh
+source $(dirname ${BASH_SOURCE[0]})/log.sh
 
 # =====================================================================================================================
 # CONFIGURATION
@@ -19,22 +20,23 @@ LOG_LEVEL_ALL
 echoServiceStatus() {
     local serviceName="${1}"
     local status="${2}"
+
     case ${status} in
         new)
-            NOTICE "Installing ${serviceName}"
+            logInfo "Installing ${serviceName}"
             ;;
         installed)
-            NOTICE "Already Installed ${serviceName}"
+            logInfo "Already Installed ${serviceName}"
             ;;
         *)
-            ERROR "Usage: $0 {new|installed}"
+            logError "Usage: $0 {new|installed}"
             exit 1
     esac
 }
 
 logParamMissing () {
     local paramName="${1}"
-    ERROR "Variable ${paramName} is not defined, exiting."
+    logError "Parameter ${paramName} is not exist, exiting."
 }
 
 isServiceExist () {

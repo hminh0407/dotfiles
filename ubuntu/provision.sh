@@ -253,6 +253,8 @@ function main() {
     pet_install
     tmux_config
     calibre_install
+
+    mkdir -p "${HOME}"/cli # folder to contain cli execution files
 }
 
 main

@@ -30,6 +30,18 @@
 # INTEGRATION
 # =====================================================================================================================
 
+# https://coderwall.com/p/a3xreg/per-directory-zsh-config
+# With this we can make .zsh_config file for each directory we want,
+# and when we cd to that directory, zsh will read the .zsh_config file and use any configuration found in there
+function chpwd() {
+    if [ -r $PWD/.zsh_config ]; then
+        source $PWD/.zsh_config
+        echo "Loaded folder specific zsh config"
+    else
+        source $HOME/.zshrc
+    fi
+}
+
 function sourceBash {
     # It is not easy to source bash file with bash_source using zsh properly. Check below stackoverflow link
     # https://unix.stackexchange.com/questions/479092/how-can-i-source-a-bash-script-containing-bash-source-from-zsh-shell/837256

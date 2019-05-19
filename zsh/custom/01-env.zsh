@@ -1,5 +1,6 @@
 # general
 export HIST_IGNORE_ALL_DUPS='true'
+export CLI_PATH="${HOME}"/cli # path to store downloaded cli tools
 
 # mycli & pgcli
 export PAGER='nvim -'
