@@ -92,6 +92,7 @@ function jenkins_cli () {
             ;;
         *)
             local cmd="java -jar ${CLI_PATH}/jenkins-cli.jar -s $jenkinsUrl -http -auth $jenkinsUser:$jenkinsToken $jenkinsFullCommand"
+            echo $cmd
             eval $cmd
             ;;
     esac
@@ -120,10 +121,10 @@ declare builtinKeyboard="AT Translated Set 2 keyboard"
 alias xinput_list_keyboard=$'xinput list | grep ${builtinKeyboard}'
 # Normal use of awk with alias will not run as expected, check for more detail on https://stackoverflow.com/a/24247870
 alias xinput_list_keyboard_id=$'xinput list | grep ${builtinKeyboard} | awk \'{print $7}\' | cut -c 4-5'
-alias xinput_disable_keyboard=$'xinput float $(xinput-list-keyboard-id)'
+alias xinput_disable_keyboard=$'xinput float $(xinput_list_keyboard_id)'
 # xinput reattach <id> <master> (master default to be 3)
 # Check for more detail: https://askubuntu.com/questions/160945/is-there-a-way-to-disable-a-laptops-internal-keyboard
-alias xinput_enable_keyboard=$'xinput reattach $(xinput-list-keyboard-id) 3'
+alias xinput_enable_keyboard=$'xinput reattach $(xinput_list_keyboard_id) 3'
 
 # utils #
 
