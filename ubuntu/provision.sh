@@ -103,6 +103,39 @@ function calibre_install () {
     fi
 }
 
+docker_install () {
+    if !isServiceExist docker; then
+        echoServiceStatus "Docker" "new"
+        # Install packages to allow apt to use a repository over HTTPS
+        apt-fast install --no-install-recommends -y \
+            apt-transport-https                     \
+            ca-certificates                         \
+            curl                                    \
+            gnupg-agent                             \
+            software-properties-common
+
+        # Add Docker’s official GPG key
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+        # Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
+        sudo apt-key fingerprint 0EBFCD88
+
+        # Use the following command to set up the stable repository
+        sudo add-apt-repository \
+           "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+           $(lsb_release -cs) \
+           stable"
+
+        # update apt package index
+        sudo apt-get update
+
+        # install latest version of Docker CE
+        apt-fast install --no-install-recommends -y docker-ce docker-ce-cli containerd.io
+    else
+        echoServiceStatus "Docker" "installed"
+    fi
+}
+
 function java_config () {
     if !isServiceExist java; then
         NOTICE "JAVA - Setting up"
@@ -253,6 +286,7 @@ function main() {
     pet_install
     tmux_config
     calibre_install
+    docker_install
 
     mkdir -p "${HOME}"/cli # folder to contain cli execution files
 }
