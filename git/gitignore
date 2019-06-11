@@ -37,6 +37,7 @@ Pipfile
 .envrc
 tags*
 .attach*
+.zsh_config*
 
 # Build folders #
 ######################

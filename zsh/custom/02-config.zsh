@@ -34,6 +34,13 @@
 # With this we can make .zsh_config file for each directory we want,
 # and when we cd to that directory, zsh will read the .zsh_config file and use any configuration found in there
 function chpwd() {
+    local suffix="${1}"
+
+    # if multiple version of zsh_config contains in folder, choose the specific version passed through as param
+    if [ ! -z $suffix ]; then
+        ln -sfn $PWD/.zsh_config_$suffix $PWD/.zsh_config
+    fi
+
     if [ -r $PWD/.zsh_config ]; then
         source $PWD/.zsh_config
         echo "Loaded folder specific zsh config"

@@ -75,6 +75,8 @@ function jenkins_getCLI () {
 }
 
 function jenkins_cli () {
+    local debug="${DEBUG:-''}"
+    local dryRun="${DRY_RUN:-''}"
     local jenkinsUrl="${JENKINS_URL}"
     local jenkinsUser="${JENKINS_USER}"
     local jenkinsToken="${JENKINS_TOKEN}"
@@ -92,10 +94,25 @@ function jenkins_cli () {
             ;;
         *)
             local cmd="java -jar ${CLI_PATH}/jenkins-cli.jar -s $jenkinsUrl -http -auth $jenkinsUser:$jenkinsToken $jenkinsFullCommand"
-            echo $cmd
-            eval $cmd
+
+            if [ $debug = "true" ]; then
+                echo $cmd # only use for debug purpose
+            fi
+
+            if [ ! $dryRun = "true" ]; then
+                eval $cmd
+            fi
+
+            sendNotification "jenkins_cli $jenkinsFullCommand completed"
             ;;
     esac
+}
+
+# notification
+sendNotification () {
+    local message="${1}"
+
+    zenity --info --text=$message
 }
 
 # nvim "
