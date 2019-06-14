@@ -66,7 +66,7 @@ function jenkins_getCLI () {
     local jenkinsUrl="${JENKINS_URL}"
     local outputFile="${1:-${CLI_PATH}/jenkins-cli.jar}"
 
-    [ -z ${jenkinsUrl} ] && { logError "JENKINS_URL env is not exist"; exit 1; }
+    [ -z ${jenkinsUrl} ] && { logError "JENKINS_URL env is not exist" }
 
     curl -X GET "${jenkinsUrl}/jnlpJars/jenkins-cli.jar" -o "${outputFile}" ||
     {
@@ -165,4 +165,3 @@ fi
 # hash -d dotfiles=~/.dotfiles
 # hash -d s-doc=~/.s-doc
 # hash -d workspace=~/workspace
-

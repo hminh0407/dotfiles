@@ -34,7 +34,7 @@ Pipfile
 
 # Special files #
 ######################
-.envrc
+.envrc*
 tags*
 .attach*
 .zsh_config*
