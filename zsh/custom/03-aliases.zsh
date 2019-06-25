@@ -34,19 +34,25 @@ if isServiceExist docker; then
     # new kind of alias, better at history search
     alias docker_rm_dangling_images="docker images -qf dangling=true | xargs -r docker rmi"
     alias docker_rm_dangling_volumes="docker volume ls -qf dangling=true | xargs -r docker volume rm"
-    function docker_rm_group_images () {
+    alias docker_stop_all="docker stop $(docker ps -q)"
+
+    docker_rm_all_ps () {
+        docker rm -fv $(docker ps -aq)
+    }
+
+    docker_rm_group_images () {
 	local pattern="$1"
 	cmd="docker images | grep "${pattern}" | awk '{print \$2}' | xargs docker rmi"
         echo ${cmd} && eval ${cmd}
     }
-    function docker_rm_group_ps () {
+    docker_rm_group_ps () {
 	local pattern="$1"
 	cmd="docker ps -a | grep "${pattern}" | awk '{print \$1}' | xargs docker rm"
         echo ${cmd} && eval ${cmd}
     }
 
     # docker run with interactive mode, image will be deleted after run
-    function docker_run_it () {
+    docker_run_it () {
         local image="$1" entrypoint="${2:=/bin/sh}"
         local tmpName="${1//[:.]/_}" # replace ':' with '_'
         cmd="docker run -it --rm --name '${tmpName}' --entrypoint ${entrypoint} "${@:3}" ${image}"

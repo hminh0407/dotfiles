@@ -33,7 +33,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
   " Markdown
   Plug 'tyru/open-browser.vim' " open uri with system browser, work well with previm
-  Plug 'kannokanno/previm'    , {'for': 'markdown'} " support mermaid (https://github.com/previm/previm)
+  " Plug 'kannokanno/previm'    , {'for': 'markdown'} " support mermaid (https://github.com/previm/previm)
   " does not need this plugin as folding has already been supported in vim-wiki
   " Plug 'nelstrom/vim-markdown-folding' , {'for': 'markdown'} " folding support for markdown
 

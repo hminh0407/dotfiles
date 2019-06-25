@@ -30,9 +30,9 @@ windows:
     - cd ${HOME}/workspace/unified/datalake
   panes:
     -
-- window_name: data-warehouse
+- window_name: unified
   layout: tiled
   shell_command_before:
-    - cd ${HOME}/workspace/unified/data-warehouse
+    - cd ${HOME}/workspace/unified
   panes:
     -
