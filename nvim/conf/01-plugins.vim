@@ -24,6 +24,8 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'itchyny/calendar.vim'    " https://github.com/itchyny/calendar.vim
   Plug 'vimwiki/vimwiki'         " https://github.com/vimwiki/vimwiki
   Plug 'rhysd/clever-f.vim'      " https://github.com/rhysd/clever-f.vim
+  Plug 'tpope/vim-unimpaired'    " add tone of pair features https://github.com/tpope/vim-unimpaired
+                                 " mostly used for '[u' to encode and ']u' to decode url
 
   " Git
   Plug 'tpope/vim-fugitive'     " extend git support
