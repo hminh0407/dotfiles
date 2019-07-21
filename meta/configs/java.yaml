@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/java.sh, Installing Java]
+

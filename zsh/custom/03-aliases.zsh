@@ -154,8 +154,8 @@ alias xinput_enable_keyboard=$'xinput reattach $(xinput_list_keyboard_id) 3'
 # use xdg-open to open any file with default app
 # should use & at the end to run the process in background otherwise we cannot continue using the cli
 # ex: open file.txt &
-if isServiceExist xdg_open; then
-    alias open="xdg_open"
+if isServiceExist xdg-open; then
+    alias open="xdg-open"
 fi
 
 ### AUTO_CD ###

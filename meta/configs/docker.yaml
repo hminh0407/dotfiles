@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/docker.sh, Installing Docker]
+

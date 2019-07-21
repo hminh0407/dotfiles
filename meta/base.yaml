@@ -1,0 +1,15 @@
+# Make sure that the files use the correct indentation or else install script will fail
+# Check for more detail: https://github.com/anishathalye/dotbot/issues/8
+- defaults:
+    link:
+        create: true
+        relink: true
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+# Clean commands specify directories that should be checked for dead symbolic links.
+# These dead links are removed automatically.
+# Only dead links that point to the dotfiles directory are removed unless the force option is set to true.
+- clean: ['~']

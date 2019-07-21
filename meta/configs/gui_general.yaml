@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/gui_general.sh, Installing General GUI Apps]
+

@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/calibre.sh, Installing Calibre]
+

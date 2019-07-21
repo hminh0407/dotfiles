@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/python.sh, Installing Python]
+

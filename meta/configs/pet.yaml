@@ -1,0 +1,3 @@
+- shell:
+    - [./scripts/installation/pet.sh, Installing Pet]
+

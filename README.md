@@ -7,8 +7,13 @@ Use [dotbot](https://github.com/anishathalye/dotbot) dotfiles manager to manage 
 
 ## Usage
 
-Run install script to provision ubuntu environment
-`./install`
+Install with profile (check meta/profiles for supported profile)
+`./install-profile <profile> [<configs...>]`
+`Ex: ./install-profile dev`
+
+Install single configuration (check meta/configs for supported configurations)
+`./install-standalone <configs...>`
+`Ex: ./install-profile nvim`
 
 ---
 
