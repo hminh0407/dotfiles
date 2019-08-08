@@ -68,6 +68,7 @@ plugins=(\
     # fasd \
     per-directory-history \
     sudo \
+    nvm \
     # wd \
     # docker mvn \ # make zsh slow, should not use
 )

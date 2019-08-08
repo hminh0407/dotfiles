@@ -29,6 +29,9 @@ install () {
     logInfo "installing zsh highlighting..."
     gitClone git://github.com/zsh-users/zsh-syntax-highlighting.git ${zshCustomPluginsPath}/zsh-syntax-highlighting
 
+    logInfo "installing nvm..."
+    gitClone git@github.com:lukechilds/zsh-nvm.git ${zshCustomPluginsPath}/zsh-nvm
+
     # reload current shell to use zsh
     env -i zsh
 }
