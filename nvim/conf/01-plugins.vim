@@ -58,7 +58,8 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'wellle/targets.vim'             " extend text objects support
   Plug 'jiangmiao/auto-pairs'           " auto close pairs (quotes, parens, brackets ...)
   Plug 'ntpeters/vim-better-whitespace' " hightlight trailing whitespace
-  Plug 'tpope/vim-abolish'              " Abbreviation & Coercion (can convert case. ex:snake,camel,mix,dot...)
+  " Plug 'tpope/vim-abolish'              " Abbreviation & Coercion (can convert case. ex:snake,camel,mix,dot...)
+  Plug 'chiedo/vim-case-convert'        " can convert case. ex:snake,camel,mix,dot... (https://github.com/chiedo/vim-case-convert)
   Plug 'sk1418/HowMuch'                 " calculator for visual selection
 
 " }

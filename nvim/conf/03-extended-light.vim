@@ -73,6 +73,8 @@
     " Mapping {
         map <A-a> <C-a>
         map <A-x> <C-x>
+        " join 2 lines without moving cursor
+        :nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
     " }
 
     " Performance Tweak {
@@ -101,7 +103,7 @@
         " fuzzy search all files in root directory
         map <C-P>      :Files!<cr>
         " fuzzy search all history
-        map <C-C>      :History!<cr>
+        map <C-C>      :History:<cr>
         " fuzzy search line in current buffer
         map <C-F><C-B> :BLines<cr>
         " fuzzy search all commands
@@ -116,6 +118,12 @@
         map <C-F><C-P> :FZFNeigh<cr>
         " fuzzy search most recently used files
         map <C-F><C-R> :FZFMru<cr>
+        " fuzzy search vim help document
+        map <C-F><C-H> :Helptags!<cr>
+        " fuzzy search mapping key
+        map <C-F><C-M> :Maps<cr>
+        " fuzzy search filetype syntax and hit ENTER on result to set that syntax to current file
+        map <C-F><C-S> :Filetypes<cr>
 
         " hide status line when fzf open
         autocmd! FileType fzf

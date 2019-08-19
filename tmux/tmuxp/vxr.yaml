@@ -1,0 +1,15 @@
+session_name: vxr
+start_directory: "${HOME}"
+windows:
+- window_name: wiki
+  focus: true
+  layout: tiled
+  start_directory: vimwiki/vxr
+  panes:
+    -
+      focus: true
+- window_name: vxr
+  layout: tiled
+  start_directory: workspace/vxr
+  panes:
+    -

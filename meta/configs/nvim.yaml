@@ -12,6 +12,7 @@
     ~/.config/nvim/conf           : nvim/conf
     ~/.config/nvim/after/ftplugin : nvim/ftplugin
     ~/.config/nvim/snippets       : nvim/snippets
+    ~/.ctags                      : nvim/ctags
 
 - shell:
     - [./scripts/installation/nvim.sh, Installing NeoVim]

@@ -1,0 +1,35 @@
+# Basic options
+--recurse=yes
+--tag-relative=yes
+# language specific
+--python-kinds=-i # exclude python tag for import and variable
+# exclude
+--exclude=.git
+--exclude=target       # java build folder
+--exclude=build
+--exclude=dist
+--exclude=.hg
+--exclude=bundle
+--exclude=min
+--exclude=vendor
+--exclude=\*.min.\*
+--exclude=\*.map
+--exclude=\*.swp
+--exclude=\*.bak
+--exclude=\*.pyc
+--exclude=\*.class
+--exclude=\*.sln
+--exclude=\*.Master
+--exclude=\*.csproj
+--exclude=\*.csproj.user
+--exclude=\*.cache
+--exclude=\*.dll
+--exclude=\*.pdb
+--exclude=tags
+--exclude=cscope.\*
+--exclude=\*.tar.\*
+
+# markdown
+--langdef=markdown
+--langmap=markdown:.md
+--regex-markdown=/^#[ \t](.*$)/\1/h,heading,headings/
