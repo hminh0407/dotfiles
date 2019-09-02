@@ -15,37 +15,15 @@ appendToFileIfNotExist () {
     grep -qF -- "$line" "$file" || echo "$line" >> "$file"
 }
 
-echoServiceStatus () {
-    local serviceName="${1}"
-    local status="${2}"
-
-    case ${status} in
-        new)
-            logInfo "Installing ${serviceName}"
-            ;;
-        installed)
-            logInfo "Already Installed ${serviceName}"
-            ;;
-        *)
-            logError "Usage: $0 {new|installed}"
-            exit 1
-    esac
-}
-
 logParamMissing () {
     local paramName="${1}"
     logError "Parameter ${paramName} is not exist, exiting."
 }
 
 isServiceExist () {
-    [ -z "$1" ] && { logParamMissing "service"; exit 1; }
-    local service="$1"
-    # check if service exist and not an alias by checking its execute file location
-    if service_loc="$(type -p "${service}")" || [[ -z $service_loc ]]; then
-        return
-    fi
-    # a proper way to use bash function that return boolean: https://stackoverflow.com/a/43840545
-    false
+    # https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
+    local service="${1}"
+    [ -x "$(command -v $service)" ]
 }
 
 # clone git if not exist, pull latest code if exist

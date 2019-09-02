@@ -11,7 +11,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist bat; then
+    if ! isServiceExist bat; then
         install
     fi
 }

@@ -1,19 +1,19 @@
 - defaults:
-    link:
-        create: true
-        relink: true
     shell:
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create: true
+        relink: true
+
+- shell:
+    - [./scripts/installation/nvim.sh, Installing NeoVim]
 
 - link:
     ~/.config/nvim/init.vim       : nvim/init.vim
     ~/.config/nvim/conf           : nvim/conf
     ~/.config/nvim/after/ftplugin : nvim/ftplugin
     ~/.config/nvim/snippets       : nvim/snippets
-    ~/.ctags                      : nvim/ctags
-
-- shell:
-    - [./scripts/installation/nvim.sh, Installing NeoVim]
+    ~/.ctags                      : nvim/conf/ctags
 

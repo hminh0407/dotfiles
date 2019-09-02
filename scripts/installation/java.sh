@@ -12,7 +12,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist java; then
+    if ! isServiceExist java; then
         install
     fi
 }

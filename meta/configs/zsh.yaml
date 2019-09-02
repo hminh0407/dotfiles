@@ -9,12 +9,9 @@
 
 - clean: ['~']
 
-- link:
-    ~/.zshrc : zsh/zshrc
-
 - shell:
     - [./scripts/installation/zsh.sh, Installing ZSH]
-    - ['yes | cp -rf zsh/custom/* ${HOME}/.oh-my-zsh/custom', Setup custom zsh scripts]
-    - ['yes | cp -rf scripts ${HOME}/.oh-my-zsh/custom', Setup library for custom zsh scripts]
-    - ['source ${HOME}/.zshrc', source zsh shell]
+
+# - link: # it could be error prone to link zshrc file, suggest that we clone a new file instead.
+#     ~/.zshrc : zsh/zshrc
 

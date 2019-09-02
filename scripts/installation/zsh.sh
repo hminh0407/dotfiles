@@ -20,7 +20,7 @@ declare ZSH_ENV="${ZSH_CUSTOM}/01-env.zsh"
 install () {
     apt-fast install --no-install-recommends -y zsh
 
-    local zshCustomPluginsPath="~/.oh-my-zsh/custom/plugins"
+    local zshCustomPluginsPath="${HOME}/.oh-my-zsh/custom/plugins"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
     logInfo "installing zsh autosuggestions..."
@@ -34,10 +34,16 @@ install () {
 
     # reload current shell to use zsh
     env -i zsh
+
+    # setup
+    yes | cp -rf zsh/custom/* ${HOME}/.oh-my-zsh/custom # Setup custom zsh scripts
+    yes | cp -rf scripts ${HOME}/.oh-my-zsh/custom # Setup library for custom zsh scripts
+    cp -f zsh/zshrc ~/.zshrc # use custom zsh config
+    chsh -s `which zsh` # change default shell to zsh, need a reboot to take affect
 }
 
 main() {
-    if !isServiceExist zsh; then
+    if ! isServiceExist zsh; then
         install
     fi
 }

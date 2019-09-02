@@ -13,8 +13,3 @@ windows:
   panes:
     -
       focus: true
-- window_name: vimwiki-resources
-  layout: tiled
-  start_directory: vimwiki-resources
-  panes:
-    -

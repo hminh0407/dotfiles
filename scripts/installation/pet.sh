@@ -14,7 +14,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist pet; then
+    if ! isServiceExist pet; then
         install
     fi
 }

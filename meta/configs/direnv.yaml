@@ -8,5 +8,8 @@
         relink: true
 
 - shell:
-    - [./scripts/installation/docker.sh, Installing Docker]
+    - [sudo apt install direnv, Installing direnv]
+
+- link:
+    ~/.config/direnv/direnvrc : direnv/direnvrc
 

@@ -9,10 +9,10 @@
 
 - clean: ['~']
 
+- shell:
+    - [./scripts/installation/tmux.sh, Installing TMUX]
+
 - link:
     ~/.tmux.conf : tmux/tmux.conf
     ~/.tmuxp     : tmux/tmuxp
-
-- shell:
-    - [./scripts/installation/tmux.sh, Installing TMUX]
 

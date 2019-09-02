@@ -5,4 +5,5 @@
         quiet : false
 
 - shell:
-    - [./scripts/installation/gcloud.sh, Installing Google Cloud]
+    - [./scripts/installation/mssql.sh, Installing MSSQL CMD Tools]
+

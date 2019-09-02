@@ -13,3 +13,8 @@ windows:
   start_directory: workspace/vxr
   panes:
     -
+- window_name: user
+  layout: tiled
+  start_directory: workspace/vxr/user-profile-service
+  panes:
+    -

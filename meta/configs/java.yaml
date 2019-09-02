@@ -1,3 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
 - shell:
     - [./scripts/installation/java.sh, Installing Java]
 

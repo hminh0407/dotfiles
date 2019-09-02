@@ -71,7 +71,9 @@
     " }
 
     " Mapping {
+        " increase number
         map <A-a> <C-a>
+        " decrease number
         map <A-x> <C-x>
         " join 2 lines without moving cursor
         :nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
@@ -94,6 +96,11 @@
 
 " Plugin Settings {
 
+    " Ale
+        " Fix file with prettier then eslint
+        let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
+    " }
+
     " Calendar {
         let g:calendar_google_calendar = 1
         let g:calendar_google_task = 1
@@ -110,8 +117,8 @@
         map <C-F><C-C> :Command!<cr>
         " fuzzy search files in buffer
         map <C-F><C-E> :Buffers<cr>
-        " fuzzy search lines in open buffer
-        map <C-F><C-L> :Lines<cr>
+        " fuzzy search lines in current buffer
+        map <C-F><C-L> :BLines<cr>
         " fuzzy search tag in current file
         map <C-F><C-O> :BTags<cr>
         " fuzzy search files in parent directory of current file
@@ -232,7 +239,7 @@
 
     " Wiki {
         " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
-        let g:vimwiki_global_ext = 0
+        " let g:vimwiki_global_ext = 0
         let g:vimwiki_list_margin = 0
         let g:vimwiki_auto_tags = 1
         let g:vimwiki_syntax = 'markdown'

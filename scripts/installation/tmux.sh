@@ -22,13 +22,13 @@ install () {
     # install plugins
     ~/.tmux/plugins/tpm/bin/install_plugins
     # install tmuxp & plugins
-    # sudo -H pip3 install tmuxp
-    sudo pip install tmuxp
+    apt-fast install python3-pip
+    sudo pip3 install tmuxp
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 }
 
 main () {
-    if !isServiceExist tmux; then
+    if ! isServiceExist tmux; then
         install
     fi
 }

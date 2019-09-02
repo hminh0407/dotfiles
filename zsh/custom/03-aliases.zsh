@@ -16,6 +16,8 @@ sourceBash $(dirname ${(%):-%N})/scripts/base.sh
 # =====================================================================================================================
 
 ### alias ###
+alias apt-get="apt-fast"
+alias apt-ins="apt-fast install --no-install-recommends -y"
 alias llink="la | grep '\->'" # list all link
 
 # ag #

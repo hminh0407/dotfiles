@@ -20,7 +20,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist gcloud; then
+    if ! isServiceExist gcloud; then
         install
     fi
 }

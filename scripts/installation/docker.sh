@@ -39,7 +39,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist docker; then
+    if ! isServiceExist docker; then
         install
     fi
 }

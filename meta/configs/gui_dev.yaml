@@ -1,3 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
 - shell:
     - [./scripts/installation/gui_dev.sh, Installing Dev GUI Apps]
 

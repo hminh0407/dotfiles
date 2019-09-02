@@ -5,4 +5,4 @@
         quiet : false
 
 - shell:
-    - [./scripts/installation/gcloud.sh, Installing Google Cloud]
+    - [apt-fast install redshift redshift-gtk, Installing Redshift]

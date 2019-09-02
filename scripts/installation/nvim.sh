@@ -11,10 +11,10 @@
 # =====================================================================================================================
 
 install () {
-    sudo apt-add-repository -y ppa:neovim-ppa/stable
+    # sudo apt-add-repository -y ppa:neovim-ppa/stable
     sudo apt-get update -y
 
-    apt-fast install --no-install-recommends -y neovim
+    apt-fast install --no-install-recommends -y neovim python-neovim python3-neovim
 }
 
 config () {
@@ -25,13 +25,10 @@ config () {
     sudo update-alternatives --config vim
     sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
     sudo update-alternatives --config editor
-
-    # install tools used for plugins
-    sudo npm install -g js-beautify # for Autoformat to format json and js file
 }
 
 main() {
-    if !isServiceExist nvim; then
+    if ! isServiceExist nvim; then
         install
         config
     fi

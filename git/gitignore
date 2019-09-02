@@ -35,9 +35,10 @@ Pipfile
 # Special files #
 ######################
 .envrc*
-tags*
+.tags
 .attach*
 .zsh_config*
+tags*
 
 # Build folders #
 ######################
@@ -52,3 +53,5 @@ oh-my-zsh/
 s-doc/
 .ropeproject/
 .idea
+node_modules/
+dotbot

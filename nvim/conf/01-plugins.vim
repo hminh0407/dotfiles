@@ -32,7 +32,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'airblade/vim-gitgutter' " show git diff for each line
 
   " Markdown
-  Plug 'tyru/open-browser.vim' " open uri with system browser, work well with previm
+  Plug 'tyru/open-browser.vim' " open uri with system browser, work well with previm and vimwiki
   " Plug 'kannokanno/previm'    , {'for': 'markdown'} " support mermaid (https://github.com/previm/previm)
   " does not need this plugin as folding has already been supported in vim-wiki
   " Plug 'nelstrom/vim-markdown-folding' , {'for': 'markdown'} " folding support for markdown
@@ -68,7 +68,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   " asynccompletor with vim lsp to support auto complete (lighter and faster than youcompleteme)
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
-  Plug 'ryanolsonx/vim-lsp-python'
+  " Plug 'ryanolsonx/vim-lsp-python'
   Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
   Plug 'prabirshrestha/asyncomplete-buffer.vim'
@@ -93,6 +93,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Plug 'wannesm/wmgraphviz.vim' " graphviz dot support for vim https://github.com/wannesm/wmgraphviz.vim
 
   " Language support
+  " autoformat: for js support, need to install some js packages `npm install -g js-beautify|prettier eslint`
   Plug 'Chiel92/vim-autoformat'      " auto format code
   Plug 'janko-m/vim-test'            " unit test tool
   Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux

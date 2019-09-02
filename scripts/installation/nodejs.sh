@@ -10,7 +10,7 @@ install () {
 }
 
 main () {
-    if !isServiceExist node; then
+    if ! isServiceExist node; then
         install
     fi
 }

@@ -1,10 +1,19 @@
 # Install essential packages
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+
+- shell:
+    - ['find . -type f -iname "*.sh" -exec chmod +x {} \;', Make scripts executable]
+    - [./scripts/installation/default.sh, Installing Default]
 
 - link:
     ~/.gitconfig : git/gitconfig
     ~/.gitignore : git/gitignore
     ~/.tigrc     : git/tigrc
 
-- shell:
-    - ['find . -type f -iname "*.sh" -exec chmod +x {} \;', Make scripts executable]
-    - [./scripts/installation/default.sh, Installing Default]

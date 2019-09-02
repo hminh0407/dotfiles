@@ -1,0 +1,11 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ['wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -', Add dbeaver key]
+    - ['echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list', Add dbeaver repo]
+    - ['sudo apt update && apt-fast install --no-install-recommends -y dbeaver-ce', Install dbeaver]
+
