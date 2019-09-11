@@ -1,0 +1,13 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+- shell:
+    - ['apt-fast install --no-install-recommends -y silversearcher-ag', Installing Silver Searcher]
+- link:
+    ~/.ignore : ag/ignore

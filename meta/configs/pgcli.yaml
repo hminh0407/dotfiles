@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ['apt-fast install --no-install-recommends -y libpq-dev', Installing Required Library]
+    - ['sudo pip install pgcli', Installing Postgres CLI]
+

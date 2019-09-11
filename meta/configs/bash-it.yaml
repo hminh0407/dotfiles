@@ -1,0 +1,15 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+- shell:
+    - [chmod +x ./scripts/installation/bash-it.sh, Pre-Installing bash-it]
+    - [./scripts/installation/bash-it.sh, Installing bash-it]
+- link:
+    ~/.bashrc : bash/bashrc
+    ~/.bash_it/custom : bash/custom
