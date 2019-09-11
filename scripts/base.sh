@@ -33,5 +33,6 @@ gitClone () {
     local repo="${1}"
     local localRepo="${2}"
 
-    git clone ${repo} ${localRepo} 2> /dev/null || git -C ${localRepo} pull;
+    # git clone ${repo} ${localRepo} 2> /dev/null || git -C ${localRepo} pull
+    git -C ${localRepo} pull || git clone --depth=1 ${repo} ${localRepo}
 }

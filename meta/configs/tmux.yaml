@@ -2,6 +2,7 @@
     link:
         create: true
         relink: true
+        force : true
     shell:
         stdin : true
         stdout: true
@@ -13,6 +14,6 @@
     - [./scripts/installation/tmux.sh, Installing TMUX]
 
 - link:
-    ~/.tmux.conf : tmux/tmux.conf
-    ~/.tmuxp     : tmux/tmuxp
+    ~/.tmux.conf           : tmux/tmux.conf
+    ~/.tmuxp/dotfiles.yaml : tmux/tmuxp/dotfiles.yaml
 

@@ -98,13 +98,15 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'janko-m/vim-test'            " unit test tool
   Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
+  " Plug 'lvht/tagbar-markdown'        " (NOT WORK) plugin to support markdown https://github.com/lvht/tagbar-markdown
+  Plug 'tenfyzhong/tagbar-markdown.vim' "support tagbar with markdown https://github.com/tenfyzhong/tagbar-markdown.vim
   Plug 'w0rp/ale'                    " syntax linting
   Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
 
   " Http Client
   " Plug 'baverman/vial'               " framework to write plugins in Python
   " Plug 'baverman/vial-http'          " (currently the best), rest client for vim https://github.com/baverman/vial-http
-  Plug 'diepm/vim-rest-console'      " http client for vim https://github.com/diepm/vim-rest-console
+  " Plug 'diepm/vim-rest-console'      " http client for vim https://github.com/diepm/vim-rest-console
 
   " Plantuml
   Plug 'aklt/plantuml-syntax'             " syntax support for plantuml
@@ -114,9 +116,6 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Snippets
   Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim
   Plug 'prabirshrestha/asyncomplete-neosnippet.vim' " integration with asyncomplete
-
-  " Tag
-  Plug 'ludovicchabant/vim-gutentags' " auto generate tag files
 " }
 
 " Initialize plugin system

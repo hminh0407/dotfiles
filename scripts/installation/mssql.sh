@@ -20,9 +20,9 @@ install () {
 }
 
 main () {
-    # if ! isServiceExist ms; then
+    if ! isServiceExist mssql-cli; then
         install
-    # fi
+    fi
 }
 
 main

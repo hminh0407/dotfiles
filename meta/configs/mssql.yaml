@@ -3,7 +3,13 @@
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create: true
+        relink: true
+        force : true
 
 - shell:
     - [./scripts/installation/mssql.sh, Installing MSSQL CMD Tools]
 
+- link:
+    ~/.mssqlclirc : mssql/mssqlclirc

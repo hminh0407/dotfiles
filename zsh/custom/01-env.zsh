@@ -16,7 +16,7 @@ export VISUAL='vim'
 
 # zfz
 # use ag (the_silver_searcher) as default search
-export FZF_DEFAULT_COMMAND="ag -g ''"
+export FZF_DEFAULT_COMMAND="ag --path-to-ignore ~/.ignore --hidden -l -g ''"
 # set color theme
 # Press F1 to open the file with less without leaving fzf
 # Press CTRL-Y to copy the line to clipboard without leaving fzf (requires xclip)
