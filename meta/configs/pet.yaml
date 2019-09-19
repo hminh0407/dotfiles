@@ -6,4 +6,6 @@
 
 - shell:
     - [./scripts/installation/pet.sh, Installing Pet]
+    # after copy config file, access_token should be manually updated
+    - ["yes | mkdir -p ~/.config/pet && cp -f pet/config.toml ~/.config/pet/config.toml", Setup Pet]
 

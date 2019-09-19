@@ -1,0 +1,8 @@
+# A utility for sending notifications, on demand and when commands finish https://github.com/dschep/ntfy
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+- shell:
+    - [./scripts/installation/ntfy.sh, Installing ntfy]

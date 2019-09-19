@@ -1,0 +1,10 @@
+# Install essential packages
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ['apt-fast install --no-install-recommends -y gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome', Installing gnome-utils]
+

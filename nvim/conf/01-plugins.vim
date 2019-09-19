@@ -95,13 +95,13 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Language support
   " autoformat: for js support, need to install some js packages `npm install -g js-beautify|prettier eslint`
   Plug 'Chiel92/vim-autoformat'      " auto format code
-  Plug 'janko-m/vim-test'            " unit test tool
-  Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux
+  " Plug 'janko-m/vim-test'            " unit test tool
+  " Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
   " Plug 'lvht/tagbar-markdown'        " (NOT WORK) plugin to support markdown https://github.com/lvht/tagbar-markdown
   Plug 'tenfyzhong/tagbar-markdown.vim' "support tagbar with markdown https://github.com/tenfyzhong/tagbar-markdown.vim
   Plug 'w0rp/ale'                    " syntax linting
-  Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
+  " Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
 
   " Http Client
   " Plug 'baverman/vial'               " framework to write plugins in Python

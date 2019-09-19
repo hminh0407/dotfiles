@@ -1,0 +1,18 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        sterr : true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+
+- shell:
+    - ["git -C ~/opt/kubectx pull || git clone --depth=1 --recursive https://github.com/ahmetb/kubectx ~/opt/kubectx", Installing kubectx]
+
+- link:
+    ~/bin/kubectx : ~/opt/kubectx/kubectx
+    ~/bin/kubens : ~/opt/kubectx/kubens
+

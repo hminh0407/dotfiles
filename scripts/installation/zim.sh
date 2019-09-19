@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+
+install () {
+    apt-fast install --no-install-recommends -y zsh
+    # Get prezto
+    gitClone https://github.com/zimfw/zimfw.git ${ZDOTDIR:-${HOME}}/.zim
+
+    # install plugin manager
+    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+
+    # # Backup zsh config if it exists
+    if [ -f ~/.zshrc ]; then
+           mv ~/.zshrc ~/.zshrc.backup
+    fi
+
+    # run this manually, not sure why but this ask for an
+    # internal prompt which cannot be detected by dotbot and make the script
+    # return as false
+    # chsh -s $(which zsh)
+}
+
+main () {
+    if ! isServiceExist zsh; then
+        install
+    fi
+}
+
+main

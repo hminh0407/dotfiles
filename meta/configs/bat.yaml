@@ -1,7 +1,0 @@
-- defaults:
-    shell:
-        stdin : true
-        stdout: true
-        quiet : false
-- shell:
-    - [./scripts/installation/bat.sh, Installing Bat]

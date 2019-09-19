@@ -1,9 +1,0 @@
-- defaults:
-    shell:
-        stdin : true
-        stdout: true
-        quiet : false
-
-- shell:
-    - [./scripts/installation/gui_general.sh, Installing General GUI Apps]
-

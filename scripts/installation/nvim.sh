@@ -4,16 +4,15 @@
 # LIBRARIES
 # =====================================================================================================================
 
-. $(dirname ${BASH_SOURCE[0]})/../base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
 
 # =====================================================================================================================
 # FUNCTION
 # =====================================================================================================================
 
 install () {
-    # sudo apt-add-repository -y ppa:neovim-ppa/stable
+    sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo apt-get update -y
-
     apt-fast install --no-install-recommends -y neovim python-neovim python3-neovim
 }
 

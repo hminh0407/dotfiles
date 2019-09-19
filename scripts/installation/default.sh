@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
 
 install () {
-    sudo add-apt-repository -y ppa:apt-fast/stable
-    sudo apt-get install -y --no-install-recommends apt-fast
+    /bin/bash -c "$(curl -sL https://git.io/vokNn)"
 
-    # install apt packages
-    apt-fast install --no-install-recommends -y                                  \
-        snapd gnome-tweak-tool gnome-shell-extensions network-manager-l2tp-gnome \
-        curl exuberant-ctags rename ncdu wget xclip tig                          \
-        python-pip python-dev python-setuptools libpq-dev
+    # install essential apt packages
+    apt-fast install --no-install-recommends -y \
+        snapd curl exuberant-ctags rename ncdu wget xclip undistract-me
 
     # create a folder to contain user specific cli execution files
     mkdir -p "${HOME}"/cli

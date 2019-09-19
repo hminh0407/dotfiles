@@ -1,0 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash, Installing nvm]
+

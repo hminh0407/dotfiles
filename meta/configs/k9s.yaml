@@ -1,0 +1,14 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        sterr : true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+
+- shell:
+    - [./scripts/installation/k9s.sh, Installing k9s]
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
 
 install () {
     sudo add-apt-repository -y ppa:teni-ime/ibus-teni

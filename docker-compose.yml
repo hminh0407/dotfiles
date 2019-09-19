@@ -1,0 +1,7 @@
+version: '3.2'
+services:
+  ubuntu: # create a container as an environment to test shell scripts
+    image: ubuntu:18.04
+    volumes:
+      - .:/dotfiles
+    command: "tail -f /var/log/bootstrap.log"

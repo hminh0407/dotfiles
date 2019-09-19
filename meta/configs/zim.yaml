@@ -1,0 +1,25 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create : true
+        relink : true
+        force  : true
+        # glob   : true
+
+- clean: ['~', '~/.bash' ,'~/.zsh']
+
+- shell:
+    - [./scripts/installation/zim.sh, Installing zimfw]
+
+- link:
+    ~/.zshrc        : zim/zshrc
+    ~/.zimrc        : zim/zimrc
+    ~/.zlogin       : zim/zlogin
+    ~/.bash/custom  : scripts/base # load base custom scripts that can be used for both bash and zsh env
+    ~/.zsh/custom   : zsh/custom # load zsh custom scripts
+    # ~/.bash/custom/ : scripts/base/* # load base custom scripts that can be used for both bash and zsh env
+    # ~/.zsh/custom/  : zsh/custom/* # load zsh custom scripts
+

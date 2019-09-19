@@ -12,44 +12,31 @@
 [alias]
     # list all git alias
     la = "!git config -l | grep alias | cut -c 7-"
-    # branches that are not tracked with remote
-    local-branches  = "!git fetch -p && git branch -vv | cut -c 3- | grep -v origin | awk '{ print $1 }'"
-    # all remote branches
-    remote-branches = "!git fetch -p && git branch -vv | cut -c 3- | grep origin | awk '{ print $1 }'"
-    # branch that has been removed from remote
-    gone-branches   = "!git fetch -p && git branch -vv | cut -c 3- | awk '/: gone]/{print $1}'"
 
     a = add
 
-    b = branch
+    br = branch
+    local-br  = "!git fetch -p && git branch -vv | cut -c 3- | grep -v origin | awk '{ print $1 }'"
+    remote-br = "!git fetch -p && git branch -vv | cut -c 3- | grep origin | awk '{ print $1 }'"
+    # branch that has been removed from remote
+    gone-br   = "!git fetch -p && git branch -vv | cut -c 3- | awk '/: gone]/{print $1}'"
     # delete both local and remote
-    bda = "!f() { \
+    delete-br = "!f() { \
         git push -d origin "$@"; \
         git branch -D "$@"; \
     }; f"
-    # delete local branch
-    bdl = branch -D
-    # remove all untracked local branch
-    bdl-untracked = "!git branch -D $(git local-branches)"
-    # delete remote branch
-    bdr = push origin -d
-    # pruning tracking branches then deleting the local ones that show they are "gone" in git branch -vv
-    bdr-gone = "!git branch -D $(git gone-branches)"
+    delete-local-br = branch -D
+    delete-untracked-local-br = "!git branch -D $(git local-branches)"
+    delete-gone-local-br = "!git branch -D $(git gone-branches)"
 
     # dry-run, only show what would be removed
-    cn = clean -n
+    clean-dry = clean -n
     # remove all untracked files and dir
-    cfd = clean -f -d
+    clean-untracked = clean -f -d
 
     cm = commit -m
 
     co = checkout
-    ; co = "!f() { \
-	; local branches branch \
-	; branches=$(git branch --all | grep -v HEAD) && \
-	; branch=$(echo "$branches" | fzf -d $(( 2 + $(wc -l <<< "$branches") )) +m) && \
-	; git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##") \
-    ; }; f"
     cob = checkout -b
 
     f = fetch origin -p

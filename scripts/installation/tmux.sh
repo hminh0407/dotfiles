@@ -4,33 +4,28 @@
 # LIBRARIES
 # =====================================================================================================================
 
-. $(dirname ${BASH_SOURCE[0]})/../base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
 
 # =====================================================================================================================
 # FUNCTION
 # =====================================================================================================================
 
 install () {
-    apt-fast install --no-install-recommends -y tmux
+    apt-fast install --no-install-recommends -y tmux python-pip
 
     # install tmux plugin manager
-    if cd ~/.tmux/plugins/tpm ; then
-        git -C ~/.tmux/plugins/tpm pull;
-    else
-        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-    fi
+    gitClone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
     # install plugins
     ~/.tmux/plugins/tpm/bin/install_plugins
     # install tmuxp & plugins
-    apt-fast install python3-pip
-    sudo pip3 install tmuxp
+    sudo pip install tmuxp
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 }
 
 main () {
-    if ! isServiceExist tmux; then
+    # if ! isServiceExist tmux; then
         install
-    fi
+    # fi
 }
 
 main

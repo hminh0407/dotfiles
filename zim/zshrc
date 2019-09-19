@@ -1,0 +1,51 @@
+#
+# User configuration sourced by interactive shells
+#
+
+# zmodload zsh/zprof # turn this on to profile zsh function https://htr3n.github.io/2018/07/faster-zsh/
+# zprof # run this after shell start to show profiling info
+
+# Zim init
+# =======================================
+# Define zim location
+export ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+
+# Start zim
+[[ -s ${ZIM_HOME}/init.zsh ]] && source ${ZIM_HOME}/init.zsh
+
+# zplug - plugin manager
+# =======================================
+source ~/.zplug/init.zsh
+
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+zplug "zsh-users/zsh-autosuggestions"
+zplug "djui/alias-tips" # remind you to use the alias https://github.com/djui/alias-tips
+# zplug 'wfxr/forgit' # (not necessary) a very cool fuzzy search implement for git command https://github.com/wfxr/forgit
+# zplug "chrissicool/zsh-bash", from:oh-my-zsh # does not work
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+  printf "Install? [y/N]: "
+  if read -q; then
+    echo; zplug install
+  fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load
+
+# Load custom modules
+# =======================================
+function sourceBash {
+    # It is not easy to source bash file with bash_source using zsh properly. Check below stackoverflow link
+    # https://unix.stackexchange.com/questions/479092/how-can-i-source-a-bash-script-containing-bash-source-from-zsh-shell/837256
+    local bashSource="${1}"
+    . <(awk '{gsub(/\${BASH_SOURCE\[0\]}/, FILENAME); print}' $bashSource)
+}
+
+# Source bash custom config
+# sourceBash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
+sourceBash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
+# Source zsh custom config
+source ${ZDOTDIR:-${HOME}}/.zsh/custom/index.zsh
+

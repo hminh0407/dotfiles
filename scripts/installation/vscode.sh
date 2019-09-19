@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
 
 install () {
     apt-fast install software-properties-common apt-transport-https wget

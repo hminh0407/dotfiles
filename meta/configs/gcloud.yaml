@@ -5,4 +5,5 @@
         quiet : false
 
 - shell:
-    - [./scripts/installation/gcloud.sh, Installing Google Cloud]
+    - [snap install google-cloud-sdk --classic, Installing gcloud-sdk]
+    - [gcloud init, Initializing gcloud-sdk]

@@ -6,10 +6,10 @@ windows:
   start_directory: .dotfiles
   panes:
     -
-- window_name: wiki
+- window_name: wiki/personal
   focus: true
   layout: tiled
-  start_directory: vimwiki
+  start_directory: vimwiki/personal
   panes:
     -
       focus: true

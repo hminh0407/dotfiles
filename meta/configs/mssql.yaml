@@ -9,7 +9,10 @@
         force : true
 
 - shell:
-    - [./scripts/installation/mssql.sh, Installing MSSQL CMD Tools]
+    - ['curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -', Import public repo key]
+    - ['curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list', Register MS Ubuntu Repo]
+    - ['sudo apt-get update && apt-fast install --no-install-recommends -y libodbc1 unixodbc mssql-tools', Installing MSSQL CMD Tools]
+    - ['sudo pip install mssql-cli', Installing MSSQL CLI Tools]
 
 - link:
     ~/.mssqlclirc : mssql/mssqlclirc

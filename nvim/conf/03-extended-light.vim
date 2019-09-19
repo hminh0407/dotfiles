@@ -229,12 +229,23 @@
         map <F1>   :NERDTreeFind<CR>
     " }
 
+    " TrimEmptyLine {
+        fun! TrimEmptyLine()
+           let _s=@/
+           let l = line(".")
+           let c = col(".")
+           :g/^\n\{1,}/d
+           let @/=_s
+           call cursor(l, c)
+        endfun
+    " }
+
     " TrimWhitespace {
-    fun! TrimWhitespace()
-        let l:save = winsaveview()
-        keeppatterns %s/\s\+$//e
-        call winrestview(l:save)
-    endfun
+        fun! TrimWhitespace()
+            let l:save = winsaveview()
+            keeppatterns %s/\s\+$//e
+            call winrestview(l:save)
+        endfun
     " }
 
     " Wiki {

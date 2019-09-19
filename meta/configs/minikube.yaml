@@ -1,0 +1,13 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    # Required kubectl to be installed first
+    - [curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64, Downloading minikube]
+    - [chmod +x minikube && sudo install minikube /usr/local/bin, Installing minikube]
+    - [sudo chown -R $USER $HOME/.minikube && sudo chgrp -R $USER $HOME/.minikube, Update ownership]
+      # Run this after installation to setup minikube: sudo minikube start --vm-driver=none
+
