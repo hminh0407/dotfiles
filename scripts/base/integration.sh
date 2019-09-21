@@ -4,12 +4,11 @@
 NTFY="$(ntfy shell-integration)"
 
 MSSQL_TOOLS="/opt/mssql-tools/bin"
-CUSTOM_BIN="${HOME}/bin"
 
 EXPORT_PATH="${PATH}"
 
 SOURCE_MODULES=()
-PATH_MODULES=($CUSTOM_BIN $MSSQL_TOOLS)
+PATH_MODULES=($CUSTOM_SCRIPTS $MSSQL_TOOLS)
 
 # Load integration modules
 for module in "$SOURCE_MODULES[@]"; do [ -f $module ] && source $module; done
@@ -21,4 +20,5 @@ done
 export PATH=$EXPORT_PATH
 
 # eval modules need to be checked carefully
-isServiceExist ntfy && eval $NTFY
+_is_service_exist ntfy && eval $NTFY
+

@@ -4,7 +4,7 @@
 # LIBRARIES
 # =====================================================================================================================
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 # =====================================================================================================================
 # FUNCTION
@@ -39,7 +39,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist docker; then
+    if ! _is_service_exist docker; then
         install
     fi
 }

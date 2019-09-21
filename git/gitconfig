@@ -11,6 +11,7 @@
     prompt = false
 [alias]
     # list all git alias
+    # do not use "_" when naming alias
     la = "!git config -l | grep alias | cut -c 7-"
 
     a = add
@@ -21,13 +22,15 @@
     # branch that has been removed from remote
     gone-br   = "!git fetch -p && git branch -vv | cut -c 3- | awk '/: gone]/{print $1}'"
     # delete both local and remote
-    delete-br = "!f() { \
+    dbr = "!f() { \
         git push -d origin "$@"; \
         git branch -D "$@"; \
     }; f"
-    delete-local-br = branch -D
-    delete-untracked-local-br = "!git branch -D $(git local-branches)"
-    delete-gone-local-br = "!git branch -D $(git gone-branches)"
+    d-local-br = branch -D
+    d-untracked-local-br = "!git branch -D $(git local-branches)"
+    d-gone-local-br = "!git branch -D $(git gone-branches)"
+
+    cl = clone --recursive --depth=1
 
     # dry-run, only show what would be removed
     clean-dry = clean -n
@@ -56,6 +59,18 @@
     rs3 = reset HEAD~3
 
     st = status
-    sl = stash list
-    sa = stash apply
-    ss = stash save
+
+    sh = stash list
+    apsh = stash apply
+    ssh = stash save
+
+    # submodule
+    sm = submodule
+    ism = submodule init
+    asm = submodule add -f
+    usm = submodule update --init --recursive
+    dsm = "!f() { \
+        git submodule deinit -f "$@"; \
+        git rm -f "$@"; \
+        rm -rf ".git/modules/$@"; \
+    }; f"

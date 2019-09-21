@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     local version="0.8.4"
@@ -15,14 +15,16 @@ install () {
     tar xvf $tmpDir/$file -C $tmpDir # extract
 
     sudo mv $tmpDir/$binFile $localBin # move binary file to /usr/bin
+}
 
+cleanup() {
     sudo rm -r $tmpDir # remove tmp dir
-
 }
 
 main () {
-    if ! isServiceExist k9s; then
+    if ! _is_service_exist k9s; then
         install
+        cleanup
     fi
 }
 

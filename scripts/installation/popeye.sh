@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     local version="0.4.3"
@@ -21,7 +21,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist popeye; then
+    if ! _is_service_exist popeye; then
         install
     fi
 }

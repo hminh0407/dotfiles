@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     # using nvm to manage node and npm
@@ -10,7 +10,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist node; then
+    if ! _is_service_exist node; then
         install
     fi
 }

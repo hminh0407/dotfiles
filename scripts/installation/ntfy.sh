@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     apt-fast install --no-install-recommends -y python-dbus
@@ -8,7 +8,7 @@ install () {
 }
 
 main() {
-    if ! isServiceExist ntfy; then
+    if ! _is_service_exist ntfy; then
         install
     fi
 }

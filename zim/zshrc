@@ -2,9 +2,6 @@
 # User configuration sourced by interactive shells
 #
 
-# zmodload zsh/zprof # turn this on to profile zsh function https://htr3n.github.io/2018/07/faster-zsh/
-# zprof # run this after shell start to show profiling info
-
 # Zim init
 # =======================================
 # Define zim location
@@ -19,7 +16,8 @@ source ~/.zplug/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-autosuggestions"
-zplug "djui/alias-tips" # remind you to use the alias https://github.com/djui/alias-tips
+# zplug "djui/alias-tips" # remind you to use the alias https://github.com/djui/alias-tips # (not necessary) as we have fzf to list all the alias
+# zplug "lukechilds/zsh-nvm"
 # zplug 'wfxr/forgit' # (not necessary) a very cool fuzzy search implement for git command https://github.com/wfxr/forgit
 # zplug "chrissicool/zsh-bash", from:oh-my-zsh # does not work
 
@@ -36,7 +34,7 @@ zplug load
 
 # Load custom modules
 # =======================================
-function sourceBash {
+function _source_bash {
     # It is not easy to source bash file with bash_source using zsh properly. Check below stackoverflow link
     # https://unix.stackexchange.com/questions/479092/how-can-i-source-a-bash-script-containing-bash-source-from-zsh-shell/837256
     local bashSource="${1}"
@@ -44,8 +42,44 @@ function sourceBash {
 }
 
 # Source bash custom config
-# sourceBash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
-sourceBash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
+_source_bash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
 # Source zsh custom config
 source ${ZDOTDIR:-${HOME}}/.zsh/custom/index.zsh
+# Source project specifi config
+local project_scripts=()
+while IFS= read -r -d $'\0' script; do
+    project_scripts+=("$script")
+done < <(find "$PROJECT_CUSTOM_SCRIPTS" -maxdepth 1 -type f -print0 2> /dev/null)
 
+if [[ ${#project_scripts[@]} -ne 0 ]]; then
+    for script in "${project_scripts[@]}"; do
+      source "$script"
+    done
+fi
+
+# Speed up zsh load time
+# =======================================
+zmodload zsh/zprof # uncomment this to profile zsh function https://htr3n.github.io/2018/07/faster-zsh/
+# zprof # run this after shell start to show profiling info
+# https://htr3n.github.io/2018/07/faster-zsh/#lazy-loading
+# https://gist.github.com/ctechols/ca1035271ad134841284
+# https://carlosbecker.com/posts/speeding-up-zsh
+
+autoload -Uz compinit
+# autoload -Uz nvm
+
+case $SYSTEM in
+  Darwin)
+    if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
+      compinit;
+    else
+      compinit -C;
+    fi
+    ;;
+  Linux)
+    # not yet match GNU & BSD stat
+  ;;
+esac
+
+# Hook for desk activation
+[ -n "$DESK_ENV" ] && source "$DESK_ENV" || true

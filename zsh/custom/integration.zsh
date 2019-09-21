@@ -13,4 +13,5 @@ SOURCE_MODULES=($FZF)
 for module in "$SOURCE_MODULES[@]"; do [ -f $module ] && source $module; done
 
 # eval modules need to be checked carefully
-isServiceExist direnv && eval $DIRENV
+_is_service_exist direnv && eval $DIRENV
+

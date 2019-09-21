@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     apt-fast install software-properties-common apt-transport-https wget
@@ -10,7 +10,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist code ; then
+    if ! _is_service_exist code ; then
         install
     fi
 }

@@ -30,6 +30,9 @@
         nnoremap <C-J> 3<C-E>
         " Scroll up 5 characters
         nnoremap <C-K> 3<C-Y>
+
+        " auto remove trailing whitespace
+        autocmd BufWritePre * %s/\s\+$//e
     " }
 
     " Folding {
@@ -229,25 +232,6 @@
         map <F1>   :NERDTreeFind<CR>
     " }
 
-    " TrimEmptyLine {
-        fun! TrimEmptyLine()
-           let _s=@/
-           let l = line(".")
-           let c = col(".")
-           :g/^\n\{1,}/d
-           let @/=_s
-           call cursor(l, c)
-        endfun
-    " }
-
-    " TrimWhitespace {
-        fun! TrimWhitespace()
-            let l:save = winsaveview()
-            keeppatterns %s/\s\+$//e
-            call winrestview(l:save)
-        endfun
-    " }
-
     " Wiki {
         " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
         " let g:vimwiki_global_ext = 0
@@ -279,5 +263,33 @@
             return 1
           endif
         endfunction
+    " }
+" }
+
+" UtilFunctions {
+    " TrimEmptyLine {
+        fun! TrimEmptyLine()
+           let _s=@/
+           let l = line(".")
+           let c = col(".")
+           :g/^\n\{1,}/d
+           let @/=_s
+           call cursor(l, c)
+        endfun
+    " }
+
+    " TrimWhitespace {
+        fun! TrimWhitespace()
+            let l:save = winsaveview()
+            keeppatterns %s/\s\+$//e
+            call winrestview(l:save)
+        endfun
+    " }
+
+    " TrimToOnceSpace {
+        " If there more than one space trim it to one space
+        fun! TrimToOnceSpace()
+            %s/ \{2,}/ /g
+        endfun
     " }
 " }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     sudo add-apt-repository -y ppa:webupd8team/java
@@ -12,7 +12,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist java; then
+    if ! _is_service_exist java; then
         install
     fi
 }

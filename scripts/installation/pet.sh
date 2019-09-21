@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 declare PET_VERSION="0.3.6"
 declare DOTFILES="${HOME}/dotfiles"
@@ -11,7 +11,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist pet; then
+    if ! _is_service_exist pet; then
         install
     fi
 }

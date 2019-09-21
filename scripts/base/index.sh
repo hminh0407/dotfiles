@@ -1,14 +1,12 @@
 # Define custom scripts
-LOG="$(dirname ${BASH_SOURCE[0]})/log.sh"
-BASE="$(dirname ${BASH_SOURCE[0]})/base.sh"
-ENV="$(dirname ${BASH_SOURCE[0]})/env.sh"
-INTEGRATION="$(dirname ${BASH_SOURCE[0]})/integration.sh"
+readonly ALIASES="$(dirname ${BASH_SOURCE[0]})/aliases.sh"
+readonly ENV="$(dirname ${BASH_SOURCE[0]})/env.sh"
+readonly FUNTIONS="$(dirname ${BASH_SOURCE[0]})/functions.sh"
+readonly INTEGRATION="$(dirname ${BASH_SOURCE[0]})/integration.sh"
+readonly LOG="$(dirname ${BASH_SOURCE[0]})/log.sh"
 
-# aliases
-ALIASES="$(dirname ${BASH_SOURCE[0]})/aliases.sh"
-GCLOUD_ALIASES="$(dirname ${BASH_SOURCE[0]})/gcloud_aliases.sh"
-
-SCRIPTS=($LOG $BASE $ENV $INTEGRATION $ALIASES $GCLOUD_ALIASES)
+# script order matter
+readonly SCRIPTS=($ENV $FUNTIONS $ALIASES $INTEGRATION $LOG)
 
 # Load custom scripts
 for script in "$SCRIPTS[@]"; do [ -f $script ] && source $script; done

@@ -22,7 +22,6 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'ap/vim-buftabline'       " display buffer files in tabline, very handy
   Plug 'svermeulen/vim-easyclip' " simplify clipboard functionality for vim
   Plug 'itchyny/calendar.vim'    " https://github.com/itchyny/calendar.vim
-  Plug 'vimwiki/vimwiki'         " https://github.com/vimwiki/vimwiki
   Plug 'rhysd/clever-f.vim'      " https://github.com/rhysd/clever-f.vim
   Plug 'tpope/vim-unimpaired'    " add tone of pair features https://github.com/tpope/vim-unimpaired
                                  " mostly used for '[u' to encode and ']u' to decode url
@@ -32,7 +31,8 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'airblade/vim-gitgutter' " show git diff for each line
 
   " Markdown
-  Plug 'tyru/open-browser.vim' " open uri with system browser, work well with previm and vimwiki
+  Plug 'vimwiki/vimwiki', { 'for': 'markdown' } " https://github.com/vimwiki/vimwiki
+  Plug 'tyru/open-browser.vim', { 'for': 'markdown' } " open uri with system browser, work well with previm and vimwiki
   " Plug 'kannokanno/previm'    , {'for': 'markdown'} " support mermaid (https://github.com/previm/previm)
   " does not need this plugin as folding has already been supported in vim-wiki
   " Plug 'nelstrom/vim-markdown-folding' , {'for': 'markdown'} " folding support for markdown
@@ -45,7 +45,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'google/vim-searchindex'          " show search information for each search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'                " fzf and vim integration
-  Plug 'dyng/ctrlsf.vim'                 " search and replace plugin that support editing result
+  Plug 'dyng/ctrlsf.vim', { 'on': ['<Plug>CtrlSFPrompt', '<Plug>CtrlSFVwordPath', 'CtrlSFToggle'] } " search and replace plugin that support editing result
 
   " Theme
   Plug 'morhetz/gruvbox'               " Retro color scheme for vim
@@ -58,8 +58,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'wellle/targets.vim'             " extend text objects support
   Plug 'jiangmiao/auto-pairs'           " auto close pairs (quotes, parens, brackets ...)
   Plug 'ntpeters/vim-better-whitespace' " hightlight trailing whitespace
-  " Plug 'tpope/vim-abolish'              " Abbreviation & Coercion (can convert case. ex:snake,camel,mix,dot...)
-  Plug 'chiedo/vim-case-convert'        " can convert case. ex:snake,camel,mix,dot... (https://github.com/chiedo/vim-case-convert)
+  Plug 'tpope/vim-abolish'              " Abbreviation & Coercion (crc-camel, crs-snake)
   Plug 'sk1418/HowMuch'                 " calculator for visual selection
 
 " }
@@ -99,9 +98,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Plug 'christoomey/vim-tmux-runner' " vim-test strategy for integration with tmux
   Plug 'majutsushi/tagbar'           " display tag of current file in a window
   " Plug 'lvht/tagbar-markdown'        " (NOT WORK) plugin to support markdown https://github.com/lvht/tagbar-markdown
-  Plug 'tenfyzhong/tagbar-markdown.vim' "support tagbar with markdown https://github.com/tenfyzhong/tagbar-markdown.vim
+  " Plug 'tenfyzhong/tagbar-markdown.vim' , { 'for': 'markdown' } "support tagbar with markdown https://github.com/tenfyzhong/tagbar-markdown.vim
   Plug 'w0rp/ale'                    " syntax linting
   " Plug 'dbeniamine/cheat.sh-vim'     " query for code example with cheat.sh engine https://github.com/chubin/cheat.sh
+  Plug 'chr4/nginx.vim', { 'for': 'conf' } " support nginx syntax (https://github.com/chr4/nginx.vim)
 
   " Http Client
   " Plug 'baverman/vial'               " framework to write plugins in Python
@@ -109,7 +109,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Plug 'diepm/vim-rest-console'      " http client for vim https://github.com/diepm/vim-rest-console
 
   " Plantuml
-  Plug 'aklt/plantuml-syntax'             " syntax support for plantuml
+  Plug 'aklt/plantuml-syntax', { 'for': 'uml' } " syntax support for plantuml
   " It's better to open with chromium and plantuml support extensions
   " Plug 'weirongxu/plantuml-previewer.vim' " preview plantuml in browser https://github.com/weirongxu/plantuml-previewer.vim
 

@@ -95,4 +95,8 @@ options     head
 	echo "${0:TARGET}" 1>&2
 	exit 1
 
+# Custom snippets
+snippet var_validate_required
+	[ -z "\$1" ] && { echo  "missing argument"; exit 1; }
+
 # vim: set noexpandtab :

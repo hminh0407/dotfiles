@@ -4,7 +4,7 @@
 # LIBRARIES
 # =====================================================================================================================
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 # =====================================================================================================================
 # FUNCTION
@@ -27,7 +27,7 @@ config () {
 }
 
 main() {
-    if ! isServiceExist nvim; then
+    if ! _is_service_exist nvim; then
         install
         config
     fi

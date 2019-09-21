@@ -1,45 +1,45 @@
 ############################################### KEY BINDING ###########################################################
 # Key Binding {
   # alias {
-    alias-widget() LBUFFER+=$(falias | join-lines)
-    zle -N alias-widget
-    bindkey '^f^l' alias-widget
+    alias_widget() LBUFFER+=$(falias | join_lines)
+    zle -N alias_widget
+    bindkey '^f^l' alias_widget
   # }
 
   # Buku {
-    # fbrowser-bookmark-widget() LBUFFER+=$(fbrowser-bookmark | join-lines)
-    # zle -N fbrowser-bookmark-widget
-    # bindkey '^f^b' fbrowser-bookmark-widget
+    # fbrowser-bookmark_widget() LBUFFER+=$(fbrowser-bookmark | join_lines)
+    # zle -N fbrowser-bookmark_widget
+    # bindkey '^f^b' fbrowser-bookmark_widget
   # }
 
   # Docker Container {
-    fdocker_container-widget() LBUFFER+=$(fdocker_container | join-lines)
-    zle -N fdocker_container-widget
-    bindkey '^d^p' fdocker_container-widget
+    fdocker_container_widget() LBUFFER+=$(fdocker_container | join_lines)
+    zle -N fdocker_container_widget
+    bindkey '^d^p' fdocker_container_widget
   # }
 
   # Docker Image {
-    fdocker_images-widget() LBUFFER+=$(fdocker_images | join-lines)
-    zle -N fdocker_images-widget
-    bindkey '^d^i' fdocker_images-widget
+    fdocker_images_widget() LBUFFER+=$(fdocker_images | join_lines)
+    zle -N fdocker_images_widget
+    bindkey '^d^i' fdocker_images_widget
   # }
 
   # Git Aliases {
-    fgit_a-widget() LBUFFER+=$(fgit_a | join-lines)
-    zle -N fgit_a-widget
-    bindkey '^g^l' fgit_a-widget
+    fgit_a_widget() LBUFFER+=$(fgit_a | join_lines)
+    zle -N fgit_a_widget
+    bindkey '^g^l' fgit_a_widget
   # }
 
   # Git Branch {
-    fgit_b-widget() LBUFFER+=$(fgit_b | join-lines)
-    zle -N fgit_b-widget
-    bindkey '^g^b' fgit_b-widget
+    fgit_b_widget() LBUFFER+=$(fgit_b | join_lines)
+    zle -N fgit_b_widget
+    bindkey '^g^b' fgit_b_widget
   # }
 
   # Git Tag {
-    fgit_t-widget() LBUFFER+=$(fgit_t | join-lines)
-    zle -N fgit_t-widget
-    bindkey '^g^t' fgit_t-widget
+    fgit_t_widget() LBUFFER+=$(fgit_t | join_lines)
+    zle -N fgit_t_widget
+    bindkey '^g^t' fgit_t_widget
   # }
 
 # }
@@ -108,7 +108,7 @@
     git rev-parse HEAD > /dev/null 2>&1
   }
 
-  join-lines() { # join multi-line output from fzf
+  join_lines() { # join multi-line output from fzf
     local item
     while read item; do
       echo -n "${(q)item} "

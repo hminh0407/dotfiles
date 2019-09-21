@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/base.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
 install () {
     /bin/bash -c "$(curl -sL https://git.io/vokNn)"
@@ -14,7 +14,7 @@ install () {
 }
 
 main () {
-    if ! isServiceExist apt-fast; then
+    if ! _is_service_exist apt-fast; then
         install
     fi
 }
