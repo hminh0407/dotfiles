@@ -1,9 +1,14 @@
-# Define custom scripts
-FZF="$(dirname ${(%):-%N})/fzf.zsh"
-PET="$(dirname ${(%):-%N})/pet.zsh"
-INTEGRATION="$(dirname ${(%):-%N})/integration.zsh"
+main() {
 
-SCRIPTS=($FZF $PET $INTEGRATION)
+  # Define custom scripts
+  declare FZF="$(dirname ${(%):-%N})/fzf.zsh"
+  declare PET="$(dirname ${(%):-%N})/pet.zsh"
+  declare INTEGRATION="$(dirname ${(%):-%N})/integration.zsh"
 
-# Load custom scripts
-for script in "$SCRIPTS[@]"; do [ -f $script ] && source $script; done
+  declare SCRIPTS=($FZF $PET $INTEGRATION)
+
+  # Load custom scripts
+  for script in "$SCRIPTS[@]"; do [ -f $script ] && source $script; done
+}
+
+main
