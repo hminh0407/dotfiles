@@ -1,0 +1,12 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+
+- shell:
+    - [curl https://raw.githubusercontent.com/jamesob/desk/master/desk > "$CUSTOM_SCRIPTS"/desk && chmod +x "$CUSTOM_SCRIPTS"/desk, Installing direnv]
+

@@ -1,13 +1,20 @@
+# This file act as a reference and template for creating new configuration
+
 # Make sure that the files use the correct indentation or else install script will fail
 # Check for more detail: https://github.com/anishathalye/dotbot/issues/8
+# Below show the default config and its description
 - defaults:
-    link:
-        create: true
-        relink: true
     shell:
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create   : false # When true, create parent directories to the link as needed
+        relink   : false # Removes the old target if it's a symlink
+        force    : false # Force removes the old target, file or folder, and forces a new link
+        relative : false # Use a relative path to the source when creating the symlink
+        glob     : true  # Treat a * character as a wildcard, and perform link operations on all of those matches
+        if       : "some_command" # Execute this in your $SHELL and only link if it is successful
 
 # Clean commands specify directories that should be checked for dead symbolic links.
 # These dead links are removed automatically.
