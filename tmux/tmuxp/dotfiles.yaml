@@ -3,20 +3,15 @@ start_directory: "${HOME}"
 windows:
 - window_name: dotfiles
   layout: tiled
-  start_directory: .dotfiles
+  start_directory: dotfiles
   panes:
     -
+      focus: true
 - window_name: wiki-personal
   focus: true
   layout: tiled
   start_directory: vimwiki/personal
-  panes:
-    -
-      focus: true
 - window_name: wiki-development
   focus: true
   layout: tiled
   start_directory: vimwiki/development
-  panes:
-    -
-      focus: true

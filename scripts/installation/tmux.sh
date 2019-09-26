@@ -18,14 +18,14 @@ install () {
     # install plugins
     ~/.tmux/plugins/tpm/bin/install_plugins
     # install tmuxp & plugins
-    sudo pip install tmuxp
+    sudo pip install wheel tmuxp
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 }
 
 main () {
-    # if ! _is_service_exist tmux; then
+    if ! _is_service_exist tmux; then
         install
-    # fi
+    fi
 }
 
 main

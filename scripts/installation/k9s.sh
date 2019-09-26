@@ -15,6 +15,8 @@ install () {
     tar xvf $tmpDir/$file -C $tmpDir # extract
 
     sudo mv $tmpDir/$binFile $localBin # move binary file to /usr/bin
+
+    rm -r $tmpDir # remove tmp dir
 }
 
 cleanup() {

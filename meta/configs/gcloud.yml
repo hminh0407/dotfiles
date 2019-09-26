@@ -1,0 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/gcloud.sh, Installing gcloud]
+      # after installation run: gcloud init to setup gcloud environment (dotbot does not support interactive command)

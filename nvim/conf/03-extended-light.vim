@@ -23,13 +23,17 @@
 
         set nowrap " do not wrap long line
         " Scroll 20 characters to the right
-        nnoremap <C-L> 20zl
+        " nnoremap <C-L> 20zl
+        nnoremap <C-M> 20zl
         " Scroll 20
-        nnoremap <C-H> 20zh
+        " nnoremap <C-H> 20zh
+        nnoremap <C-Q> 20zh
         " Scroll down 5 characters
-        nnoremap <C-J> 3<C-E>
+        " nnoremap <C-J> 3<C-E>
+        nnoremap <C-e> 3<C-e>
         " Scroll up 5 characters
-        nnoremap <C-K> 3<C-Y>
+        " nnoremap <C-K> 3<C-Y>
+        nnoremap <C-y> 3<C-Y>
 
         " auto remove trailing whitespace
         autocmd BufWritePre * %s/\s\+$//e
@@ -232,6 +236,12 @@
         map <F1>   :NERDTreeFind<CR>
     " }
 
+    " Sneak {
+        map f <Plug>Sneak_s
+        map F <Plug>Sneak_S
+        let g:sneak#s_next = 1
+    " }
+
     " Wiki {
         " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
         " let g:vimwiki_global_ext = 0
@@ -288,7 +298,7 @@
 
     " TrimToOnceSpace {
         " If there more than one space trim it to one space
-        fun! TrimToOnceSpace()
+        fun! TrimToOneSpace()
             %s/ \{2,}/ /g
         endfun
     " }

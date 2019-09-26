@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        sterr : true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/popeye.sh, Installing popeye]
+

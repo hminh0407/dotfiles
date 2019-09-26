@@ -22,9 +22,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'ap/vim-buftabline'       " display buffer files in tabline, very handy
   Plug 'svermeulen/vim-easyclip' " simplify clipboard functionality for vim
   Plug 'itchyny/calendar.vim'    " https://github.com/itchyny/calendar.vim
-  Plug 'rhysd/clever-f.vim'      " https://github.com/rhysd/clever-f.vim
+  Plug 'justinmk/vim-sneak'      " enhance vim f search motion https://github.com/justinmk/vim-sneak
   Plug 'tpope/vim-unimpaired'    " add tone of pair features https://github.com/tpope/vim-unimpaired
                                  " mostly used for '[u' to encode and ']u' to decode url
+  Plug 'christoomey/vim-tmux-navigator' " tmux integration https://github.com/christoomey/vim-tmux-navigator
 
   " Git
   Plug 'tpope/vim-fugitive'     " extend git support

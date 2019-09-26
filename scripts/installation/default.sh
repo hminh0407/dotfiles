@@ -2,7 +2,7 @@
 
 . $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
 
-install () {
+install() {
     /bin/bash -c "$(curl -sL https://git.io/vokNn)"
 
     # install essential apt packages
@@ -10,10 +10,10 @@ install () {
         snapd curl exuberant-ctags rename ncdu wget xclip undistract-me
 
     # create a folder to contain user specific cli execution files
-    mkdir -p "${HOME}"/cli
+    mkdir -p "${HOME}"/bin
 }
 
-main () {
+main() {
     if ! _is_service_exist apt-fast; then
         install
     fi

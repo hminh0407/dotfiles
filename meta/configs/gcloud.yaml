@@ -1,9 +1,0 @@
-- defaults:
-    shell:
-        stdin : true
-        stdout: true
-        quiet : false
-
-- shell:
-    - [snap install google-cloud-sdk --classic, Installing gcloud-sdk]
-    - [gcloud init, Initializing gcloud-sdk]

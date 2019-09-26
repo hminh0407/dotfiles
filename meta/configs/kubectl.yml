@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/kubectl.sh, Installing kubectl]
+      # after install kubectl, config need to be setup either via yml file or with gcloud command
+

@@ -1,8 +1,6 @@
 # Store all package that need to be integrated with shell
 
 # Define modules to integrate with
-NTFY="$(ntfy shell-integration)"
-
 MSSQL_TOOLS="/opt/mssql-tools/bin"
 
 EXPORT_PATH="${PATH}"
@@ -20,5 +18,13 @@ done
 export PATH=$EXPORT_PATH
 
 # eval modules need to be checked carefully
-_is_service_exist ntfy && eval $NTFY
+_is_service_exist ntfy && eval "$(ntfy shell-integration)"
+
+cd() { # overide cd to add more hook
+    builtin cd "$@"
+    if _is_service_exist tmux && _is_in_tmux; then
+        # check if is in tmux session, then rename current window to current dir name
+        tmux rename-window $(basename $(pwd))
+    fi
+}
 

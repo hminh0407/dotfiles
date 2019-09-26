@@ -1,0 +1,14 @@
+# A fast & lightweight configurable terminal
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+- shell:
+    - ['sudo add-apt-repository ppa:mmstick76/alacritty && sudo apt-get update && apt-fast apt-fast install --no-install-recommends -y alacritty', Installing Alacritty Terminal]
+- link:
+    ~/.conf/alacritty/alacritty.yml : alacritty/alacritty.yml

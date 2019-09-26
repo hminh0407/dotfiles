@@ -11,10 +11,27 @@ Use [dotbot](https://github.com/anishathalye/dotbot) dotfiles manager to manage 
 
 # Usage
 
-Install with profile (check meta/profiles for supported profile)
+It is recommend to fork this project
+
+## Docker
+There's a docker setup to try out the tools and config.
+* run `docker-compose up -d ubuntu` to start the container
+* run `docker exec -it dotfiles_ubuntu_1 /bin/sh` to start a new shell in container
+* then you can try to run the install script and play with the config
+
+## Install Module
+
+`./install-profile default` should be run (to make sure that script files are granted the proper permission to run)
+* before the first installation
+* and everytime a new install script is added
+
+Install with profile (install group of modules together: check meta/profiles for supported profile)
 `./install-profile <profile> [<configs...>]` `Ex: ./install-profile terminal`
 
-Install single package (check meta/configs for supported package)
+Install single package (install 1 module at a time: check meta/configs for supported package)
 `./install-standalone <configs...>` `Ex: ./install-profile nvim`
-Note that for any new configuration with sh file scripts installation, command
-`./install-profile default` must be run to set up execution permission for script files
+
+## Custom script & binary
+
+* Custom zsh files will be automatically available if placed in `~/.project/`
+* Custom binary files will be automatically available if placed in `~/bin`
