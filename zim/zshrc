@@ -82,4 +82,4 @@ case $SYSTEM in
 esac
 
 # Hook for desk activation
-[ -n "$DESK_ENV" ] && source "$DESK_ENV" || true
+# [ -n "$DESK_ENV" ] && source "$DESK_ENV" || true

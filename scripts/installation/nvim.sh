@@ -13,7 +13,7 @@
 install () {
     sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo apt-get update -y
-    apt-fast install --no-install-recommends -y neovim python-neovim python3-neovim
+    apt-fast install --no-install-recommends -y neovim python-neovim python3-neovim ripgrep
 }
 
 config () {
@@ -24,6 +24,12 @@ config () {
     sudo update-alternatives --config vim
     sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
     sudo update-alternatives --config editor
+}
+
+plugin() {
+    # setup environment for vim plugins
+    apt-fast install --no-install-recommends -y nodejs npm
+    sudo npm install -g bash-language-server
 }
 
 main() {

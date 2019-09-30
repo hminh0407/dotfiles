@@ -15,9 +15,7 @@ install () {
            mv ~/.zshrc ~/.zshrc.backup
     fi
 
-    # run this manually, not sure why but this ask for an
-    # internal prompt which cannot be detected by dotbot and make the script
-    # return as false
+    # run this manually as dotbot does not support interactive command
     # chsh -s $(which zsh)
 }
 

@@ -12,24 +12,25 @@
 # example: ping='ping -c 4'
 
 # common_alias {
-# alias ag="ag-i"
-alias chown='chown --preserve-root' # safety
-alias chmod='chmod --preserve-root' # safety
 alias chgrp='chgrp --preserve-root' # safety
+alias chmod='chmod --preserve-root' # safety
+alias chown='chown --preserve-root' # safety
 alias cpu='lscpu'
 alias evi="vi -u NONE"
 alias mv="mv -v"
-alias nowtime='date +"%T"'
-alias nowdate='date +"%d-%m-%Y"'
+alias m="man"
 alias now='date +"%d-%m-%Y %T"'
+alias nowdate='date +"%d-%m-%Y"'
+alias nowtime='date +"%T"'
 alias open="xdg-open"
 alias path='echo -e ${PATH//:/\\n}'
 alias ping='ping -c 4'
 alias ram="sudo lshw -short -C memory"
-alias rn="rename" # ex: rename 's/{searchString}/{replaceString}/' *.sh
-alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
+alias t="tldr -p linux"
 alias wget="wget -c"
 
+alias rn="rename" # ex: rename 's/{searchString}/{replaceString}/' *.sh
+alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
 alias untargz="tar -xvzf"
 alias targz="tar -cvzf"
 
@@ -39,10 +40,15 @@ if _is_service_exist "apt-fast"; then
 fi
 
 if _is_service_exist "fzf"; then
-    alias ports='netstat -tulanp | fzf'
+    alias fs="_fzf_find_in_files" # search text in files
+    alias fm="_fzf_man"
+    alias ft="_fzf_tldr"
+        # ex: fs abc - search all files contain 'abc'
+        # ex: fs abc vim - search all '.vim' files contain 'abc'
+    alias ports="netstat -tulanp | fzf"
     alias psaux="ps aux | fzf"
 else
-    alias ports='netstat -tulanp'
+    alias ports="netstat -tulanp"
     alias psaux="ps aux"
 fi
 

@@ -8,4 +8,6 @@
 - shell:
     - ['find . -type f -iname "*.sh" -exec chmod +x {} \;', Make scripts executable]
     - [./scripts/installation/default.sh, Installing Default]
+- link:
+      ~/.ignore: ignore
 

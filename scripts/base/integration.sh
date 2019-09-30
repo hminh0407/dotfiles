@@ -20,7 +20,7 @@ export PATH=$EXPORT_PATH
 # eval modules need to be checked carefully
 _is_service_exist ntfy && eval "$(ntfy shell-integration)"
 
-cd() { # overide cd to add more hook
+cd() { # override cd to add more hook
     builtin cd "$@"
     if _is_service_exist tmux && _is_in_tmux; then
         # check if is in tmux session, then rename current window to current dir name
@@ -28,3 +28,10 @@ cd() { # overide cd to add more hook
     fi
 }
 
+rg() { # override rg to invoke pager as default
+    if [ -t 1 ]; then
+        command rg -p "$@" | less -RFX
+    else
+        command rg "$@"
+    fi
+}

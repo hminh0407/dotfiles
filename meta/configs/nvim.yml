@@ -17,4 +17,5 @@
     ~/.config/nvim/after/ftplugin : nvim/ftplugin
     ~/.config/nvim/snippets       : nvim/snippets
     ~/.ctags                      : nvim/conf/ctags
+    ~/.config/TabNine/tabnine_config.json : nvim/coc/extensions/tabnine_config.json
 

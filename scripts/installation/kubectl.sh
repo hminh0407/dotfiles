@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 . $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
+. $(dirname ${BASH_SOURCE[0]})/../base/env.sh
 
 declare VERSION="v1.13.10" # https://github.com/kubernetes/kubectl/issues/675
-declare CUSTOM_BIN="$HOME/bin"
 
 install () {
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$VERSION/bin/linux/amd64/kubectl
-    chmod +x ./kubectl && mv ./kubectl $CUSTOM_BIN/kubectl
+    chmod +x ./kubectl && mv ./kubectl $CUSTOM_SCRIPTS/kubectl
 }
 
 config() { # auto config kubectl (required gcloud init first)

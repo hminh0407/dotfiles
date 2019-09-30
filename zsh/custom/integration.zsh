@@ -5,10 +5,11 @@
 # Define modules to integrate with
 DESK="$DESK_ENV"
 FZF="$HOME/.fzf.zsh"
+# POWERLINE="/usr/share/powerline/bindings/zsh/powerline.zsh"
 
 # DIRENV="$(direnv hook zsh)"
 
-SOURCE_MODULES=($FZF)
+SOURCE_MODULES=($FZF $DESK)
 
 # Load integration modules
 for module in "$SOURCE_MODULES[@]"; do [ -f $module ] && source $module; done

@@ -7,7 +7,7 @@ install() {
 
     # install essential apt packages
     apt-fast install --no-install-recommends -y \
-        snapd curl exuberant-ctags rename ncdu wget xclip undistract-me
+        snapd curl exuberant-ctags rename ncdu wget xclip powerline fonts-powerline
 
     # create a folder to contain user specific cli execution files
     mkdir -p "${HOME}"/bin

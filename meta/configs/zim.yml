@@ -7,9 +7,8 @@
         create : true
         relink : true
         force  : true
-        # glob   : true
 
-- clean: ['~', '~/.bash' ,'~/.zsh']
+- clean: ['~', '~/.bash/custom' ,'~/.zsh/custom']
 
 - shell:
     - [./scripts/installation/zim.sh, Installing zimfw]
@@ -20,6 +19,4 @@
     ~/.zlogin       : zim/zlogin
     ~/.bash/custom  : scripts/base # load base custom scripts that can be used for both bash and zsh env
     ~/.zsh/custom   : zsh/custom # load zsh custom scripts
-    # ~/.bash/custom/ : scripts/base/* # load base custom scripts that can be used for both bash and zsh env
-    # ~/.zsh/custom/  : zsh/custom/* # load zsh custom scripts
 

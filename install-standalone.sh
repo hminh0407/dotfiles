@@ -16,7 +16,7 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASE_DIR}"
 git -C "${META_DIR}/${DOTBOT_DIR}" submodule sync --quiet --recursive
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 
 for config in ${@}; do
 	configFile="$(mktemp)" ; echo -e "$(<"${BASE_DIR}/${META_DIR}/${BASE_CONFIG}${CONFIG_SUFFIX}")\n$(<"${BASE_DIR}/${META_DIR}/${CONFIG_DIR}/${config}${CONFIG_SUFFIX}")" > "$configFile"

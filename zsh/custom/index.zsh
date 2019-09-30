@@ -1,9 +1,8 @@
 # Define custom scripts
-FZF="$(dirname ${(%):-%N})/fzf.zsh"
-PET="$(dirname ${(%):-%N})/pet.zsh"
+KEYBIND="$(dirname ${(%):-%N})/keybind.zsh"
 INTEGRATION="$(dirname ${(%):-%N})/integration.zsh"
 
-SCRIPTS=($FZF $PET $INTEGRATION)
+SCRIPTS=($KEYBIND $INTEGRATION)
 
 # Load custom scripts
 for script in "$SCRIPTS[@]"; do [ -f $script ] && source $script; done
