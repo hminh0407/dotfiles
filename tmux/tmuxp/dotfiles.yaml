@@ -10,8 +10,8 @@ windows:
 - window_name: wiki-personal
   focus: true
   layout: tiled
-  start_directory: vimwiki/personal
-- window_name: wiki-development
-  focus: true
-  layout: tiled
-  start_directory: vimwiki/development
+  start_directory: wiki/personal
+# - window_name: wiki-development
+#   focus: true
+#   layout: tiled
+#   start_directory: wiki/development

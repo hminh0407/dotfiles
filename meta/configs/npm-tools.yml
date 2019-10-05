@@ -1,0 +1,8 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ["sudo npm install -g fx", Installing NPM Tools]

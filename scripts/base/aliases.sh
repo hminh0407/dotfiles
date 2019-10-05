@@ -34,6 +34,10 @@ alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
 alias untargz="tar -xvzf"
 alias targz="tar -cvzf"
 
+alias dot="cd ~/dotfiles"
+alias wp="cd ~/wiki/personal"
+alias wd="cd ~/wiki/development"
+
 if _is_service_exist "apt-fast"; then
     alias apt-get="apt-fast"
     alias aptins="apt-fast install --no-install-recommends -y"
@@ -132,6 +136,7 @@ fi
 if _is_service_exist "tmuxp"; then
     alias tmp="tmuxp"
     alias tmpl="tmuxp load"
+    alias tmpk="tmux kill-session -t"
 fi
 # }
 

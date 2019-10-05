@@ -10,6 +10,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # pager
 # export PAGER='vim -'
+export PAGER='less -RFX'
 
 # tmux
 export DISABLE_AUTO_TITLE='true' # tmuxp integration

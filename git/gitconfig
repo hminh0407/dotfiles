@@ -59,9 +59,9 @@
 
     st = status
 
-    sh = stash list
-    apsh = stash apply
-    ssh = stash save
+    s = stash list
+    sa = stash apply
+    ss = stash save
 
     # submodule
     sm = submodule
