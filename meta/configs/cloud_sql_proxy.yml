@@ -1,0 +1,8 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/cloud_sql_proxy.sh, Installing Cloud SQL Provxy]
