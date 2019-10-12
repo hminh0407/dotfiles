@@ -132,6 +132,14 @@ if _is_service_exist gcloud; then
         fi
     }
 
+    _gcloud_deployment() { # list of gcloud compute instances and describe selected instance if possible
+        if _is_service_exist fzf; then
+            gcloud deployment-manager deployments list | fzf | awk '{print $1}' | xargs -r gcloud compute instances describe
+        else
+            gcloud deployment instances list && return
+        fi
+    }
+
     _gcloud_project() { # get current project
         gcloud config get-value project -q
     }
@@ -208,3 +216,36 @@ _git_get_latest_release() { # get the latest release tag from github
         sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
 }
 # }
+
+# httpie {
+if _is_service_exist http; then
+    _get() {
+        echo $@
+        _http GET "$@"
+    }
+
+    _post_form() {
+        _http --form POST "$@"
+    }
+
+    _http()  {
+        # note that below are just cosmetic for output format, should be set only
+        # when running isolated request, do not use it for scripting
+        local result_type="${result_type:-body}" # should default body
+        local pretty="${pretty:-none}" # should default none
+        local pager="${pager:-''}"
+
+        local less_pager="less -RFX"
+        local vim_pager="vi -c 'set ft=json | set foldlevel=9' -" # should only use with result_type=body & pretty=format
+
+        if [ "$pager" = "vim" ]; then
+            http --$result_type --pretty="format" "$@" | eval "$vim_pager" # has to use eval or else vim does not work as expected
+        elif [ "$pager" = "less" ]; then
+            http --$result_type --pretty="all" "$@" | $less_pager
+        else
+            http --verbose --$result_type --pretty=$pretty "$@"
+        fi
+    }
+fi
+# }
+

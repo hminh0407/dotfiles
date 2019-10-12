@@ -23,8 +23,4 @@ export VISUAL='vim'
 # zfz
 # export FZF_DEFAULT_COMMAND="ag --path-to-ignore ~/.ignore --hidden -l -g ''" # use ag (the_silver_searcher) as default search
 export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search
-# set color theme
-# Press F1 to open the file with less without leaving fzf
-# Press CTRL-Y to copy the line to clipboard without leaving fzf (requires xclip)
-export FZF_DEFAULT_OPTS="--color=16 --bind 'f1:execute(less -f {}),ctrl-y:execute-silent(echo {} | xclip -selection c)'"
-
+export FZF_DEFAULT_OPTS="--height 80% --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'"

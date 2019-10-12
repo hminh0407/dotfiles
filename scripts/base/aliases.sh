@@ -28,6 +28,9 @@ alias ping='ping -c 4'
 alias ram="sudo lshw -short -C memory"
 alias t="tldr -p linux"
 alias wget="wget -c"
+alias vii="vim -c ':PlugInstall!'"
+alias viu="vim -c ':PlugUpdate!' "
+alias vin="vim -u NONE"
 
 alias rn="rename" # ex: rename 's/{searchString}/{replaceString}/' *.sh
 alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
@@ -40,7 +43,8 @@ alias wd="cd ~/wiki/development"
 
 if _is_service_exist "apt-fast"; then
     alias apt-get="apt-fast"
-    alias aptins="apt-fast install --no-install-recommends -y"
+    alias apti="apt-fast install --no-install-recommends -y"
+    alias aptu="apt-fast update"
 fi
 
 if _is_service_exist "fzf"; then
@@ -95,7 +99,7 @@ fi
 
 # gcloud {
 if _is_service_exist "gcloud"; then
-    alias gcompute="_gcloud_compute"
+    alias gvm="_gcloud_compute"
     alias gsql="_gcloud_sql"
     alias gservice="_gcloud_service"
 fi
@@ -114,6 +118,14 @@ fi
 # git {
 if _is_service_exist "git"; then
     alias g="git"
+fi
+# }
+
+# supervisor {
+if _is_service_exist supervisorctl; then
+    alias s="sudo supervisorctl"
+    alias sr="sudo supervisorctl reload"
+    alias ss="sudo supervisorctl status"
 fi
 # }
 
