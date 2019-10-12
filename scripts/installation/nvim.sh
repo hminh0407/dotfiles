@@ -30,13 +30,22 @@ plugin() {
     # setup environment for vim plugins
     apt-fast install --no-install-recommends -y nodejs npm
     sudo npm install -g bash-language-server
+
+    # make vimwiki works with tagbar
+    local location="$CUSTOM_SCRIPTS/vwtags.py"
+    local link="https://raw.githubusercontent.com/vimwiki/utils/master/vwtags.py"
+
+    wget -qO $location $link && chmod +x $location
 }
 
 main() {
     if ! _is_service_exist nvim; then
         install
         config
+        plugin
     fi
+    plugin
 }
 
 main
+

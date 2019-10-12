@@ -178,9 +178,6 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Custom commands & functions
 
-" NOTE: preview mode seem to have problem with latest linux kernel https://github.com/junegunn/fzf/issues/1486.
-" Until it is fixed use normal mode instead
-"
 " Files command with preview window
 " command! -bang -nargs=? -complete=dir Files
 "   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:70%'), <bang>0)
@@ -239,7 +236,9 @@ inoremap <C-F><C-T> <Esc>:CtrlSFToggle<CR>
 " Specifies command(s) to use to list files for which tags should be generated,
 " instead of recursively examining all files within the project root
 " let g:gutentags_file_list_command = 'ag -l' " ag ignore files in .gitignore and .ignore
-let g:gutentags_file_list_command = 'rg -l' " rg ignore files in .gitignore and .ignore
+let g:gutentags_file_list_command = 'rg --files' " rg ignore files in .gitignore and .ignore
+let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor", ".git", "node_modules", "*.vim/bundle/*", "*.csv"]
+" let g:gutentags_trace = 1
 " }
 
 " HowMuch {
@@ -272,6 +271,18 @@ let g:sneak#s_next = 1
 
 " Tagbar {
 nmap <F7> :TagbarToggle<CR>
+let g:tagbar_autoclose=1 " Only open Tagbar when you want to jump to a specific tag and have it close automatically once you have selected one
+
+" integrate vimwiki with tagbar plugin
+let g:tagbar_type_vimwiki = {
+          \   'ctagstype':'vimwiki'
+          \ , 'kinds':['h:header']
+          \ , 'sro':'&&&'
+          \ , 'kind2scope':{'h':'header'}
+          \ , 'sort':0
+          \ , 'ctagsbin':'~/bin/vwtags.py'
+          \ , 'ctagsargs': 'markdown'
+          \ }
 " }
 
 " Test {

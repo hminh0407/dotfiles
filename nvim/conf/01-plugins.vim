@@ -33,8 +33,8 @@ Plug 'tpope/vim-fugitive'     " extend git support
 Plug 'airblade/vim-gitgutter' " show git diff for each line
 
 " Markdown
-Plug 'vimwiki/vimwiki', { 'for': 'markdown' } " https://github.com/vimwiki/vimwiki
-Plug 'tyru/open-browser.vim', { 'for': 'markdown' } " open uri with system browser, work well with previm and vimwiki
+Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
+" Plug 'tyru/open-browser.vim', { 'for': 'markdown' } " open uri with system browser, work well with previm and vimwiki
 
 " Search
 Plug 'google/vim-searchindex'          " show search information for each search

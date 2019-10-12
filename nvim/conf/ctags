@@ -1,11 +1,11 @@
-# Basic options
+
 --recurse=yes
 --tag-relative=yes
-# language specific
---python-kinds=-i # exclude python tag for import and variable
-# exclude
+
+--python-kinds=-i
+
 --exclude=.git
---exclude=target       # java build folder
+--exclude=target
 --exclude=build
 --exclude=dist
 --exclude=.hg
@@ -29,7 +29,7 @@
 --exclude=cscope.\*
 --exclude=\*.tar.\*
 
-# markdown
 --langdef=markdown
 --langmap=markdown:.md
---regex-markdown=/^#[ \t](.*$)/\1/h,heading,headings/
+--regex-markdown=/^#+[ \t](.*$)/\1/h,heading,headings/
+
