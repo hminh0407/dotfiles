@@ -1,0 +1,30 @@
+{
+    "coc.source.emoji.enable": true,
+    "coc.source.emoji.filetypes": [
+        "markdown",
+        "vimwiki"
+    ],
+    "eslint.autoFixOnSave": true,
+    "eslint.run": "onSave",
+    "eslint.filetypes": [
+        "javascript",
+        "typescript",
+        "typescriptreact",
+        "javascriptreact"
+    ],
+    "yaml.format.enable": true,
+    "languageserver": {
+        "bash": {
+            "command": "bash-language-server",
+            "args": [
+                "start"
+            ],
+            "filetypes": [
+                "sh"
+            ],
+            "ignoredRootPaths": [
+                "~"
+            ]
+        }
+    }
+}

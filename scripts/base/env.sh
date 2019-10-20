@@ -17,7 +17,7 @@ export DISABLE_AUTO_TITLE='true' # tmuxp integration
 
 # vim
 export EDITOR='vim'
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 export VISUAL='vim'
 
 # zfz

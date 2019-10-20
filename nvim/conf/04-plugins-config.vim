@@ -1,9 +1,16 @@
-" Calendar {
+" Asterisk {{
+map *  <Plug>(asterisk-z*)
+map #  <Plug>(asterisk-z#)
+map g* <Plug>(asterisk-gz*)
+map g# <Plug>(asterisk-gz#)
+" }}
+
+" Calendar {{
 let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
-" }
+" }}
 
-" Cutclass & Yoink {
+" Cutclass & Yoink {{
 " keep the x key as default (move)
 " nnoremap x d
 " xnoremap x d
@@ -11,16 +18,17 @@ let g:calendar_google_task = 1
 " nnoremap X D
 
 " Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
-let g:yoinkIncludeDeleteOperations=1
-" }
+" let g:yoinkIncludeDeleteOperations=1
+" }}
 
 if executable('node') && executable('npm') " use coc if possible
-    " Coc {
+    " Coc {{
     let g:coc_global_extensions = [
                 \  'coc-tabnine',
                 \  'coc-eslint', 'coc-tsserver',
                 \  'coc-yaml',
-                \  'coc-json'
+                \  'coc-json',
+                \  'coc-emoji'
                 \]
     " Use `:Format` to format current buffer
     command! -nargs=0 Format :call CocAction('format')
@@ -65,14 +73,14 @@ if executable('node') && executable('npm') " use coc if possible
                 \   'currentfunction': 'CocCurrentFunction'
                 \ },
                 \ }
-    " }
+    " }}
 else
-    " Ale
+    " Ale {{
     " Fix file with prettier then eslint
     let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
-    " }
+    " }}
 
-    " Asyncomplete {
+    " Asyncomplete {{
     " buffer complete
     silent! call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
                 \ 'name': 'buffer',
@@ -106,9 +114,9 @@ else
     imap <C-B> <Plug>(asyncomplete_force_refresh)
     " remove duplicate
     let g:asyncomplete_remove_duplicates = 1
-    " }
+    " }}
 
-    " Neosnippet {
+    " Neosnippet {{
     imap <C-K> <Plug>(neosnippet_expand_or_jump)
     smap <C-K> <Plug>(neosnippet_expand_or_jump)
     xmap <C-K> <Plug>(neosnippet_expand_target)
@@ -120,10 +128,10 @@ else
 
     " Use custom snippets
     let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
-    " }
+    " }}
 endif
 
-" Fzf {
+" Fzf {{
 " fuzzy search all files in root directory
 map <C-P>      :Files!<cr>
 " fuzzy search all history
@@ -136,6 +144,8 @@ map <C-F><C-C> :Command!<cr>
 map <C-F><C-E> :Buffers<cr>
 " fuzzy search lines in buffer
 map <C-F><C-L> :Lines<cr>
+" fuzzy search tags
+map <C-F><C-T> :Tags<cr>
 " fuzzy search tag in current file
 map <C-F><C-O> :BTags<cr>
 " fuzzy search files in parent directory of current file
@@ -202,22 +212,22 @@ command! FZFMru call fzf#run({
             \  'sink':    'e',
             \  'options': '-m -x +s',
             \  'down':    '41%'})
-" }
+" }}
 
-" Easy Align {
+" Easy Align {{
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-" }
+" }}
 
-" EditorConfig {
+" EditorConfig {{
 " make sure that it works well with vim fugitive and avoid loading EditorConfig
 " for any remote files over ssh
 let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
-" }
+" }}
 
-" CtrlSF {
+" CtrlSF {{
 " let g:ctrlsf_search_mode = 'async'
 " disable builtin ctrl-f key from vim to avoid conflict
 " map <C-F> <Nop>
@@ -227,49 +237,56 @@ nmap     <C-F><C-F> <Plug>CtrlSFPrompt
 " Input :CtrlSF foo in command line where foo is the current visual selected word
 vmap     <C-F><C-F> <Plug>CtrlSFVwordPath
 " Toggle search result
-nnoremap <C-F><C-T> :CtrlSFToggle<CR>
-inoremap <C-F><C-T> <Esc>:CtrlSFToggle<CR>
-" }
+nnoremap <C-F><C-G> :CtrlSFToggle<CR>
+inoremap <C-F><C-G> <Esc>:CtrlSFToggle<CR>
+" }}
 
-" Gutentags {
+" Gutentags {{
 "
 " Specifies command(s) to use to list files for which tags should be generated,
 " instead of recursively examining all files within the project root
 " let g:gutentags_file_list_command = 'ag -l' " ag ignore files in .gitignore and .ignore
 let g:gutentags_file_list_command = 'rg --files' " rg ignore files in .gitignore and .ignore
 let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor", ".git", "node_modules", "*.vim/bundle/*", "*.csv"]
+let g:gutentags_add_default_project_roots = 0
+    " by default gutentags will automatically seek for project root folder which contain `root markers`` like `.git` `.hg`
+    " setting this option to prevent that behavior
 " let g:gutentags_trace = 1
-" }
+" }}
 
-" HowMuch {
+" HowMuch {{
 " sum values of a column and display result in an addional row
 vmap <leader><leader>cs <Plug>AutoCalcReplaceWithSum
 " calculate math formular and append result after '='
 vmap <leader>ce <Plug>AutoCalcAppendWithEq
-" }
+" }}
 
-" Maximize {
+" Markdown Preview {{
+nmap <F5> <Plug>MarkdownPreview
+" }}
+
+" Maximize {{
 let g:maximizer_set_default_mapping = 2
 let g:maximizer_set_mapping_with_bang = 1
-" }
+" }}
 
-" Nerdtree {
+" Nerdtree {{
 let NERDTreeMinimalUI = 1       " disable `Press ? for help`
 let NERDTreeDirArrows = 1       " disable `Press ? for help`
 map <F1> :NERDTreeFind<CR>
 " close all other buffers. equipvalence to ':NERDTreeClose | w | %bd | e# | bd#'
 map <silent> <C-B><C-O> :NERDTreeClose <bar> w <bar> %bd <bar> e# <bar> bd#<CR>
-" }
+" }}
 
-" Sneak {
+" Sneak {{
 map f <Plug>Sneak_f
 map F <Plug>Sneak_F
 map s <Plug>Sneak_s
 map S <Plug>Sneak_S
 let g:sneak#s_next = 1
-" }
+" }}
 
-" Tagbar {
+" Tagbar {{
 nmap <F7> :TagbarToggle<CR>
 let g:tagbar_autoclose=1 " Only open Tagbar when you want to jump to a specific tag and have it close automatically once you have selected one
 
@@ -283,17 +300,17 @@ let g:tagbar_type_vimwiki = {
           \ , 'ctagsbin':'~/bin/vwtags.py'
           \ , 'ctagsargs': 'markdown'
           \ }
-" }
+" }}
 
-" Test {
+" Test {{
 " let test#strategy = "dispatch" " use quickfix window, not as good as vtr (async)
 " let test#strategy = "neoterm" " easily crash on Unbuntu (sync)
 " let test#strategy = "vimterminal" " use quickfix window, not like it (sync)
 " let test#strategy = "vimux" " could be the best but heavier than vtr (async)
 let test#strategy = "vtr" " seem to be the best solution (async)
-" }
+" }}
 
-" Wiki {
+" Wiki {{
 " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
 " let g:vimwiki_global_ext = 0
 let g:vimwiki_list_margin = 0
@@ -324,4 +341,4 @@ function! VimwikiLinkHandler(link)
         return 1
     endif
 endfunction
-" }
+" }}

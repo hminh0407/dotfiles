@@ -31,5 +31,6 @@
 
 --langdef=markdown
 --langmap=markdown:.md
+--regex-markdown=/^#[ \t](.*$)/\1/h1,heading,headings/
 --regex-markdown=/^@@(.*$)/\1/t,tag,tags/
 

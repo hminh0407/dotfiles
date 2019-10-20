@@ -1,4 +1,4 @@
-# utilities { # contain base functions for other scripts. Need to be in the first order
+# contain base functions for other scripts. Need to be in the first order
 _append_to_file_if_not_exist() {
     [ -z "$1" ] && { echo  "missed param 'line'"; exit 1; }
     [ -z "$2" ] && { echo  "missed param 'file'"; exit 1; }
@@ -30,9 +30,7 @@ _git_clone() {
     # git clone ${repo} ${localRepo} 2> /dev/null || git -C ${localRepo} pull
     git -C ${localRepo} pull || git clone --depth=1 --recursive ${repo} ${localRepo}
 }
-# }
 
-# desk {
 if _is_service_exist "desk"; then
     _desk() { # list all pre-defined desk and cd to selected desk if possible
         if _is_service_exist fzf; then
@@ -45,9 +43,7 @@ if _is_service_exist "desk"; then
         fi
     }
 fi
-# }
 
-# fzf {
 if _is_service_exist fzf; then
     _fzf_alias() { # show all alias
         alias | fzf | awk '{split($0,a,"="); print a[1]}'
@@ -120,9 +116,7 @@ if _is_service_exist fzf; then
         tldr -l | sed 1d | xargs -n 1 | fzf --ansi --preview 'tldr {} | head -100' | xargs -r tldr
     }
 fi
-# }
 
-# gcloud {
 if _is_service_exist gcloud; then
     _gcloud_compute() { # list of gcloud compute instances and describe selected instance if possible
         if _is_service_exist fzf; then
@@ -202,9 +196,7 @@ if _is_service_exist kubectl; then
         fi
     }
 fi
-# }
 
-# Git {
 _git_get_latest_release() { # get the latest release tag from github
     # Usage: _git_get_latest_release "creationix/nvm"
     # Output: v0.31.4
@@ -215,9 +207,7 @@ _git_get_latest_release() { # get the latest release tag from github
         grep '"tag_name":' |                                            # Get tag line
         sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
 }
-# }
 
-# httpie {
 if _is_service_exist http; then
     _get() {
         echo $@
@@ -247,5 +237,4 @@ if _is_service_exist http; then
         fi
     }
 fi
-# }
 

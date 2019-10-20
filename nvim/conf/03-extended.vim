@@ -1,5 +1,5 @@
-" Settings {
-" Appearance {
+" Settings {{
+" Appearance {{
 if exists('+termguicolors') " enable true color
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -18,9 +18,9 @@ set nu                             " show line number
 " set cursorline                     " highlight current line (impact performance)
 set splitbelow                     " split window below
 set splitright                     " split window to the right
-" }
+" }}
 
-" Buffer {
+" Buffer {{
 map <C-B><C-J> :bnext     <CR>
 map <C-B><C-K> :bprevious <CR>
 map <C-B><C-W> :bd        <CR>
@@ -40,11 +40,11 @@ nnoremap <C-e> 3<C-e>
 " nnoremap <C-K> 3<C-Y>
 nnoremap <C-y> 3<C-Y>
 
-" auto remove trailing whitespace
+" auto remove trailing whitespace on buffer write
 autocmd BufWritePre * %s/\s\+$//e
-" }
+" }}
 
-" Folding {
+" Folding {{
 " map folding za to space
 nmap <space> za
 " Code folding options
@@ -68,10 +68,10 @@ set foldmethod=syntax " fold based on language specific syntax
 let sh_fold_enabled=1         " sh
 let vimsyn_folding='af'       " Vim script
 let xml_syntax_folding=1      " XML
-" }
+" }}
 
-" Formatting {
-set colorcolumn=120
+" Formatting {{
+" set colorcolumn=120
 " Tab & Indentation
 " Line
 set tw=120                " line break on 120 characters
@@ -80,21 +80,28 @@ set clipboard=unnamedplus " place yanked text to global clipboard
 " the set paste setting disable some features and can mess up key
 " mapping, should not use it
 " set paste                 " Paste from window or from Vim
-" }
+" }}
 
-" Mapping {
-" increase number
+" Mapping {{
+nnoremap Y y$
+    " only yank to end of line not contain new line character
+
 map <A-a> <C-a>
-" decrease number
-map <A-x> <C-x>
-" join 2 lines without moving cursor
-:nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
-let g:BASH_Ctrl_j = 'off'
-" windo diff toggle
-nmap <silent> <F8> :call ToggleDiff()<CR>
-" }
+    " increase number
 
-" Performance Tweak {
+map <A-x> <C-x>
+    " decrease number
+
+:nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+    " join 2 lines without moving cursor
+
+let g:BASH_Ctrl_j = 'off'
+
+nmap <silent> <F8> :call ToggleDiff()<CR>
+    " windo diff toggle
+" }}
+
+" Performance Tweak {{
 " suggestion from https://stackoverflow.com/a/7187629
 set nocursorcolumn
 set nocursorline " seem to have a big impact on performance
@@ -104,13 +111,13 @@ syntax sync minlines=256
 " suggestion from https://superuser.com/a/302189
 set ttyfast " u got a fast terminal
 " set ttyscroll=5
-" }
+" }}
 
-" }
+" }}
 
-" UtilFunctions {
+" UtilFunctions {{
 
-" ToggleDiff {
+" ToggleDiff {{
 fun! ToggleDiff ()
     if (&diff)
         :windo diffof
@@ -118,9 +125,9 @@ fun! ToggleDiff ()
         :windo diffthis
     endif
 endfunction
-" }
+" }}
 
-" TrimEmptyLine {
+" TrimEmptyLine {{
 fun! TrimEmptyLine()
     let _s=@/
     let l = line(".")
@@ -129,20 +136,20 @@ fun! TrimEmptyLine()
     let @/=_s
     call cursor(l, c)
 endfun
-" }
+" }}
 
-" TrimWhitespace {
+" TrimWhitespace {{
 fun! TrimWhitespace()
     let l:save = winsaveview()
     keeppatterns %s/\s\+$//e
     call winrestview(l:save)
 endfun
-" }
+" }}
 
-" TrimToOnceSpace {
+" TrimToOnceSpace {{
 " If there more than one space trim it to one space
 fun! TrimToOneSpace()
     %s/ \{2,}/ /g
 endfun
-" }
-" }
+" }}
+" }}

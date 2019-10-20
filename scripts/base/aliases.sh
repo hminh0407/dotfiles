@@ -45,6 +45,7 @@ if _is_service_exist "apt-fast"; then
     alias apt-get="apt-fast"
     alias apti="apt-fast install --no-install-recommends -y"
     alias aptu="apt-fast update"
+    alias aptr="sudo apt purge"
 fi
 
 if _is_service_exist "fzf"; then
