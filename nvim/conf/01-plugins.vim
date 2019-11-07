@@ -13,7 +13,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Core {{
 " General
-" Plug 'tpope/vim-sensible'             " standard vim configuration
+" Plug 'tpope/vim-sensible'             " standard vim configuration (not neccessary for nvim)
 Plug '907th/vim-auto-save'            " autosave
 Plug 'szw/vim-maximizer'              " toggle maximizer for current pane
 Plug 'tpope/vim-repeat'               " repeat support for plugins
@@ -50,7 +50,7 @@ Plug 'itchyny/lightline.vim' " status line and tab line plugin
 
 " Text editor
 Plug 'mhinz/vim-startify'             " fancy start screen for vim
-" Plug 'scrooloose/nerdtree',   { 'on': ['NERDTreeToggle', 'NERDTreeFind', 'NERDTreeFromBookmark'] }
+Plug 'scrooloose/nerdtree',   { 'on': ['NERDTreeToggle', 'NERDTreeFind', 'NERDTreeFromBookmark'] }
 " Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeToggle', 'NERDTreeFind', 'NERDTreeFromBookmark'] }
 Plug 'editorconfig/editorconfig-vim'      " editorconfig plugin for vim https://github.com/editorconfig/editorconfig-vim
 Plug 'junegunn/vim-easy-align'            " align text
@@ -58,6 +58,7 @@ Plug 'tpope/vim-commentary'               " comment plugin
 Plug 'jiangmiao/auto-pairs'               " auto close pairs (quotes, parens, brackets ...)
 Plug 'rhysd/vim-grammarous' " https://github.com/rhysd/vim-grammarous
 Plug 'majutsushi/tagbar'           " display tag of current file in a window
+Plug 'chiedo/vim-case-convert' " https://github.com/chiedo/vim-case-convert
 " }}
 
 " Utilities

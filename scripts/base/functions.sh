@@ -21,6 +21,15 @@ _is_service_exist() {
     [ -x "$(command -v $service)" ]
 }
 
+_join_by() {
+    # join elements of array by a delimiter
+    local IFS="$1"; shift; echo "$*";
+    # example usages
+    # join_by , a "b c" d     #a,b c,d
+    # join_by / var local tmp #var/local/tmp
+    # join_by , "${FOO[@]}"   #a,b,c
+}
+
 # clone git if not exist, pull latest code if exist
 _git_clone() {
     [ -z "$1" ] && { echo "missed param 'repo'"; exit 1; }
@@ -119,11 +128,89 @@ fi
 
 if _is_service_exist gcloud; then
     _gcloud_compute() { # list of gcloud compute instances and describe selected instance if possible
+            local fields=(
+                'name'
+                'zone.basename()'
+                'machineType.basename()'
+                'scheduling.preemptible.yesno(yes=true, no='')'
+                'networkInterfaces[0].networkIP:label=INTERNAL_IP'
+                'networkInterfaces[0].accessConfigs[0].natIP:label=EXTERNAL_IP'
+                'status'
+                'labels.list()'
+            )
+            local format_str="table($(_join_by ',' ${fields[@]}))"
+
+            local filter="$1"
+
+            if [ -z $filter ]; then
+                gcloud compute instances list --format="$format_str"
+            else
+                gcloud compute instances list --format="$format_str" --filter="$filter"
+            fi
+    }
+
+    _gcloud_compute_display() {
         if _is_service_exist fzf; then
-            gcloud compute instances list | fzf | awk '{print $1}' | xargs -r gcloud compute instances describe
+            _gcloud_compute \
+                | fzf                                            \
+                | awk '{print $1}'                               \
+                | xargs -r gcloud compute instances describe
         else
             gcloud compute instances list && return
         fi
+    }
+
+    _gcloud_compute_name_filter_no_label() { # return name list of all instances that do not have a specific label
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+
+        local label="$1"
+
+        gcloud compute instances list --filter="-labels.${label}:*" --format="value(name)"
+    }
+
+    _gcloud_compute_name_filter_with_label() { # return list of all instances that have a specific label
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+
+        local label="$1"
+
+        gcloud compute instances list --filter="labels.${label}:*" --format="value(name)"
+    }
+
+    _gcloud_compute_add_label() { # a label to an instance
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$2" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$3" ] && { echo  "missing argument"; exit 1; }
+
+        local instance="$1"
+        local label_key="$2"
+        local label_value="$3"
+
+        gcloud compute instances add-labels "$instance" --labels="$label_key=$label_value"
+    }
+
+    _gcloud_compute_remove_label() { # remove a label from an instance
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$2" ] && { echo  "missing argument"; exit 1; }
+
+        local instance="$1"
+        local label_key="$2"
+
+        gcloud compute instances add-labels "$instance" --labels="$label_key"
+    }
+
+    _gloud_compute_add_label_instance_name() { # add label instance-name={instance-name} for all instances that do not have this label
+        local specific_instance="$1"
+
+        local label_key="instance-name"
+        local instances=( $(_gcloud_compute_name_filter_no_label $label_key) ) # list of instance name that do not have this label
+
+        for instance in ${instances[@]}; do
+            if [ -z $specific_instance ]; then
+                _gcloud_compute_add_label "$instance" $label_key "$instance"
+            elif [ $specific_instance = $instance ]; then
+                _gcloud_compute_add_label "$instance" $label_key "$instance"
+            fi
+        done
     }
 
     _gcloud_deployment() { # list of gcloud compute instances and describe selected instance if possible
@@ -160,41 +247,94 @@ if _is_service_exist gcloud; then
 fi
 
 if _is_service_exist kubectl; then
-    _kube_deployments() { # list of kubernetes deployment and describe selected item if possible
-        if _is_service_exist fzf; then
-            kubectl get deployment | fzf | awk '{print $1}' | xargs -r kubectl describe deployment
-        else
-            # kubectl get deployment --no-headers -o custom-columns=NAME:.metadata.name && return
-            kubectl get deployment && return
-        fi
+    _kube_get_list() {
+        local service="$1"
+        local mode="$2"
+
+        case "$mode" in
+            describe*) # describe the selected item
+                if ! _is_service_exist fzf; then echo "fzf is not exist, this mode is not supported" && return; fi
+
+                kubectl get $service | fzf | awk '{print $1}' | xargs -r kubectl describe $service
+                ;;
+            name*) # copy name of selected item to clipboard
+                if ! _is_service_exist fzf; then echo "fzf is not exist, this mode is not supported" && return; fi
+
+                kubectl get $service | fzf | awk '{print $1}' ORS='' | xclip -selection c
+                    # get list of items
+                    # select by fzf
+                    # get the value of 1 column and join lines (by default fzf will add an additional new line to selected item)
+                    # copy the selected item to clipboard
+                ;;
+            *)
+                kubectl get $service && return
+        esac
+    }
+
+    _kube_deployment() { # list of kubernetes deployment and describe selected item if possible
+        local mode="$1"
+
+        _kube_get_list "deployment" $mode
     }
 
     _kube_ingress() { # list of kubernetes deployment and describe selected item if possible
-        if _is_service_exist fzf; then
-            kubectl get ingress | fzf | awk '{print $1}' | xargs -r kubectl describe ingress
-        else
-            # kubectl get ingress --no-headers -o custom-columns=NAME:.metadata.name && return
-            ubectl get ingress && return
-        fi
+        local mode="$1"
+
+        _kube_get_list "ingress" $mode
     }
 
-    _kube_nodes() { # list of kubernetes nodes and describe selected item if possible
-        if _is_service_exist fzf; then
-            kubectl get node | fzf | awk '{print $1}' | xargs -r kubectl describe node
-        else
-            # kubectl get node --no-headers -o custom-columns=NAME:.metadata.name && return
-            kubectl get node && return
-        fi
+    _kube_node() { # list of kubernetes nodes and describe selected item if possible
+        local mode="$1"
+
+        _kube_get_list "node" $mode
     }
 
-    _kube_services() { # list all kubernetes services and describe selected service if possible
-        if _is_service_exist fzf; then
-            kubectl get services | fzf | awk '{print $1}' | xargs -r kubectl describe service
-        else
-            # kubectl get services --no-headers -o custom-columns=NAME:.metadata.name && return
-            kubectl get services && return
-        fi
+    _kube_pod() { # list of kubernetes nodes and describe selected item if possible
+        local mode="$1"
+
+        _kube_get_list "pod" $mode
     }
+
+    _kube_pod_usage () {
+        # bash function to track k8s pod usage
+        # example output
+        #
+        # NAMESPACE NAME             CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM
+        # default   canary-ams       0m               61Mi             100m          128Mi         <none>       1Gi
+        # default   canary-ams-react 0m               22Mi             100m          <none>        <none>       <none>
+
+        local namespace="${1:-default}"
+        local pod_defail_custom_columns=(
+            'NAMESPACE:.metadata.namespace'
+            'NAME:.metadata.name'
+            'REQUESTED_CPU:.spec.containers[*].resources.requests.cpu'
+            'REQUESTED_RAM:.spec.containers[*].resources.requests.memory'
+            'LIMITTED_CPU:.spec.containers[*].resources.limits.cpu'
+            'LIMITTED_RAM:.spec.containers[*].resources.limits.memory'
+            'NODE:.spec.nodeName'
+        )
+        local pod_defail_custom_columns_str=$(_join_by ',' ${pod_defail_custom_columns[@]})
+
+        local pod_usage="$(kubectl top pods --namespace=$namespace --no-headers | sort -k 1,1 -k 2,2)" # sort first column to make sure rows are consistent
+        local pod_detail="$(kubectl get pods --namespace=$namespace --no-headers -o custom-columns="$pod_defail_custom_columns_str" | sort -k 2,2)" # sort first column to make sure rows are consistent
+
+        local header="NAMESPACE NAME CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM NODE"
+        local data="$(join -1 1 -2 2 -o '2.1,2.2,1.2,1.3,2.3,2.4,2.5,2.6,2.7' <(echo $pod_usage) <(echo $pod_detail) | sort -n -k 4,4 -k 2,2)"
+            # join 2 data from $pod_usage and $pod_detail on pod_usage.column1 = pod_detail.column1
+            # order columns with -o
+            # use `sort -k 4,4 -k 2,2` to sort by the 4rd column (RAM_USAGE), 2nd column (NAME)
+
+        ( echo $header ; echo $data ) | column -t
+            # combine header and data
+            # use `column -t` to align column for pretty output
+    }
+
+    _kube_service() { # list all kubernetes services and describe selected service if possible
+        local mode="$1"
+
+        _kube_get_list "services" $mode
+    }
+
 fi
 
 _git_get_latest_release() { # get the latest release tag from github

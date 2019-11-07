@@ -23,4 +23,4 @@ export VISUAL='vim'
 # zfz
 # export FZF_DEFAULT_COMMAND="ag --path-to-ignore ~/.ignore --hidden -l -g ''" # use ag (the_silver_searcher) as default search
 export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search
-export FZF_DEFAULT_OPTS="--height 80% --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'"
+# export FZF_DEFAULT_OPTS="--height 80% --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'"

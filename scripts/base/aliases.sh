@@ -19,6 +19,7 @@ alias cpu='lscpu'
 alias evi="vi -u NONE"
 alias mv="mv -v"
 alias m="man"
+alias mk="mkdir"
 alias now='date +"%d-%m-%Y %T"'
 alias nowdate='date +"%d-%m-%Y"'
 alias nowtime='date +"%T"'
@@ -26,7 +27,8 @@ alias open="xdg-open"
 alias path='echo -e ${PATH//:/\\n}'
 alias ping='ping -c 4'
 alias ram="sudo lshw -short -C memory"
-alias t="tldr -p linux"
+alias t="touch"
+alias tl="tldr -p linux"
 alias wget="wget -c"
 alias vii="vim -c ':PlugInstall!'"
 alias viu="vim -c ':PlugUpdate!' "
@@ -100,19 +102,23 @@ fi
 
 # gcloud {
 if _is_service_exist "gcloud"; then
-    alias gvm="_gcloud_compute"
+    alias gcp="gcloud"
+    alias gcpc="_gcloud_compute"
+    alias gcpcs="_gcloud_compute_display"
     alias gsql="_gcloud_sql"
     alias gservice="_gcloud_service"
 fi
 if _is_service_exist "kubectl"; then
     alias k="kubectl"
-    alias ks="k9s"
+    alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
     alias kns="kubens" # switch namespace
-    alias kgd="_kube_deployments"
-    alias kgi="_kube_ingress"
-    alias kgn="_kube_nodes"
-    alias kgs="_kube_services"
+    alias kd="_kube_deployment"
+    alias ki="_kube_ingress"
+    alias kn="_kube_node"
+    alias kp="_kube_pod"
+    alias kpu="_kube_pod_usage"
+    alias ks="_kube_service"
 fi
 # }
 
