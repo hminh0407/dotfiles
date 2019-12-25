@@ -86,11 +86,20 @@ set clipboard=unnamedplus " place yanked text to global clipboard
 nnoremap Y y$
     " only yank to end of line not contain new line character
 
+" delete without yanking
+nnoremap d "_d
+vnoremap d "_d
+
+" replace currently selected text with default register without yanking it
+vnoremap p "_dP
+
 map <A-a> <C-a>
     " increase number
 
 map <A-x> <C-x>
     " decrease number
+
+nnoremap <leader>nh :noh<CR>
 
 :nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
     " join 2 lines without moving cursor

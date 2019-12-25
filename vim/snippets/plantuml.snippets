@@ -86,3 +86,23 @@ snippet actNode
 
 	stop
 	@enduml
+
+snippet seqTemplate
+	@startuml
+
+	/' Config '/
+
+	hide footbox
+	skinparam SequenceGroupBodyBackGroundColor transparent /' make group background color transparent '/
+
+	/' Component '/
+
+	participant part1 as "part1"
+	participant part2 as "part2"
+
+	/' Flow '/
+
+	part1 -> part2++ : request
+	part1 <-- part2-- : response
+
+	@enduml

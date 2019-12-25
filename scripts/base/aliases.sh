@@ -40,8 +40,8 @@ alias untargz="tar -xvzf"
 alias targz="tar -cvzf"
 
 alias dot="cd ~/dotfiles"
-alias wp="cd ~/wiki/personal"
-alias wd="cd ~/wiki/development"
+alias wp="cd ~/vimwiki/personal"
+alias wd="cd ~/vimwiki/development"
 
 if _is_service_exist "apt-fast"; then
     alias apt-get="apt-fast"
@@ -103,20 +103,30 @@ fi
 # gcloud {
 if _is_service_exist "gcloud"; then
     alias gcp="gcloud"
-    alias gcpc="_gcloud_compute"
-    alias gcpcs="_gcloud_compute_display"
-    alias gsql="_gcloud_sql"
-    alias gservice="_gcloud_service"
+    alias gcp_cluster="_gcloud_cluster"
+    alias gcp_cluster_nodepool="_gcloud_cluster_nodepool"
+    alias gcp_compute="gcloud compute"
+    alias gcp_compute_disk="_gcloud_disk"
+    alias gcp_compute_instance="gcloud compute instances"
+    alias gcp_compute_instance_list="_gcloud_compute"
+    alias gcp_compute_instance_select="_gcloud_compute_display"
+    alias gcp_sql="_gcloud_sql"
+    alias gcp_service="_gcloud_service"
 fi
 if _is_service_exist "kubectl"; then
     alias k="kubectl"
     alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
     alias kns="kubens" # switch namespace
+
     alias kd="_kube_deployment"
     alias ki="_kube_ingress"
     alias kn="_kube_node"
+    alias knu="_kube_node_usage"
+    alias knpd="_kube_nodepool_drain"
     alias kp="_kube_pod"
+    alias kpa="_kube_pod_all"
+    alias kpi="_kube_pod_inactive"
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
 fi
@@ -129,11 +139,11 @@ fi
 # }
 
 # supervisor {
-if _is_service_exist supervisorctl; then
-    alias s="sudo supervisorctl"
-    alias sr="sudo supervisorctl reload"
-    alias ss="sudo supervisorctl status"
-fi
+# if _is_service_exist supervisorctl; then
+#     alias s="sudo supervisorctl"
+#     alias sr="sudo supervisorctl reload"
+#     alias ss="sudo supervisorctl status"
+# fi
 # }
 
 # nvm {
@@ -155,7 +165,7 @@ fi
 if _is_service_exist "tmuxp"; then
     alias tmp="tmuxp"
     alias tmpl="tmuxp load"
-    alias tmpk="tmux kill-session -t"
+    alias tmk="tmux kill-session -t"
 fi
 # }
 

@@ -18,14 +18,16 @@ let g:calendar_google_task = 1
 " nnoremap X D
 
 " Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
-" let g:yoinkIncludeDeleteOperations=1
+let g:yoinkIncludeDeleteOperations=1
+
 " }}
 
 if executable('node') && executable('npm') " use coc if possible
     " Coc {{
+    " extensions in below list will be automatically installed
     let g:coc_global_extensions = [
                 \  'coc-tabnine',
-                \  'coc-eslint', 'coc-tsserver',
+                \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
                 \  'coc-yaml',
                 \  'coc-json',
                 \  'coc-emoji'
@@ -40,6 +42,8 @@ if executable('node') && executable('npm') " use coc if possible
     nmap <silent> gy <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
+
+    nmap <leader>cf  <Plug>(coc-fix-current)
     " Use K to show documentation in preview window
     nnoremap <silent> K :call <SID>show_documentation()<CR>
     function! s:show_documentation()
@@ -127,7 +131,7 @@ else
                 \ }
 
     " Use custom snippets
-    let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
+    let g:neosnippet#snippets_directory='~/.vim/snippets'
     " }}
 endif
 
@@ -290,9 +294,8 @@ let g:sneak#s_next = 1
 nmap <F7> :TagbarToggle<CR>
 let g:tagbar_autoclose=1 " Only open Tagbar when you want to jump to a specific tag and have it close automatically once you have selected one
 
-" integrate vimwiki with tagbar plugin
-let g:tagbar_type_vimwiki = {
-          \   'ctagstype':'vimwiki'
+let g:tagbar_type_markdown = {
+          \   'ctagstype':'markdown'
           \ , 'kinds':['h:header']
           \ , 'sro':'&&&'
           \ , 'kind2scope':{'h':'header'}
@@ -300,7 +303,18 @@ let g:tagbar_type_vimwiki = {
           \ , 'ctagsbin':'~/bin/vwtags.py'
           \ , 'ctagsargs': 'markdown'
           \ }
-" }}
+
+" integrate vimwiki with tagbar plugin
+" let g:tagbar_type_vimwiki = {
+"           \   'ctagstype':'vimwiki'
+"           \ , 'kinds':['h:header']
+"           \ , 'sro':'&&&'
+"           \ , 'kind2scope':{'h':'header'}
+"           \ , 'sort':0
+"           \ , 'ctagsbin':'~/bin/vwtags.py'
+"           \ , 'ctagsargs': 'markdown'
+"           \ }
+" " }}
 
 " Test {{
 " let test#strategy = "dispatch" " use quickfix window, not as good as vtr (async)
@@ -311,34 +325,34 @@ let test#strategy = "vtr" " seem to be the best solution (async)
 " }}
 
 " Wiki {{
-" do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
-" let g:vimwiki_global_ext = 0
-let g:vimwiki_list_margin = 0
-let g:vimwiki_auto_tags = 1
-let g:vimwiki_syntax = 'markdown'
-let g:vimwiki_ext = '.md'
-let g:vimwiki_folding = 'expr'
+" " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
+" " let g:vimwiki_global_ext = 0
+" let g:vimwiki_list_margin = 0
+" let g:vimwiki_auto_tags = 1
+" let g:vimwiki_syntax = 'markdown'
+" let g:vimwiki_ext = '.md'
+" let g:vimwiki_folding = 'expr'
 
-nmap <leader>wn <Plug>VimwikiNextLink
-nmap <leader>wp <Plug>VimwikiPrevLink
+" nmap <leader>wn <Plug>VimwikiNextLink
+" nmap <leader>wp <Plug>VimwikiPrevLink
 
-function! VimwikiLinkHandler(link)
-    " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
-    "   1) [[vfile:~/Code/PythonProject/abc123.py]]
-    "   2) [[vfile:./|Wiki Home]]
-    let link = a:link
-    if link =~# '^vfile:'
-        let link = link[1:]
-    else
-        return 0
-    endif
-    let link_infos = vimwiki#base#resolve_link(link)
-    if link_infos.filename == ''
-        echomsg 'Vimwiki Error: Unable to resolve link!'
-        return 0
-    else
-        exe 'vsplit ' . fnameescape(link_infos.filename)
-        return 1
-    endif
-endfunction
+" function! VimwikiLinkHandler(link)
+"     " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
+"     "   1) [[vfile:~/Code/PythonProject/abc123.py]]
+"     "   2) [[vfile:./|Wiki Home]]
+"     let link = a:link
+"     if link =~# '^vfile:'
+"         let link = link[1:]
+"     else
+"         return 0
+"     endif
+"     let link_infos = vimwiki#base#resolve_link(link)
+"     if link_infos.filename == ''
+"         echomsg 'Vimwiki Error: Unable to resolve link!'
+"         return 0
+"     else
+"         exe 'vsplit ' . fnameescape(link_infos.filename)
+"         return 1
+"     endif
+" endfunction
 " }}

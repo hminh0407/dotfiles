@@ -1,15 +1,6 @@
-" this script will automatically install vim-plug.
-" It should be placed before plug#begin() call
-if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-    silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 " Specify a directory for plugins
-" - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.local/share/nvim/plugged')
+call plug#begin('~/.vim/plugged')
 
 " Core {{
 " General
@@ -22,18 +13,18 @@ Plug 'tpope/vim-surround'             " add, change, delete bracket, paren, carr
 Plug 'ap/vim-buftabline'              " display buffer files in tabline, very handy
 Plug 'wellle/targets.vim'             " extend text objects support
 Plug 'ntpeters/vim-better-whitespace' " hightlight trailing whitespace
-Plug 'svermeulen/vim-easyclip' " simplify clipboard functionality for vim
+" Plug 'svermeulen/vim-easyclip' " simplify clipboard functionality for vim
     " cutlass and yoink are the modern implementation
     " but they are quite buggy at the moment
 " Plug 'svermeulen/vim-cutlass' " make delete operation only delete and not affect yank history
-" Plug 'svermeulen/vim-yoink'   " auto copy vim yank to clipboard and via versa
+Plug 'svermeulen/vim-yoink'   " auto copy vim yank to clipboard and via versa
 
 " Git
 Plug 'tpope/vim-fugitive'     " extend git support
 Plug 'airblade/vim-gitgutter' " show git diff for each line
 
 " Markdown
-Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
+" Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
 Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': { -> mkdp#util#install() } }
 
 " Search
@@ -56,9 +47,10 @@ Plug 'editorconfig/editorconfig-vim'      " editorconfig plugin for vim https://
 Plug 'junegunn/vim-easy-align'            " align text
 Plug 'tpope/vim-commentary'               " comment plugin
 Plug 'jiangmiao/auto-pairs'               " auto close pairs (quotes, parens, brackets ...)
-Plug 'rhysd/vim-grammarous' " https://github.com/rhysd/vim-grammarous
+" Plug 'rhysd/vim-grammarous' " https://github.com/rhysd/vim-grammarous
 Plug 'majutsushi/tagbar'           " display tag of current file in a window
 Plug 'chiedo/vim-case-convert' " https://github.com/chiedo/vim-case-convert
+Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
 " }}
 
 " Utilities
@@ -83,15 +75,13 @@ endif
 if executable('tmux')
     " Plug 'wellle/tmux-complete.vim' " complete for tmux integration
     Plug 'christoomey/vim-tmux-navigator' " tmux integration https://github.com/christoomey/vim-tmux-navigator
+    Plug 'wincent/terminus' " https://github.com/wincent/terminus, cursor shape change in insert and replace mode
 endif
 
 " Advance {{
 if executable('ctags')
     Plug 'ludovicchabant/vim-gutentags'
 endif
-
-" Awesome intellisense tootl that make vim work like VSCode
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Language support
 Plug 'chr4/nginx.vim', { 'for': 'conf' } " support nginx syntax (https://github.com/chr4/nginx.vim)

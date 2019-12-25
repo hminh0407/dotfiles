@@ -29,7 +29,4 @@
 --exclude=cscope.\*
 --exclude=\*.tar.\*
 
---langdef=markdown
---langmap=markdown:.md
---regex-markdown=/^@@(.*$)/\1/t,tag,tags/
 

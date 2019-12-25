@@ -99,7 +99,30 @@ options     head
 	exit 1
 
 # Custom snippets
+snippet filename_from_path
+	basename "${1}" | cut -d. -f1
+        # extract filename from path
+        # get filename without extension
+
+snippet join_by
+	_join_by() {
+		# join elements of array by a delimiter
+		local IFS="\$1"; shift; echo "$*";
+		# example usages
+		# join_by , a "b c" d     # a,b c,d
+		# join_by / var local tmp # var/local/tmp
+		# join_by , "${FOO[@]}"   # a,b,c
+	}
+
+snippet path_absolute
+	echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+		# Get absolute path if receive relative path or else return absolute path
+		# * get relative path as argument "$1"
+		# * get dirname part of that path (can pass either dir or file to this script): dirname "$1"
+		# * cd "$(dirname "$1") into this relative dir and get absolute path by running pwd shell command
+		# * append basename to absolute path: $(basename "$1")
+		# * echo it
+
 snippet var_validate_required
 	[ -z "\$1" ] && { echo  "missing argument"; exit 1; }
-
 # vim: set noexpandtab :

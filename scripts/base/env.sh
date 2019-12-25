@@ -3,6 +3,7 @@
 # general
 export CUSTOM_SCRIPTS="$HOME/bin"
 export PROJECT_CUSTOM_SCRIPTS="$HOME/.project"
+export TMP_FOLDER="$HOME/tmp"
 
 # nvm
 export NVM_NO_USE=true # disable auload node https://github.com/lukechilds/zsh-nvm

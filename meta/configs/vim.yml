@@ -9,10 +9,10 @@
         force: true
 
 - shell:
-    - [./scripts/installation/nvim.sh, Installing NeoVim]
+    - [./scripts/installation/vim.sh, Installing Vim]
 
 - link:
-    ~/.config/nvim/init.vim               : nvim/init.vim
+    ~/.vimrc                              : vim/vimrc
     ~/.vim/conf                           : vim/conf
     ~/.vim/after/ftplugin                 : vim/ftplugin
     ~/.vim/snippets                       : vim/snippets

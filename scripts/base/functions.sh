@@ -25,19 +25,23 @@ _join_by() {
     # join elements of array by a delimiter
     local IFS="$1"; shift; echo "$*";
     # example usages
-    # join_by , a "b c" d     #a,b c,d
-    # join_by / var local tmp #var/local/tmp
-    # join_by , "${FOO[@]}"   #a,b,c
+    # join_by , a "b c" d     # a,b c,d
+    # join_by / var local tmp # var/local/tmp
+    # join_by , "${FOO[@]}"   # a,b,c
 }
 
 # clone git if not exist, pull latest code if exist
+# ex: _git_clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
 _git_clone() {
     [ -z "$1" ] && { echo "missed param 'repo'"; exit 1; }
-    [ -z "$2" ] && { echo "missed param 'localRepo'"; exit 1; }
+    [ -z "$2" ] && { echo "missed param 'localFolder'"; exit 1; }
+
     local repo="${1}"
-    local localRepo="${2}"
-    # git clone ${repo} ${localRepo} 2> /dev/null || git -C ${localRepo} pull
-    git -C ${localRepo} pull || git clone --depth=1 --recursive ${repo} ${localRepo}
+    local localFolder="${2}"
+
+    echo 'here'
+    # git clone ${repo} ${localFolder} 2> /dev/null || git -C ${localFolder} pull
+    git -C ${localFolder} pull || git clone --depth=1 --recursive ${repo} ${localFolder}
 }
 
 if _is_service_exist "desk"; then
@@ -127,26 +131,69 @@ if _is_service_exist fzf; then
 fi
 
 if _is_service_exist gcloud; then
+
+    _gcloud_cluster() { # list of kubernetes cluster
+        local mode="$1"
+
+        case "$mode" in
+            name*) # only output name list
+                gcloud container clusters list --format="table[no-heading](name)" --filter="location='asia-southeast1-a'"
+                ;;
+            *)
+                gcloud container clusters list
+        esac
+    }
+
+    _gcloud_cluster_nodepool() { # list all nodepool of all clusters
+        local clusters=( $(_gcloud_cluster "name") )
+
+        local nodepools=$(
+            # echo "${clusters[1]}"
+            gcloud container node-pools list --cluster="${clusters[1]}" | head -n 1 | awk '{print "CLUSTER", $0}';
+                # get the header row
+                # add header 'CLUSTER' at the beginning
+
+            for c in $clusters; do
+                gcloud container node-pools list --cluster="$c" --format="table[no-heading](name,config.machineType,config.diskSizeGb,version)" \
+                    | awk '{print "'$c'", $0}'
+                    # get list of nodepools
+                    # add column cluster at the beginning
+            done
+        )
+
+        echo $nodepools | column -t
+    }
+
     _gcloud_compute() { # list of gcloud compute instances and describe selected instance if possible
-            local fields=(
-                'name'
-                'zone.basename()'
-                'machineType.basename()'
-                'scheduling.preemptible.yesno(yes=true, no='')'
-                'networkInterfaces[0].networkIP:label=INTERNAL_IP'
-                'networkInterfaces[0].accessConfigs[0].natIP:label=EXTERNAL_IP'
-                'status'
-                'labels.list()'
-            )
-            local format_str="table($(_join_by ',' ${fields[@]}))"
+        local fields=(
+            'name'
+            'zone.basename()'
+            'machineType.basename()'
+            'scheduling.preemptible.yesno(yes=true, no='')'
+            'networkInterfaces[0].networkIP:label=INTERNAL_IP'
+            'networkInterfaces[0].accessConfigs[0].natIP:label=EXTERNAL_IP'
+            'status'
+            'labels.list()'
+        )
+        local format_str="table($(_join_by ',' ${fields[@]}))"
 
-            local filter="$1"
+        local filter="$1"
 
-            if [ -z $filter ]; then
-                gcloud compute instances list --format="$format_str"
-            else
-                gcloud compute instances list --format="$format_str" --filter="$filter"
-            fi
+        if [ -z $filter ]; then
+            gcloud compute instances list --format="$format_str"
+        else
+            gcloud compute instances list --format="$format_str" --filter="$filter"
+        fi
+    }
+
+    _gcloud_disk() {
+        local filter="$1"
+
+        if [ -z $filter ]; then
+            gcloud compute disks list
+        else
+            gcloud compute disks list --filter="$filter"
+        fi
     }
 
     _gcloud_compute_display() {
@@ -249,25 +296,37 @@ fi
 if _is_service_exist kubectl; then
     _kube_get_list() {
         local service="$1"
-        local mode="$2"
+        local mode="${2:-default}"
 
         case "$mode" in
             describe*) # describe the selected item
                 if ! _is_service_exist fzf; then echo "fzf is not exist, this mode is not supported" && return; fi
 
-                kubectl get $service | fzf | awk '{print $1}' | xargs -r kubectl describe $service
+                kubectl get $service ${@:3} | fzf | awk '{print $1}' | xargs -r kubectl describe $service
                 ;;
             name*) # copy name of selected item to clipboard
                 if ! _is_service_exist fzf; then echo "fzf is not exist, this mode is not supported" && return; fi
 
-                kubectl get $service | fzf | awk '{print $1}' ORS='' | xclip -selection c
+                kubectl get $service ${@:3} | fzf | awk '{print $1}' ORS='' | xclip -selection c
                     # get list of items
                     # select by fzf
                     # get the value of 1 column and join lines (by default fzf will add an additional new line to selected item)
                     # copy the selected item to clipboard
                 ;;
             *)
-                kubectl get $service && return
+                kubectl get $service ${@:3} && return
+        esac
+    }
+
+    _kube_context() {
+        local mode="$1"
+
+        case "$mode" in
+            name*) # only output name list
+                kubectl config get-contexts | awk '{print $2}' | tail -n +2
+                ;;
+            *)
+                kubectl config get-contexts
         esac
     }
 
@@ -289,10 +348,91 @@ if _is_service_exist kubectl; then
         _kube_get_list "node" $mode
     }
 
-    _kube_pod() { # list of kubernetes nodes and describe selected item if possible
-        local mode="$1"
+    _kube_node_usage() {
+            local mode="default"
+            local current_context="$(kubectl config current-context)"
+            local contexts=( $(_kube_context 'name') )
 
-        _kube_get_list "pod" $mode
+            local node=$(
+                kubectl top node | head -n 1 |  awk '{print "CONTEXT", $0}';
+                    # get the header row
+                    # add header 'CONTEXT' at the beginning
+
+                for c in ${contexts[@]}; do
+                    kubectx $c >/dev/null && kubectl top node --no-headers | awk '{print "'$c'", $0}'
+                        # change context
+                        # get list of node usage
+                        # add column context at the beginning
+                done
+            )
+            kubectx $current_context >/dev/null # change back to current context
+
+            echo $node | column -t
+    }
+
+    _kube_nodepool_drain() { # drain all the node inside a nodepool
+        # run _gcloud_cluster_nodepool to find nodepool name
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+
+        local oldpool="$1"
+        local oldnodes=( $(kubectl get no --selector="cloud.google.com/gke-nodepool=$oldpool" -o json | jq '.items[].metadata.name' -r) )
+
+        kubectl cordon --selector="cloud.google.com/gke-nodepool=$oldpool"
+            # Marking a node as unschedulable prevents new pods from being scheduled to that node, but does not affect any existing pods on the node
+
+        for n in $oldnodes; do
+            echo "draining $n"
+
+            kubectl drain --delete-local-data --ignore-daemonsets $n
+                # safely evict all pods from the node
+            # read -n 1 -s -r -p "Press any key to continue" # bash version
+                # confirm before each drain
+                # -n defines the required character count to stop reading
+                # -s hides the user's input
+                # -r causes the string to be interpreted "raw" (without considering backslash escapes)
+            read -k 1 "?Press any key to continue" # zsh version
+                # anything after ? is used as prompt string
+                # -k defines the required character count to stop reading
+
+            echo "\n----------------------------"
+        done;
+    }
+
+    _kube_pod() { # list all pod in current context and current namespace
+        local mode="${1:-default}"
+
+        _kube_get_list "pod" $mode -owide --show-labels
+
+        # wip
+        # k get pod -o json | jq -r '(["NAME","STATUS"] | (., map(length*"-"))), (.items[] | [.metadata.name, .status.phase]) | @tsv'
+    }
+
+    _kube_pod_all() { # list all pod in all context and all namespace
+        local mode="${1:-default}"
+        local current_context="$(kubectl config current-context)"
+        local contexts=( $(_kube_context 'name') )
+
+        local pod=$(
+            kubectl get pod -owide --all-namespaces | head -n 1 |  awk '{print "CONTEXT", $0}';
+                # get the header row
+                # add header 'CONTEXT' at the beginning
+
+            for c in ${contexts[@]}; do
+                kubectx $c >/dev/null && _kube_get_list "pod" $mode -owide --no-headers --all-namespaces | awk '{print "'$c'", $0}'
+                    # change context
+                    # get list of pod
+                    # add column context at the beginning
+            done
+        )
+        kubectx $current_context >/dev/null # change back to current context
+
+        echo $pod | column -t
+    }
+
+    _kube_pod_inactive() {
+        local mode="${1:-default}"
+
+        _kube_get_list "pod" $mode --field-selector="status.phase!=Running,status.phase!=Succeeded" --all-namespaces
     }
 
     _kube_pod_usage () {
@@ -304,7 +444,7 @@ if _is_service_exist kubectl; then
         # default   canary-ams-react 0m               22Mi             100m          <none>        <none>       <none>
 
         local namespace="${1:-default}"
-        local pod_defail_custom_columns=(
+        local pod_detail_custom_columns=(
             'NAMESPACE:.metadata.namespace'
             'NAME:.metadata.name'
             'REQUESTED_CPU:.spec.containers[*].resources.requests.cpu'
@@ -313,9 +453,9 @@ if _is_service_exist kubectl; then
             'LIMITTED_RAM:.spec.containers[*].resources.limits.memory'
             'NODE:.spec.nodeName'
         )
-        local pod_defail_custom_columns_str=$(_join_by ',' ${pod_defail_custom_columns[@]})
+        local pod_defail_custom_columns_str=$(_join_by ',' ${pod_detail_custom_columns[@]})
 
-        local pod_usage="$(kubectl top pods --namespace=$namespace --no-headers | sort -k 1,1 -k 2,2)" # sort first column to make sure rows are consistent
+        local pod_usage="$(kubectl top pods --namespace=$namespace --no-headers | sort -k 1,1)" # sort first column to make sure rows are consistent
         local pod_detail="$(kubectl get pods --namespace=$namespace --no-headers -o custom-columns="$pod_defail_custom_columns_str" | sort -k 2,2)" # sort first column to make sure rows are consistent
 
         local header="NAMESPACE NAME CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM NODE"
@@ -378,3 +518,73 @@ if _is_service_exist http; then
     }
 fi
 
+# _redis_copy_all(){
+#     # copy all redis keys from one server to another server
+#     local source_host="$1"
+#     local source_port="$2"
+
+#     local target_host="$3"
+#     local target_port="$4"
+
+#     local keys=( $(redis-cli -u $source_urikeys '*') )
+
+#     for key in ${keys[@]}; do
+
+#         local ttl=$(redis-cli -u $source_uri--raw TTL "$key") # expire time of the key
+
+#         if [ $ttl -gt 0 ]; then
+#             redis-cli -u $source_uri--raw DUMP "$key" | head -c-1 \
+#                 | redis-cli -u $target_uri -x RESTORE "$key" "$ttl" # restore key with expiration time
+#         else
+#             redis-cli -u $source_uri--raw DUMP "$key" | head -c-1 \
+#                 | redis-cli -u $target_uri -x RESTORE "$key" 0 # restore key with no expiration time
+#         fi
+
+#     done
+# }
+
+_redis_copy_all(){
+    # copy all redis keys from one server to another server
+
+    [ -z "$1" ] && { echo  "missing source uri argument"; exit 1; }
+    [ -z "$2" ] && { echo  "missing destination uri argument"; exit 1; }
+
+    local source_uri="$1"
+    local target_uri="$2"
+    local specific_key="$3"
+
+    if [ -n "$specific_key" ]; then
+        _redis_dump_one_key $source_uri $target_uri $specific_key
+
+    else
+        local keys=( $(redis-cli -u $source_uri keys '*') )
+
+        for key in ${keys[@]}; do
+            _redis_dump_one_key $source_uri $target_uri $key
+        done
+    fi
+
+}
+
+_redis_dump_one_key() {
+    [ -z "$1" ] && { echo  "missing source uri argument"; exit 1; }
+    [ -z "$2" ] && { echo  "missing destination uri argument"; exit 1; }
+
+    local source_uri="$1"
+    local target_uri="$2"
+    local key="$3"
+
+    local exists=$(redis-cli -u $target_uri exists "$key")
+
+    if [ $exists -eq 0 ]; then
+        local ttl=$(redis-cli -u $source_uri --raw TTL "$key") # expire time of the key
+
+        if [ $ttl -gt 0 ]; then
+            redis-cli -u $source_uri --raw DUMP "$key" | head -c-1 \
+                | redis-cli -u $target_uri -x RESTORE "$key" "$ttl" # restore key with expiration time
+        else
+            redis-cli -u $source_uri --raw DUMP "$key" | head -c-1 \
+                | redis-cli -u $target_uri -x RESTORE "$key" 0 # restore key with no expiration time
+        fi
+    fi
+}

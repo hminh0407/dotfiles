@@ -1,0 +1,8 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/youtube-dl.sh, Installing youtube-dl]

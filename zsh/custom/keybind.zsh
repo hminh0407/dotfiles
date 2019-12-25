@@ -47,3 +47,4 @@ join_lines() { # join multi-line output from fzf
 }
 # }
 
+stty -ixon # disable Ctrl+S key

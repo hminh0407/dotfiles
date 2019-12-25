@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && apt-fast install --no-install-recommends -y yq, Installing yq]
+      # after install kubectl, config need to be setup either via yml file or with gcloud command
+

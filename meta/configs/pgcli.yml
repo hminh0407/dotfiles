@@ -3,8 +3,14 @@
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
 
 - shell:
     - ['apt-fast install --no-install-recommends -y libpq-dev', Installing Required Library]
     - ['sudo pip install pgcli', Installing Postgres CLI]
 
+- link:
+    ~/.config/pgcli/config : config/pgcli.config
