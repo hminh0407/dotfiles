@@ -1,61 +1,94 @@
-snippet if
-  if (${1:true}) {
-    ${0:TARGET}
-  }
+# ===Normal JS===
+# module exports
+snippet ex
+	module.exports = ${1};
 
-snippet if-else
-  if (${1:#:condition}) {
-    ${2:TARGET}
-  } else {
-    ${3}
-  }
+snippet re
+	${1:const} ${2} = require('${3:module_name}');
 
-snippet for
-  for (let ${1:i} = 0; $1 < ${2:#:Things}.length; ++$1) {
-    ${0:TARGET}
-  }
+# Flow control
+snippet if "if (condition) { ... }"
+	if (${1:true}) {
+		${0:${VISUAL}}
+	}
 
-snippet forin
-  for (let ${1:i} in ${2:#:Things}) {
-    ${0:TARGET}
-  }
-
-snippet while
-  while (${1:true}) {
-    ${0:TARGET}
-  }
+snippet ife "if (condition) { ... } else { ... }"
+	if (${1:true}) {
+		${0:${VISUAL}}
+	} else {
+		${2}
+	}
+# tertiary conditional
+snippet ter
+	${1:/* condition */} ? ${2:/* if true */} : ${0:/* if false */}
 
 snippet switch
-  switch (${1:#:let}) {
-    case ${2:#:val}:
-      ${0:TARGET}
-      break;
-  }
+	switch (${1:expression}) {
+		case '${3:case}':
+			${4}
+			break;
+		${0}
+		default:
+			${2}
+	}
 
-snippet try
-  try {
-    ${1:TARGET}
-  } catch (${2:e}) {
-    ${3}
-  }
+snippet case "case 'xyz': ... break"
+	case '${1:case}':
+		${0:${VISUAL}}
+		break;
 
-snippet try_finally
-  try {
-    ${1:TARGET}
-  } catch (${2:e}) {
-    ${3}
-  } finally {
-    ${4}
-  }
+snippet try "try { ... } catch(e) { ... }"
+	try {
+		${0:${VISUAL}}
+	} catch (${1:e}) {
+		${2:/* handle error */}
+	}
 
-# Custom Snippets
-snippet object_destructoring
+snippet tryf "try { ... } catch(e) { ... } finally { ... }"
+	try {
+		${0:${VISUAL}}
+	} catch (${1:e}) {
+		${2:/* handle error */}
+	} finally {
+		${3:/* be executed regardless of the try / catch result*/}
+	}
+
+snippet terr
+	throw new Error('${1:error message}')
+
+snippet for "for (...) {...}"
+	for (var ${1:i} = 0, ${2:len} = ${3:Things.length}; $1 < $2; $1++) {
+		${0:${VISUAL}}
+	}
+
+snippet forr "reversed for (...) {...}"
+	for (var ${2:i} = ${1:Things.length} - 1; $2 >= 0; $2--) {
+		${0:${VISUAL}}
+	}
+
+snippet wh "(condition) { ... }"
+	while (${1:/* condition */}) {
+		${0:${VISUAL}}
+	}
+
+snippet do "do { ... } while (condition)"
+	do {
+		${0:${VISUAL}}
+	} while (${1:/* condition */});
+
+snippet fori
+	for (var ${1:prop} in ${2:object}) {
+		${0:$2[$1]}
+	}
+
+# ===Custom Snippets===
+snippet object_reduce
 // create a sub object from an object
 // https://stackoverflow.com/questions/17781472/how-to-get-a-subset-of-a-javascript-objects-properties
 // Ex:
 // * object = { a: 'a_value', b: 'b_value', c: 'c_value' }
 // * pickFields = ['a', 'b']
-// * subObject = { a: 'a_value', b: 'b_value' }
+// * result = { a: 'a_value', b: 'b_value' }
 const object = $1
 const pickFields = $2
 const subObject = pickFields.reduce( //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
@@ -65,3 +98,18 @@ const subObject = pickFields.reduce( //https://developer.mozilla.org/en-US/docs/
   },
   {} // default value
 )
+
+snippet array_object_reduce
+// reduce an array object to pick
+// Ex:
+// * arrayObject = [ { a: 'a_value', b: 'b_value', c: 'c_value' }, { a: 'a__value', b: 'b__value', c: 'c__value' } ]
+// * fields = ['a', 'b']
+// * result = [ { a: 'a_value', b: 'b_value'}, { a: 'a__value', b: 'b__value' } ]
+function mapReduce(arrayObject, fields) {
+    return arrayObject.map(x =>
+        fields.reduce((acc, cur) => {
+            acc[cur] = _.get(x, cur);
+            return acc;
+        }, {})
+    );
+}

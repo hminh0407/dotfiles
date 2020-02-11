@@ -1,4 +1,6 @@
+# === Base ===
 # contain base functions for other scripts. Need to be in the first order
+
 _append_to_file_if_not_exist() {
     [ -z "$1" ] && { echo  "missed param 'line'"; exit 1; }
     [ -z "$2" ] && { echo  "missed param 'file'"; exit 1; }
@@ -23,25 +25,28 @@ _is_service_exist() {
 
 _join_by() {
     # join elements of array by a delimiter
-    local IFS="$1"; shift; echo "$*";
+    local delimiter="$1" # Save first argument in a variable
+    shift            	 # Shift all arguments to the left (original $1 gets lost)
+    local items=("$@")   # Rebuild the array with rest of arguments
+
+    # local IFS=$delimiter; shift; echo "$*";
+    local IFS=$delimiter; echo "${items[*]}";
     # example usages
     # join_by , a "b c" d     # a,b c,d
     # join_by / var local tmp # var/local/tmp
     # join_by , "${FOO[@]}"   # a,b,c
-}
 
-# clone git if not exist, pull latest code if exist
-# ex: _git_clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
-_git_clone() {
-    [ -z "$1" ] && { echo "missed param 'repo'"; exit 1; }
-    [ -z "$2" ] && { echo "missed param 'localFolder'"; exit 1; }
+    # Reference (from `man bash`)
+    # If the word is double-quoted, ${name[*]} expands to a single word
+    #     with the value of each array member separated by the first character of the IFS special variable,
+    # and ${name[@]} expands each element of name to a separate word.
 
-    local repo="${1}"
-    local localFolder="${2}"
-
-    echo 'here'
-    # git clone ${repo} ${localFolder} 2> /dev/null || git -C ${localFolder} pull
-    git -C ${localFolder} pull || git clone --depth=1 --recursive ${repo} ${localFolder}
+    # Example
+    # array=("1" "2" "3")
+    # printf "'%s'" "${array[*]}"
+    # '1 2 3'
+    # printf "'%s'" "${array[@]}"
+    # '1''2''3'
 }
 
 if _is_service_exist "desk"; then
@@ -54,6 +59,35 @@ if _is_service_exist "desk"; then
         else
             desk ls && return
         fi
+    }
+fi
+
+# ======
+
+if _is_service_exist ffmpeg; then
+    _ffmpeg_add_sub_to_video() {
+        # adds the subtitles to the video as a separate optional (and user-controlled) subtitle track.
+        # create new video with embedded subtitle
+        #https://stackoverflow.com/a/33289845/1530178
+        # only support mkv video and srt sub
+
+        local video="$1"
+        local sub="$2"
+        local videoName=$(basename $video | cut -d '.' -f1)
+        local videoExtension=$(basename $video | cut -d '.' -f2)
+
+        # this will add an additional subtitle with metadata 'unknown'
+        ffmpeg -i $video -i $sub \
+            -map 0:0 -map 0:1 -map 1:0 \
+            -c:v copy -c:a copy -c:s srt \
+            "${videoName}_formatted.$videoExtension"
+
+        # to add multiple subtitles with proper metadata use below script instead. Note that it is intended to run manually
+        # ffmpeg -i $video -i $sub1 -i$sub2 ... \
+        #     -map 0:v -map 0:a -map 1 -map 2 \
+        #     -c:v copy -c:a copy -c:s srt \
+        #     -metadata:s:s:0 language=$lang1 -metadata:s:s:1 language=$lang2 ...\
+        #     "${videoName}_formatted.$videoExtension"
     }
 fi
 
@@ -130,6 +164,22 @@ if _is_service_exist fzf; then
     }
 fi
 
+if _is_service_exist helm; then
+    _helm_template() {
+        [ -z "$1" ] && { echo  "missing chart name"; exit 1; }
+        [ -z "$2" ] && { echo  "missing template file"; exit 1; }
+        [ -z "$3" ] && { echo  "missing value file"; exit 1; }
+        [ -z "$4" ] && { echo  "missing release name"; exit 1; }
+
+        local chart="$1"
+        local template="$2"
+        local value="$3"
+        local release="$4"
+
+        helm template $chart -x $template -f $value --name $release
+    }
+fi
+
 if _is_service_exist gcloud; then
 
     _gcloud_cluster() { # list of kubernetes cluster
@@ -183,16 +233,6 @@ if _is_service_exist gcloud; then
             gcloud compute instances list --format="$format_str"
         else
             gcloud compute instances list --format="$format_str" --filter="$filter"
-        fi
-    }
-
-    _gcloud_disk() {
-        local filter="$1"
-
-        if [ -z $filter ]; then
-            gcloud compute disks list
-        else
-            gcloud compute disks list --filter="$filter"
         fi
     }
 
@@ -268,6 +308,59 @@ if _is_service_exist gcloud; then
         fi
     }
 
+    _gcloud_disk() {
+        local filter="$1"
+
+        if [ -z $filter ]; then
+            gcloud compute disks list
+        else
+            gcloud compute disks list --filter="$filter"
+        fi
+    }
+
+    _gcp_log_kevent() {
+        # Example
+        # _gcp_log_event_hpa \
+        #     "jsonPayload.involvedObject.name=<project_name>" \
+        #     "timestamp>=\"$(date --iso-8601=s --date='7 days ago')\""
+        local filter=(
+            "resource.type=gke_cluster"
+            "jsonPayload.kind=Event"
+            # "timestamp>=\"$(date --iso-8601=s --date='30 minutes ago')\"" # latest 30 minutes
+            # "jsonPayload.source.component=horizontal-pod-autoscaler"
+            # "severity=WARNING" # check for specific severity
+            # "resource.labels.cluster_name=vexere"
+            # "jsonPayload.metadata.name:<pod_name>" # check specific pod pattern
+            # "jsonPayload.reason=FailedGetResourceMetric" # check for specific reason
+            "$@"
+        )
+        local filterStr=$( _join_by ' ' "${filter[@]}" )
+
+        local resultField=(
+            "'resource.labels.cluster_name'"
+            # "'resource.labels.location'"
+            # "'resource.labels.project_id'"
+            # "'resource.type'"
+            "'jsonPayload.involvedObject.namespace'"
+            "'jsonPayload.involvedObject.kind'"
+            "'jsonPayload.involvedObject.name'"
+            # "'jsonPayload.metadata.name'"
+            "'jsonPayload.reason'"
+            "'jsonPayload.message'"
+            "'severity'"
+            "'timestamp'"
+            "'kind'"
+        )
+        local resultFieldStr=$(_join_by ',' "${resultField[@]}")
+
+        gcloud logging read "$filterStr" --limit 9000 --format json \
+        | fx ".map( x => [$resultFieldStr].reduce( (acc,cur) => { acc[cur] = require('lodash').get(x, cur); return acc }, {} ))"
+    }
+
+    _gcp_log_event_hpa() {
+        _gcp_log_kevent "jsonPayload.source.component=horizontal-pod-autoscaler" "$@"
+    }
+
     _gcloud_project() { # get current project
         gcloud config get-value project -q
     }
@@ -292,6 +385,62 @@ if _is_service_exist gcloud; then
 
     }
 fi
+
+if _is_service_exist git; then
+
+    # clone git if not exist, pull latest code if exist
+    # ex: _git_clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
+    _git_clone() {
+        [ -z "$1" ] && { echo "missed param 'repo'"; exit 1; }
+        [ -z "$2" ] && { echo "missed param 'localFolder'"; exit 1; }
+
+        local repo="${1}"
+        local localFolder="${2}"
+
+        echo 'here'
+        # git clone ${repo} ${localFolder} 2> /dev/null || git -C ${localFolder} pull
+        git -C ${localFolder} pull || git clone --depth=1 --recursive ${repo} ${localFolder}
+    }
+
+fi
+
+    # _gitlab_pr_create() {
+    #     # Create gitlab pr for
+    #     # * current branch (pwd git folder)
+    #     # * merge to default branch
+    #     # * in current repo (pwd git folder)
+
+    #     local endpoint="$GITLAB_HOST/api/$GITLAB_API_VERSION/projects"
+    #     local token="$GITLAB_TOKEN"
+
+    #     local headers=(
+    #        Authorization:"Bearer $token"
+    #     )
+
+    #     local branch="$(git br-current)" # get current git branch (git alias)
+    #     local repo="$(git repo)" # get current repo (git alias)
+    #     local encodedRepo="$(_urlencode $repo)" # get current repo (git alias)
+    #     local targetBranch="$(_gitlab_repo_get_default_branch $repo)" # get the default branch of repo
+    #     local assigneeId="$(_gitlab_repo_get_creator_id $repo)" # assign to creator by default
+    #     local title="$(_urlencode "$(git log-last-comment)")" # get comment from last commit (git alias)
+
+    #     local params=(
+    #         "source_branch=$branch"
+    #         "target_branch=$targetBranch"
+    #         "assignee_id=$assigneeId"
+    #         "title=$title"
+    #         "remove_source_branch=true"
+    #         "squash=true"
+    #         "$@"
+    #     )
+    #     local queryStr=$(_join_by '&' "${params[@]}")
+
+    #     local url="$endpoint/$encodedRepo/merge_requests?$queryStr"
+
+    #     http POST \
+    #         "$url" \
+    #         "${headers[@]}"
+    # }
 
 if _is_service_exist kubectl; then
     _kube_get_list() {
@@ -334,6 +483,89 @@ if _is_service_exist kubectl; then
         local mode="$1"
 
         _kube_get_list "deployment" $mode
+    }
+
+    _kube_deployment_name() {
+        kubectl get deployment -o custom-columns="NAME:metadata.name" --no-headers
+    }
+
+    _kube_event() { # list of kubernetes deployment and describe selected item if possible
+        local mode="$1"
+
+        _kube_get_list "event" $mode
+    }
+
+    _kube_event_hpa() {
+        # display hpa events in the last 1 hour
+        local filter=(
+            "involvedObject.kind=HorizontalPodAutoscaler"
+        )
+        local filterStr=$(_join_by ',' "${filter[@]}")
+
+        local resultField=(
+            'involvedObject.name:.involvedObject.name'
+            'involvedObject.kind:.involvedObject.kind'
+            # 'metadata.name:.metadata.name'
+            'type:.type'
+            'reason:.reason'
+            'message:.message'
+            'lastTimestamp:.lastTimestamp'
+        )
+        local resultFieldStr=$(_join_by ',' "${resultField[@]}")
+
+        kubectl get events \
+            -o custom-columns="$resultFieldStr" \
+            --field-selector="$filterStr" \
+            --sort-by=.lastTimestamp # asc order, latest event in the bottom
+    }
+
+    _kube_hpa() {
+        local mode="$1"
+
+        _kube_get_list "hpa" $mode
+    }
+
+    _kube_hpa_multi_replica() {
+        # display hpa that has more than 1 replica
+        kubectl get hpa -owide | awk '{ if($7 > 1) {print} }'
+    }
+
+    _kube_hpa_name() {
+        kubectl get hpa -o custom-columns="NAME:metadata.name" --no-headers
+    }
+
+    _kube_hpa_validate() { # validate all hpa in current namespace
+        local deployments=( $(_kube_deployment_name)) # list of deployment name
+
+        local fields=(
+            "NAME:metadata.name"
+            "REF-KIND:spec.scaleTargetRef.kind"
+            "REF-NAME:spec.scaleTargetRef.name"
+        )
+        local fieldStr=$( _join_by ',' "${fields[@]}" )
+
+        # it's tricky to implement array of objects in bash, therefore use 3 arrays to handle
+        local hpaNameList=( $(kubectl get hpa -o custom-columns="NAME:metadata.name" --no-headers --sort-by=.metadata.uid) )
+        local hpaRefKindList=( $(kubectl get hpa -o custom-columns="REF-KIND:spec.scaleTargetRef.kind" --no-headers --sort-by=.metadata.uid) )
+        local hpaRefNameList=( $(kubectl get hpa -o custom-columns="REF-NAME:spec.scaleTargetRef.name" --no-headers --sort-by=.metadata.uid) )
+
+        local i=1
+        for hpaName in "${hpaNameList[@]}"; do
+            local hpaRefKind="${hpaRefKindList[$i]}"
+            local hpaRefName="${hpaRefNameList[$i]}"
+            local inDeployments=$(printf '%s\n' ${deployments[@]} | grep -P "^${hpaRefNameList[$i]}$" | wc -w)
+                # inDeployments > 0 means item is exist in list
+
+            # echo "$i - $hpaName - ${hpaNameList[$i]}" # for debug purpose
+            if [ "Deployment" = "$hpaRefKind" ] && [ "$inDeployments" -eq 0 ]; then
+                # check if hpa reference an existed deployment
+
+                # echo "$i - $hpaName - $hpaRefKind - $hpaRefName - $inDeployments" # for debug purpose
+                echo "hpa '$hpaName' reference a $hpaRefKind '$hpaRefName' which does not exist"
+            fi
+
+            let "i+=1"
+        done
     }
 
     _kube_ingress() { # list of kubernetes deployment and describe selected item if possible
@@ -452,6 +684,7 @@ if _is_service_exist kubectl; then
             'LIMITTED_CPU:.spec.containers[*].resources.limits.cpu'
             'LIMITTED_RAM:.spec.containers[*].resources.limits.memory'
             'NODE:.spec.nodeName'
+            # 'created:.metadata.creationTimestamp'
         )
         local pod_defail_custom_columns_str=$(_join_by ',' ${pod_detail_custom_columns[@]})
 
@@ -484,8 +717,8 @@ _git_get_latest_release() { # get the latest release tag from github
 
     local repo="$1"
     curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
-        grep '"tag_name":' |                                            # Get tag line
-        sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+        grep '"tag_name":' |                                          # Get tag line
+        sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
 
 if _is_service_exist http; then
@@ -588,3 +821,39 @@ _redis_dump_one_key() {
         fi
     fi
 }
+
+if _is_service_exist rg ; then
+    _rg_file_pattern() {
+        local search_pattern="$1"
+        local file_pattern="${2:-*}"
+
+        rg -g "$file_pattern" "$search_pattern"
+    }
+fi
+
+if _is_service_exist youtube-dl; then
+    _youtube_download_video_mkv() {
+        # download youtube video as mkv
+        local url="$1"
+            # youtube video url. ex: https://www.youtube.com/watch?v=LQRAfJyEsko
+
+        youtube-dl \
+            --format 'bestvideo[height=1080]+bestaudio' \
+            --write-sub --sub-lang en,en_US,en_GB,en-US,en-GB \
+            --merge-output-format mkv --embed-sub \
+            -o '%(title)s.%(ext)s' \
+            $url
+    }
+
+    _youtube_download_sub() {
+        # download youtube video subtitle only
+        local url="$1"
+        local subLanguage="${2:-en,en_US,en_GB,en-US,en-GB}" # default to download english sub
+
+        youtube-dl \
+            --write-sub --sub-lang $subLanguage \
+            --skip-download \
+            $url
+    }
+fi
+

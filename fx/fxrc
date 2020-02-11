@@ -1,0 +1,65 @@
+global._ = require("lodash");
+
+global.list = json => (json.forEach(x => console.log(x)), "");
+
+global.find = re => json => [...find(json, re)];
+
+global.mapReduce = mapReduce;
+// global.mapReduce = (json, fields) => {
+//     return json.map(x =>
+//         fields.reduce((acc, cur) => {
+//             acc[cur] = _.get(x, cur);
+//             return acc;
+//         }, {})
+//     );
+// };
+
+// ======
+
+function* find(v, regex, path = "") {
+    if (regex.test(path)) {
+        yield path;
+        return;
+    }
+
+    if (typeof v === "undefined" || v === null) {
+        return;
+    }
+
+    if (Array.isArray(v)) {
+        let i = 0;
+        for (let value of v) {
+            const prefix = path === "" ? "this" : path;
+            yield* find(value, regex, prefix + "[" + i++ + "]");
+        }
+        return;
+    }
+
+    if (typeof v === "object" && v.constructor === Object) {
+        const entries = Object.entries(v);
+        for (let [key, value] of entries) {
+            yield* find(value, regex, path + "." + key);
+        }
+        return;
+    }
+
+    if (regex.test(v)) {
+        yield path;
+    }
+}
+
+function mapReduce(json, fields) {
+    if (Array.isArray(json)) {
+        return json.map(x =>
+            fields.reduce((acc, cur) => {
+                acc[cur] = _.get(x, cur);
+                return acc;
+            }, {})
+        );
+    } else {
+        return fields.reduce((acc, cur) => {
+            acc[cur] = _.get(json, cur);
+            return acc;
+        }, {});
+    }
+}

@@ -33,5 +33,5 @@ Install single package (install 1 module at a time: check meta/configs for suppo
 
 ## Custom script & binary
 
-* Custom zsh files will be automatically available if placed in `~/.project/`
+* Custom sh files will be automatically available if placed in `~/.project/` (need restart)
 * Custom binary files will be automatically available if placed in `~/bin`

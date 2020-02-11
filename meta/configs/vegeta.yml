@@ -1,0 +1,9 @@
+# http load testing tool: https://github.com/tsenart/vegeta
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/vegeta.sh, Installing vegeta]

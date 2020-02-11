@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# =============================================================================
+# Note
+# =============================================================================
+
+# use some external library from shell environment
+# * fx
+# * httpie
+# * json2csv
+# * csvlook
+
+# use some custom variables from shell environment
+# * GITLAB_TOKEN
+# * GITLAB_HOST
+# * GITLAB_API_VERSION
+
+# =============================================================================
+# util functions
+# =============================================================================
+
+_join_by() {
+    local delimiter="$1" # Save first argument in a variable
+    shift            	 # Shift all arguments to the left (original $1 gets lost)
+    local items=("$@")   # Rebuild the array with rest of arguments
+
+    local IFS=$delimiter; echo "${items[*]}";
+}
+
+_urldecode() {
+    # https://stackoverflow.com/a/10660730/1530178
+    # This is perhaps a risky gambit, but since all escape characters must be
+    # encoded, we can replace %NN with \xNN and pass the lot to printf -b, which
+    # will decode hex for us
+    printf -v REPLY '%b' "${1//%/\\x}" # You can either set a return variable (FASTER)
+
+    echo "${REPLY}"  #+or echo the result (EASIER)... or both... :p
+}
+
+_urlencode() {
+    # https://stackoverflow.com/a/10660730/1530178
+    local string="${1}"
+    local strlen=${#string}
+    local encoded=""
+    local pos=""
+    local c=""
+    local o=""
+
+    for (( pos=0 ; pos<strlen ; pos++ )); do
+        c=${string:$pos:1}
+        case "$c" in
+           [-_.~a-zA-Z0-9] ) o="${c}" ;;
+           * )               printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="${o}"
+    done
+    echo "${encoded}"    # You can either set a return variable (FASTER)
+    REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
+}
+
+_api_base_url() {
+    local path="$1"
+
+    echo "$GITLAB_HOST/api/$GITLAB_API_VERSION/$path"
+}
+
+_api_headers() {
+    # header use with httpie
+
+    local token="$GITLAB_TOKEN"
+    local headers=(
+       Authorization:"Bearer $token"
+       "$@"
+    )
+
+    echo "${headers[@]}"
+}
+
+_api_queryStr() {
+    local params=(
+        "$@"
+    )
+
+    _join_by '&' "${params[@]}"
+}
+
+_api_reduce_response() {
+    local fields=()
+
+    if [ "${#@}" -gt 0 ]; then
+        local fields=()
+
+        for field in "$@"; do
+            fields=( ${fields[@]} "'$field'" )
+        done
+
+        local fieldStr="$(_join_by ',' "${fields[@]}")"
+
+        fx "x => mapReduce(x, [$fieldStr])"
+    else
+        fx "."
+    fi
+}
+
+_api() {
+    local method=""
+    local path=""
+    local params=()
+    local fields=()
+    local format="json"
+
+    while [[ $1 ]]; do
+        case "$1" in
+            --method)
+                method="$2"
+                shift
+                ;;
+            --path)
+                path="$2"
+                shift
+                ;;
+            --param)
+                params+=( "$2" )
+                shift
+                ;;
+            --field)
+                fields+=( "$2" )
+                shift
+                ;;
+            --format)
+                format="$2"
+                shift
+                ;;
+            *)
+                echo "Unknown parameter: $1" >&2
+                return 1
+        esac
+
+        if ! shift; then
+            echo 'Missing parameter argument.' >&2
+            return 1
+        fi
+    done
+
+    local headers=$(_api_headers)
+    local endpoint="$(_api_base_url $path)"
+    local queryStr="$(_api_queryStr ${params[@]} )"
+
+    local url="$endpoint?$queryStr"
+
+    # echo $method
+    # echo $url
+    # echo ${headers[@]}
+    # echo ${params[@]}
+
+    case "$format" in
+
+        json*)
+            http $method \
+                "$url" \
+                "${headers[@]}" \
+                --body \
+                | _api_reduce_response ${fields[@]}
+            ;;
+
+        csv*)
+            http $method \
+                "$url" \
+                "${headers[@]}" \
+                --body \
+                | _api_reduce_response ${fields[@]} \
+                | json2csv
+            ;;
+
+        table*)
+            http $method \
+                "$url" \
+                "${headers[@]}" \
+                --body \
+                | _api_reduce_response ${fields[@]} \
+                | json2csv \
+                | csvlook -d ','
+            ;;
+
+        fzf*)
+            http $method \
+                "$url" \
+                "${headers[@]}" \
+                --body \
+                | _api_reduce_response ${fields[@]} \
+                | json2csv \
+                | csvlook \
+                | fzf
+            ;;
+
+        *)
+            echo "$format format is not support"
+    esac
+}
+
+# =============================================================================
+# call functions
+# =============================================================================
+
+#######################################
+# Create gitlab merge request for current project with current branch to project's default branch
+# Arguments:
+#   None
+# Returns:
+#   pr created in json format
+#######################################
+create_project_pr() {
+
+    local source_branch="$(git br-current)" # get current git branch (git alias)
+    local project_name="$(git project)" # get current repo (git alias)
+    local target_branch="$(gitlab project | fx .default_branch)" # get the default branch of current project
+    local assignee_id="$(gitlab project | fx .creator_id)" # assign to creator by default
+    local title="$(_urlencode "$(git log-last-comment)")" # get comment from last commit (git alias)
+    local path="projects/$(_urlencode $project_name)/merge_requests"
+
+    _api \
+        --method POST \
+        --path "$path" \
+        --param "source_branch=$source_branch" \
+        --param "target_branch=$target_branch" \
+        --param "assignee_id=$assignee_id" \
+        --param "title=$title" \
+        --param "remove_source_branch=true" \
+        --param "squash=true"
+        "$@"
+}
+
+update_project_pr() {
+    local project_id="$1" # could be an id number or string as project path (ex: hminh0407/dotfiles)
+    local pr_id="$2"
+    local path="projects/$project_id/merge_requests/$pr_id"
+
+    _api \
+        --method PUT \
+        --path "$path" \
+        "$@"
+}
+
+projects() {
+    # Attribute                   	 Type    	 Required 	 Description
+    # archived                    	 boolean 	 no       	 Limit by archived status
+    # visibility                  	 string  	 no       	 Limit by visibility public, internal, or private
+    # order_by                    	 string  	 no       	 Return projects ordered by id, name, path, created_at, updated_at, or last_activity_at fields. Default is created_at
+    # sort                        	 string  	 no       	 Return projects sorted in asc or desc order. Default is desc
+    # search                      	 string  	 no       	 Return list of projects matching the search criteria
+    # simple                      	 boolean 	 no       	 Return only limited fields for each project. This is a no-op without authentication as then only simple fields are returned.
+    # owned                       	 boolean 	 no       	 Limit by projects explicitly owned by the current user
+    # membership                  	 boolean 	 no       	 Limit by projects that the current user is a member of
+    # starred                     	 boolean 	 no       	 Limit by projects starred by the current user
+    # statistics                  	 boolean 	 no       	 Include project statistics
+    # with_custom_attributes      	 boolean 	 no       	 Include custom attributes in response (admins only)
+    # with_issues_enabled         	 boolean 	 no       	 Limit by enabled issues feature
+    # with_merge_requests_enabled 	 boolean 	 no       	 Limit by enabled merge requests feature
+    # with_programming_language   	 string  	 no       	 Limit by projects which use the given programming language
+    # wiki_checksum_failed        	 boolean 	 no       	 Limit projects where the wiki checksum calculation has failed (Introduced in GitLab Premium 11.2)
+    # repository_checksum_failed  	 boolean 	 no       	 Limit projects where the repository checksum calculation has failed (Introduced in GitLab Premium 11.2)
+    # min_access_level            	 integer 	 no       	 Limit by current user minimal access level
+    # id_after                    	 integer 	 no       	 Limit results to projects with IDs greater than the specified ID
+    # id_before                   	 integer 	 no       	 Limit results to projects with IDs less than the specified ID
+
+    _api \
+        --method GET \
+        --path "projects" \
+        --param "membership=true" --param "per_page=1000" --param "oder_by=id" --param "sort=desc" \
+        "$@"
+}
+
+project() {
+    local project_name="$(git project)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
+    local path="projects/$(_urlencode $project_name)"
+
+    _api \
+        --method GET \
+        --path "$path" \
+        --param "statistics=true" --param "liscene=true" --param "with_custom_attributes=true" \
+        "$@"
+}
+
+project_tags() {
+    local project_name="$(git project)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
+    local path="projects/$(_urlencode $project_name)/repository/tags"
+
+    _api \
+        --method GET \
+        --path "$path" \
+        --param "order_by=updated" --param "sort=desc" \
+        "$@"
+}
+
+prs() {
+    # check for more usage: https://docs.gitlab.com/ee/api/merge_requests.html
+    # params
+    # attribute         type     required description
+    # state             string   no       Return all merge requests or just those that are opened, closed, locked, or merged
+    # order_by          string   no       Return requests ordered by created_at or updated_at fields. Default is created_at
+    # sort              string   no       Return requests sorted in asc or desc order. Default is desc
+    # milestone         string   no       Return merge requests for a specific milestone. None returns merge requests with no milestone. Any returns merge requests that have an assigned milestone.
+    # view              string   no       If simple, returns the iid, URL, title, description, and basic state of merge request
+    # labels            string   no       Return merge requests matching a comma separated list of labels. None lists all merge requests with no labels. Any lists all merge requests with at least one label. No+Label (Deprecated) lists all merge requests with no labels. Predefined names are case-insensitive.
+    # created_after     datetime no       Return merge requests created on or after the given time
+    # created_before    datetime no       Return merge requests created on or before the given time
+    # updated_after     datetime no       Return merge requests updated on or after the given time
+    # updated_before    datetime no       Return merge requests updated on or before the given time
+    # scope             string   no       Return merge requests for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me For               versions before   11.0, use the now deprecated created-by-me or assigned-to-me scopes instead.
+    # author_id         integer  no       Returns merge requests created by the given user id. Combine with scope=all or scope=assigned_to_me
+    # assignee_id       integer  no       Returns merge requests assigned to the given user id. None returns unassigned merge requests. Any returns merge requests with an assignee.
+    # approver_ids      integer  array    no Returns merge requests which have specified all the users with the given ids as individual approvers. None returns merge requests without approvers. Any returns merge requests with an approver.
+    # my_reaction_emoji string   no       Return merge requests reacted by the authenticated user by the given emoji. None returns issues not given a reaction. Any returns issues given at least one reaction. (Introduced in GitLab 10.0)
+    # source_branch     string   no       Return merge requests with the given source branch
+    # target_branch     string   no       Return merge requests with the given target branch
+    # search            string   no       Search merge requests against their title and description
+    # in                string   no       Modify the scope of the search attribute. title, description, or a string joining them with comma. Default is title,description
+    # wip               string   no       Filter merge requests against their wip status. yes to return only WIP merge requests, no to return non WIP merge requests
+
+    # default behavior
+    _api \
+        --method GET \
+        --path "merge_requests" \
+        --param "scope=all" --param "state=opened" --param "per_page=1000" --param "oder_by=created_at" \
+        "$@"
+}
+
+user() {
+    # get current gitlab user
+    _api \
+        --method GET \
+        --path "user" \
+        "$@"
+}
+
+users() {
+    # get list of gitlab users
+    _api \
+        --method GET \
+        --path "users" \
+        "$@"
+}
+
+# ===main===
+main() {
+    local option="$1"
+
+    case "$option" in
+        create_project_pr)
+            shift
+            create_project_pr "$@"
+            ;;
+        project)
+            shift
+            project "$@"
+            ;;
+        project_tags)
+            shift
+            project_tags "$@"
+            ;;
+        projects)
+            shift
+            projects "$@"
+            ;;
+        prs)
+            shift
+            prs "$@"
+            ;;
+        user)
+            shift
+            user "$@"
+            ;;
+        users)
+            shift
+            users "$@"
+            ;;
+        *)
+            echo "Unknown parameter: $option" >&2
+    esac
+}
+
+main "$@"

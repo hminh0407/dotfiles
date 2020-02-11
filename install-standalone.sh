@@ -2,6 +2,7 @@
 
 set -e
 
+DEFAULT_CONFIG="default"
 BASE_CONFIG="base"
 CONFIG_SUFFIX=".yml"
 
@@ -18,7 +19,7 @@ cd "${BASE_DIR}"
 git -C "${META_DIR}/${DOTBOT_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive --remote
 
-for config in ${@}; do
+for config in $DEFAULT_CONFIG ${@}; do
 	configFile="$(mktemp)" ; echo -e "$(<"${BASE_DIR}/${META_DIR}/${BASE_CONFIG}${CONFIG_SUFFIX}")\n$(<"${BASE_DIR}/${META_DIR}/${CONFIG_DIR}/${config}${CONFIG_SUFFIX}")" > "$configFile"
 	"${BASE_DIR}/${META_DIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASE_DIR}" -c "$configFile" ; rm -f "$configFile"
 done

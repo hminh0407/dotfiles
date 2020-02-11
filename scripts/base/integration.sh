@@ -1,12 +1,14 @@
 # Store all package that need to be integrated with shell
 
 # Define modules to integrate with
+KREW="${KREW_ROOT:-$HOME/.krew}/bin" # https://github.com/kubernetes-sigs/krew
 MSSQL_TOOLS="/opt/mssql-tools/bin"
+LOCAL_BIN="$HOME/.local/bin"
 
 EXPORT_PATH="${PATH}"
 
 SOURCE_MODULES=()
-PATH_MODULES=($CUSTOM_SCRIPTS $MSSQL_TOOLS)
+PATH_MODULES=($CUSTOM_SCRIPTS $KREW $LOCAL_BIN $MSSQL_TOOLS)
 
 # Load integration modules
 for module in "$SOURCE_MODULES[@]"; do [ -f $module ] && source $module; done

@@ -29,6 +29,10 @@
     d-untracked-local-br = "!git branch -D $(git local-branches)"
     d-gone-local-br = "!git branch -D $(git gone-branches)"
 
+    br-ck-exist = "rev-parse --verify --quiet"
+
+    br-current = "rev-parse --abbrev-ref HEAD"
+
     cl = clone --recursive --depth=1
 
     # dry-run, only show what would be removed
@@ -43,6 +47,10 @@
 
     f = fetch origin -p
 
+    # log
+    log-last-comment="!git log -1 --pretty=%B | awk NF"
+        # get the comment from last commit
+
     pl = pull --rebase --prune
 
     ps = push --set-upstream origin
@@ -56,6 +64,9 @@
     rs1 = reset HEAD~1
     rs2 = reset HEAD~2
     rs3 = reset HEAD~3
+
+    project = "!git remote get-url origin | sed -E 's#^.*:(.*).git$#\\1#'"
+        ; get name of the current repo
 
     st = status
 
@@ -73,3 +84,7 @@
         git rm -f "$@"; \
         rm -rf ".git/modules/$@"; \
     }; f"
+
+    usr = shortlog -s -n
+        # get list of contributor and their commits
+        # the list is ordered by most contributed (first user)

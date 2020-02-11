@@ -7,7 +7,6 @@
 *.o
 *.pyc
 *.so
-Pipfile
 
 # Temporary files #
 ###################
@@ -55,3 +54,4 @@ s-doc/
 .idea
 node_modules/
 dotbot
+.venv/

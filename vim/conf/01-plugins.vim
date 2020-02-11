@@ -25,7 +25,7 @@ Plug 'airblade/vim-gitgutter' " show git diff for each line
 
 " Markdown
 " Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
-Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': { -> mkdp#util#install() } }
+Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': { -> mkdp#util#install() } } " https://github.com/iamcco/markdown-preview.nvim
 
 " Search
 Plug 'google/vim-searchindex'          " show search information for each search
@@ -70,12 +70,13 @@ else
     Plug 'prabirshrestha/asyncomplete-neosnippet.vim' " integration with asyncomplete
 
     Plug 'Shougo/neosnippet.vim'                      " https://github.com/Shougo/neosnippet.vim
+        " get snippet from https://github.com/honza/vim-snippets
 endif
 
 if executable('tmux')
     " Plug 'wellle/tmux-complete.vim' " complete for tmux integration
     Plug 'christoomey/vim-tmux-navigator' " tmux integration https://github.com/christoomey/vim-tmux-navigator
-    Plug 'wincent/terminus' " https://github.com/wincent/terminus, cursor shape change in insert and replace mode
+    " Plug 'wincent/terminus' " https://github.com/wincent/terminus, cursor shape change in insert and replace mode
 endif
 
 " Advance {{

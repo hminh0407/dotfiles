@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [pip install --user fire, Installing Python Module - Fire]
+    - [pip install --user jedi, Installing Python Module - Jedi]
+

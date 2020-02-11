@@ -18,19 +18,28 @@ let g:calendar_google_task = 1
 " nnoremap X D
 
 " Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
-let g:yoinkIncludeDeleteOperations=1
+" let g:yoinkIncludeDeleteOperations=1
 
 " }}
 
 if executable('node') && executable('npm') " use coc if possible
     " Coc {{
     " extensions in below list will be automatically installed
+    " let g:coc_global_extensions = [
+    "             \  'coc-snippet',
+    "             \  'coc-tabnine',
+    "             \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
+    "             \  'coc-yaml',
+    "             \  'coc-json',
+    "             \  'coc-emoji'
+    "             \]
     let g:coc_global_extensions = [
+                \  'coc-snippets',
+                \  'coc-sh',
                 \  'coc-tabnine',
                 \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
                 \  'coc-yaml',
-                \  'coc-json',
-                \  'coc-emoji'
+                \  'coc-python',
                 \]
     " Use `:Format` to format current buffer
     command! -nargs=0 Format :call CocAction('format')
@@ -58,8 +67,12 @@ if executable('node') && executable('npm') " use coc if possible
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
     " Add status line support, for integration with other plugin, checkout `:h coc-status`
     set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}" }
+
     " Remap for rename current word
     nmap <leader>rn <Plug>(coc-rename)
+
+    " Fix autofix problem of current line
+    nmap <leader>qf  <Plug>(coc-fix-current)
 
     " integrate with lightline
     function! CocCurrentFunction()
@@ -77,7 +90,55 @@ if executable('node') && executable('npm') " use coc if possible
                 \   'currentfunction': 'CocCurrentFunction'
                 \ },
                 \ }
+
     " }}
+
+
+    if (index(['vim','help'], &filetype) >= 0)
+        " make popup window scrollable (vim only)
+        " check for enhancement in https://github.com/neoclide/coc.nvim/issues/1160
+        " for now, this is the workaround from https://github.com/neoclide/coc.nvim/issues/1405
+        function FindCursorPopUp()
+            let radius = get(a:000, 0, 2)
+            let srow = screenrow()
+            let scol = screencol()
+            " it's necessary to test entire rect, as some popup might be quite small
+            for r in range(srow - radius, srow + radius)
+                for c in range(scol - radius, scol + radius)
+                    let winid = popup_locate(r, c)
+                    if winid != 0
+                        return winid
+                    endif
+                endfor
+            endfor
+
+           return 0
+        endfunction
+
+        function ScrollPopUp(down)
+            let winid = FindCursorPopUp()
+            if winid == 0
+                return 0
+            endif
+
+            let pp = popup_getpos(winid)
+            call popup_setoptions( winid,
+                \ {'firstline' : pp.firstline + ( a:down ? 1 : -1 ) } )
+
+            return 1
+        endfunction
+
+        nnoremap <expr> <c-d> ScrollPopUp(1) ? '<esc>' : '<c-d>'
+        nnoremap <expr> <c-u> ScrollPopUp(0) ? '<esc>' : '<c-u>'
+    else
+        " nvim only
+        "coc#util#float_scroll({forward})
+        "Return expr for scrolling a floating window forward or backward. ex: >
+
+        nnoremap <expr><C-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-d>"
+        nnoremap <expr><C-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-u>"
+    endif
+
 else
     " Ale {{
     " Fix file with prettier then eslint
@@ -121,17 +182,17 @@ else
     " }}
 
     " Neosnippet {{
-    imap <C-K> <Plug>(neosnippet_expand_or_jump)
-    smap <C-K> <Plug>(neosnippet_expand_or_jump)
-    xmap <C-K> <Plug>(neosnippet_expand_target)
+        imap <C-K> <Plug>(neosnippet_expand_or_jump)
+        smap <C-K> <Plug>(neosnippet_expand_or_jump)
+        xmap <C-K> <Plug>(neosnippet_expand_target)
 
-    " Disable snipMate compatibility feature.
-    let g:neosnippet#disable_runtime_snippets = {
-                \   '_' : 1,
-                \ }
+        " Disable snipMate compatibility feature.
+        let g:neosnippet#disable_runtime_snippets = {
+                    \   '_' : 1,
+                    \ }
 
-    " Use custom snippets
-    let g:neosnippet#snippets_directory='~/.vim/snippets'
+        " Use custom snippets
+        let g:neosnippet#snippets_directory='~/.vim/snippets'
     " }}
 endif
 
@@ -263,10 +324,6 @@ let g:gutentags_add_default_project_roots = 0
 vmap <leader><leader>cs <Plug>AutoCalcReplaceWithSum
 " calculate math formular and append result after '='
 vmap <leader>ce <Plug>AutoCalcAppendWithEq
-" }}
-
-" Markdown Preview {{
-nmap <F5> <Plug>MarkdownPreview
 " }}
 
 " Maximize {{

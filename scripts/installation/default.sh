@@ -11,6 +11,9 @@ install() {
 
     # create a folder to contain user specific cli execution files
     mkdir -p "${HOME}"/bin
+
+    # install essential pip tool
+    sudo pip install csvkit
 }
 
 main() {

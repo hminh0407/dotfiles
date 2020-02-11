@@ -5,6 +5,7 @@ if exists('+termguicolors') " enable true color
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
+set showcmd
 
 " theme
 silent! colorscheme gruvbox        " colorscheme gruvbox
@@ -42,6 +43,8 @@ nnoremap <C-y> 3<C-Y>
 
 " auto remove trailing whitespace on buffer write
 autocmd BufWritePre * %s/\s\+$//e
+
+set mouse=a
 " }}
 
 " Folding {{

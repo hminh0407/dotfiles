@@ -100,6 +100,18 @@ if _is_service_exist "lazydocker"; then
 fi
 # }
 
+if _is_service_exist ffmpeg; then
+    alias ffmpeg_add_sub_to_video="_ffmpeg_add_sub_to_video"
+fi
+
+if _is_service_exist helm; then
+    alias helm_template="_helm_template" # locally render helm template, does not apply any update
+    alias helm_upgrade="helm upgrade --reuse-values"
+        # safe guard, always reuse current values
+        # https://medium.com/@kcatstack/understand-helm-upgrade-flags-reset-values-reuse-values-6e58ac8f127e
+    alias helm_values="helm get values"
+fi
+
 # gcloud {
 if _is_service_exist "gcloud"; then
     alias gcp="gcloud"
@@ -110,16 +122,25 @@ if _is_service_exist "gcloud"; then
     alias gcp_compute_instance="gcloud compute instances"
     alias gcp_compute_instance_list="_gcloud_compute"
     alias gcp_compute_instance_select="_gcloud_compute_display"
+    alias gcp_log_event_hpa="_gcp_log_event_hpa"
+    alias gcp_log_kevent="_gcp_log_kevent"
     alias gcp_sql="_gcloud_sql"
     alias gcp_service="_gcloud_service"
 fi
+
 if _is_service_exist "kubectl"; then
     alias k="kubectl"
     alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
     alias kns="kubens" # switch namespace
 
+    alias kca="kubectl describe -n kube-system configmap cluster-autoscaler-status" # cluster autoscaler status
     alias kd="_kube_deployment"
+    alias ke="_kube_event"
+    alias ke_hpa="_kube_event_hpa"
+    alias khpa="_kube_hpa"
+    alias khpa_multi_replica="_kube_hpa_multi_replica"
+    alias khpa_validate="_kube_hpa_validate"
     alias ki="_kube_ingress"
     alias kn="_kube_node"
     alias knu="_kube_node_usage"
@@ -129,13 +150,43 @@ if _is_service_exist "kubectl"; then
     alias kpi="_kube_pod_inactive"
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
+
+    alias k_resource="kubectl-resource_capacity --pods --util --sort cpu.request"
 fi
 # }
 
 # git {
 if _is_service_exist "git"; then
     alias g="git"
+    alias mgst="mgst" # https://github.com/fboender/multi-git-status
+        # Show uncommited, untracked and unpushed changes in multiple Git repositories
+
+    alias gl_create_project_pr="gitlab create_project_pr"
+
+    alias gl_projects="gitlab projects --field id --field visibility --field web_url --field web_url_to_repo --field default_branch --field creator_id --format table"
+    alias gl_projects_urls="gitlab projects --field web_url --format fzf"
+    alias gl_project="gitlab project"
+    alias gl_project_tags="gitlab project_tags --field name --field commit.title --field commit.created_at --field commit.author_email --format table"
+    alias gl_project_url="gitlab project | fx .web_url"
+    alias gl_project_branch="gitlab project | fx .default_branch"
+
+    alias gl_prs="gitlab prs --field title --field source_branch --field target_branch --field web_url --field author.username --field assignee.username --format table"
+    alias gl_prs_usr="gl_prs --param author_id=\$(gitlab user | fx '.id') --format table"
+
+    # alias gl_pr_create="_gitlab_pr_create"
+    # alias gl_pr_update="_gitlab_pr_update"
+
+    alias gl_usrs="gitlab users"
+    alias gl_usr="gitlab user"
 fi
+# }
+
+if _is_service_exist "pgcli"; then
+    alias pgcli_dev="pgcli postgres://dev:dev@localhost:5432/dev" # default connect for postgres in localhost
+fi
+
+# search {
+    alias s="_rg_file_pattern"
 # }
 
 # supervisor {
@@ -178,3 +229,12 @@ alias xinput_disable_keyboard="xinput float \$(_xinput_list_keyboard_id)"
 # Check for more detail: https://askubuntu.com/questions/160945/is-there-a-way-to-disable-a-laptops-internal-keyboard
 alias xinput_enable_keyboard="xinput reattach \$(_xinput_list_keyboard_id) 3"
 # }
+
+# https://unix.stackexchange.com/a/454072/388893
+# download the best 1080p video quality
+# download the best mp4 compatible audio quality
+# convert output format to mp4
+alias yt-dl-mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
+alias yt-dl-mkv="_youtube_download_video_mkv"
+alias yt-dl-sub="_youtube_download_sub"
+alias yt-dl-sub-auto="youtube-dl --write-auto-sub --skip-download"

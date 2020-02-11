@@ -4,6 +4,8 @@
 . $(dirname ${BASH_SOURCE[0]})/../base/env.sh
 
 install () {
+    apt-fast install --no-install-recommends -y ffmpeg
+
     local location="$CUSTOM_SCRIPTS/youtube-dl"
     local link="https://yt-dl.org/downloads/latest/youtube-dl"
 

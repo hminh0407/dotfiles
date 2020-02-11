@@ -13,7 +13,7 @@
     - ['apt-fast install --no-install-recommends -y tig', Installing tig]
 
 - link:
-    ~/.gitconfig : git/gitconfig
-    ~/.gitignore : git/gitignore
+    ~/.gitconfig : git/.gitconfig
+    ~/.gitignore : git/.gitignore
     ~/.tigrc     : git/tigrc
 

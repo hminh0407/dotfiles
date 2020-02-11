@@ -16,6 +16,7 @@
     ~/.vim/conf                           : vim/conf
     ~/.vim/after/ftplugin                 : vim/ftplugin
     ~/.vim/snippets                       : vim/snippets
+    ~/.config/coc/ultisnips               : vim/ultisnips # default folder for utilsnippets files
     ~/.ctags                              : vim/conf/ctags
     ~/.vim/coc-settings.json              : vim/coc/coc-settings.json
     ~/.config/TabNine/tabnine_config.json : vim/coc/extensions/tabnine_config.json

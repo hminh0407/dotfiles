@@ -43,8 +43,10 @@ function _source_bash {
 
 # Source bash custom config
 _source_bash ${ZDOTDIR:-${HOME}}/.bash/custom/index.sh
+
 # Source zsh custom config
 source ${ZDOTDIR:-${HOME}}/.zsh/custom/index.zsh
+
 # Source project specifi config
 local project_scripts=()
 while IFS= read -r -d $'\0' script; do

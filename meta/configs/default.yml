@@ -4,10 +4,15 @@
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
 
 - shell:
     - ['find . -type f -iname "*.sh" -exec chmod +x {} \;', Make scripts executable]
     - [./scripts/installation/default.sh, Installing Default]
 - link:
       ~/.ignore: ignore
+      ~/.fxrc: fx/fxrc
 

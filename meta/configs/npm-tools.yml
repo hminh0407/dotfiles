@@ -5,4 +5,5 @@
         quiet : false
 
 - shell:
-    - ["sudo npm install -g fx", Installing NPM Tools]
+    - ["sudo npm install -g fx", Installing NPM Tools - fx json processing]
+    - ["sudo npm install -g json2csv", Installing NPM Tools - json2csv]

@@ -1,0 +1,118 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet pg-db_info
+SELECT
+    d.datname AS Name,
+    pg_catalog.pg_get_userbyid(d.datdba) AS Owner,
+    CASE
+        WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
+            THEN pg_catalog.pg_size_pretty(pg_catalog.pg_database_size(d.datname))
+        ELSE 'No Access'
+    END AS SIZE
+FROM pg_catalog.pg_database d
+ORDER BY
+    CASE
+        WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
+            THEN pg_catalog.pg_database_size(d.datname)
+        ELSE NULL
+    END DESC -- nulls first
+LIMIT 20
+endsnippet
+
+snippet pg-db_alter_db_owner
+ALTER DATABASE ${1:database} OWNER TO ${2:owner};
+endsnippet
+
+snippet pg-create_role
+CREATE ROLE ${1:role} LOGIN PASSWORD '${2:pass}';
+endsnippet
+
+snippet pg-ddl-columns
+	SELECT
+		table_name
+		,column_name
+		,data_type
+		,udt_name
+		,is_nullable
+		,character_maximum_length
+	FROM information_schema.columns
+	WHERE table_schema = '${0:public}'
+	ORDER BY table_name,ordinal_position
+	;
+endsnippet
+
+snippet pg-insert
+INSERT
+    INTO ${1:table}
+        (${2:columns})
+    VALUES
+        (${3:values}),
+	();
+endsnippet
+
+snippet pg-view_def
+	select pg_get_viewdef('${0:name}', true);
+endsnippet
+
+snippet pg-table_size
+SELECT
+    *
+    , pg_size_pretty(total_bytes) AS total
+    , pg_size_pretty(index_bytes) AS INDEX
+    , pg_size_pretty(toast_bytes) AS toast
+    , pg_size_pretty(table_bytes) AS TABLE
+FROM (
+    SELECT
+        *,
+        total_bytes-index_bytes-COALESCE(toast_bytes,0) AS table_bytes
+    FROM (
+        SELECT
+            c.oid
+	    ,nspname                                 AS table_schema
+            , relname                                AS TABLE_NAME
+            , c.reltuples                            AS row_estimate
+            , pg_total_relation_size(c.oid)          AS total_bytes
+            , pg_indexes_size(c.oid)                 AS index_bytes
+            , pg_total_relation_size(reltoastrelid)  AS toast_bytes
+        FROM pg_class c
+        LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+        WHERE relkind = 'r'
+	    AND nspname = 'public'
+    ) a
+) a;
+endsnippet
+
+snippet pg-truncate-all-tables-query
+	SELECT
+		'TRUNCATE ' || input_table_name || ' CASCADE;' AS truncate_query
+	FROM (
+		SELECT
+			table_schema || '.' || table_name AS input_table_name
+		FROM information_schema.tables
+		WHERE table_schema NOT IN ('pg_catalog', 'information_schema') AND table_schema NOT LIKE 'pg_toast%'
+	) AS information;
+endsnippet

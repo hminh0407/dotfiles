@@ -1,9 +1,6 @@
 {
     "coc.source.emoji.enable": true,
-    "coc.source.emoji.filetypes": [
-        "markdown",
-        "vimwiki"
-    ],
+    "coc.source.emoji.filetypes": ["markdown", "vimwiki"],
     "eslint.autoFixOnSave": true,
     "eslint.run": "onSave",
     "eslint.filetypes": [
@@ -12,19 +9,15 @@
         "typescriptreact",
         "javascriptreact"
     ],
-    "yaml.format.enable": true,
     "languageserver": {
         "bash": {
             "command": "bash-language-server",
-            "args": [
-                "start"
-            ],
-            "filetypes": [
-                "sh"
-            ],
-            "ignoredRootPaths": [
-                "~"
-            ]
+            "args": ["start"],
+            "filetypes": ["sh"],
+            "ignoredRootPaths": ["~"]
         }
-    }
+    },
+    "python.analysis.diagnosticEnabled": false,
+    "snippets.userSnippetsDirectory": "~/.vim/snippets",
+    "yaml.format.enable": true
 }
