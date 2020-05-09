@@ -1,31 +1,22 @@
 #!/usr/bin/env bash
 
-# =====================================================================================================================
-# LIBRARIES
-# =====================================================================================================================
-
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-
-# =====================================================================================================================
-# FUNCTION
-# =====================================================================================================================
+declare DOTFILES_DIR="$HOME/.dotfiles"
+declare DOTFILES_BIN_DIR="$DOTFILES_DIR/bin"
+declare DOTFILES_BIN_NVIM="$DOTFILES_BIN_DIR/nvim"
 
 install () {
-    apt-fast install --no-install-recommends -y tmux python-pip
+    echo "... Installing Tmux ..."
+    apt-fast install --no-install-recommends -y tmux
 
-    # install tmux plugin manager
-    _git_clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
-    # install plugins
+    echo "... Installing Tmux Plugin Manager ..."
+    git cl https://github.com/tmux-plugins/tpm.git ~/.tmux/plugins/tpm
+
+    echo "... Installing Tmux Plugins ..."
     ~/.tmux/plugins/tpm/bin/install_plugins
-    # install tmuxp & plugins
+
+    echo "... Installing Tmux Profile Tool tmuxp ..."
     sudo pip install wheel tmuxp
-    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+    # ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 }
 
-main () {
-    if ! _is_service_exist tmux; then
-        install
-    fi
-}
-
-main
+install

@@ -1,0 +1,19 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create : true
+        relink : true
+        force  : true
+
+- clean: ['~', '~/.dotfiles']
+
+- shell:
+    - [./scripts/installation/zsh.sh, Installing zsh]
+
+- link:
+    ~/.zshrc            : zsh/zshrc
+    ~/.dotfiles/zshrc.d : zsh/zshrc.d
+

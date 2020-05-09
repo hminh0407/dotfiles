@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-
 install () {
+    # nvm should be installed already as zsh plugin
     # using nvm to manage node and npm
-    # nvm is used as oh-my-zsh plugin (zsh-nvm)
     nvm install --lts
     nvm use --lts
+
+    # when node is already installed prompt will return exit code error
+    # explicit return 0 to avoid that
+    return 0
 }
 
-main () {
-    if ! _is_service_exist node; then
-        install
-    fi
-}
-
-main
+install

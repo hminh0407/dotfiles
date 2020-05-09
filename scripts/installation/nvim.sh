@@ -1,64 +1,48 @@
 #!/usr/bin/env bash
 
-# =====================================================================================================================
-# LIBRARIES
-# =====================================================================================================================
+installAppImage() {
+    echo "... Installing Nvim ..."
 
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-. $(dirname ${BASH_SOURCE[0]})/../base/env.sh
+    local repo="https://github.com/neovim/neovim"
+    local version="$(git rp-latest-release $repo)"
+    # local location="$CUSTOM_SCRIPTS/nvim"
+    local location="$DOTFILES_BIN_NVIM"
+    local link="$repo/releases/download/$version/nvim.appimage"
+    local file="$(basename $link)"
 
-# =====================================================================================================================
-# FUNCTION
-# =====================================================================================================================
+    curl -LO $link && mv $file $location && chmod u+x $location
 
-install() {
-    local repo="neovim/neovim"
-    local version="$(_git_get_latest_release $repo)"
-    local location="$CUSTOM_SCRIPTS/nvim"
-    local link="https://github.com/$repo/releases/download/$version/nvim.appimage"
-
-    wget -qO $location $link && chmod +x $location
-
-    sudo pip install pynvim
-}
-
-# install () {
-#     sudo add-apt-repository -y ppa:neovim-ppa/stable
-#     sudo apt-get update -y
-#     apt-fast install --no-install-recommends -y neovim python-neovim python3-neovim ripgrep
-# }
-
-config () {
+    echo "... Configuring Nvim ..."
     # use Neovim for some (or all) of the editor alternatives, use the following commands
-    sudo update-alternatives --install /usr/bin/vi vi $CUSTOM_SCRIPTS/nvim 60
-    sudo update-alternatives --config vi
-    sudo update-alternatives --install /usr/bin/editor editor $CUSTOM_SCRIPTS/nvim 60
-    sudo update-alternatives --config editor
+    sudo update-alternatives --auto --install /usr/bin/vi vi $DOTFILES_BIN_NVIM 60
+    sudo update-alternatives --auto --config vi
+    sudo update-alternatives --auto --install /usr/bin/editor editor $DOTFILES_BIN_NVIM 60
+    sudo update-alternatives --auto --config editor
+
+    # sudo pip install pynvim # install python support
 }
 
-plugin() {
-    # setup environment for vim plugins
-    apt-fast install --no-install-recommends -y nodejs npm
-    sudo npm install -g bash-language-server yarn
+installFromSource() {
+    echo "... Installing NVIM prerequisite ..."
+    apt-fast install --no-install-recommends -y \
+        make cmake build-essential pkg-config libtool-bin gettext \
+        gperf luajit luarocks libuv1-dev libluajit-5.1-dev libunibilium-dev libmsgpack-dev libtermkey-dev libvterm-dev libutf8proc-dev
 
-    # make vimwiki works with tagbar
-    # local location="$CUSTOM_SCRIPTS/vwtags.py"
-    # local link="https://raw.githubusercontent.com/vimwiki/utils/master/vwtags.py"
+    sudo luarocks build mpack
+    sudo luarocks build lpeg
+    sudo luarocks build inspect
 
-    # config for markdown
-    local location="$CUSTOM_SCRIPTS/markdown2ctags.py"
-    local link="https://github.com/jszakmeister/markdown2ctags/blob/master/markdown2ctags.py"
-
-    wget -qO $location $link && chmod +x $location
+    echo "... Building NVIM from source ..."
+    git cl "https://github.com/neovim/neovim.git" $DOTFILES_TMP_DIR/neovim
+    cd $DOTFILES_TMP_DIR/neovim
+    # git checkout stable
+    make CMAKE_BUILD_TYPE=Release
+    sudo make install
 }
 
-main() {
-    if ! _is_service_exist nvim; then
-        install
-        config
-        plugin
-    fi
+installFromApt() {
+    echo "... Installing Nvim ..."
+    apt-fast install --no-install-recommends -y neovim
 }
 
-main
-
+installFromApt

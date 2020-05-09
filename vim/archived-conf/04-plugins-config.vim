@@ -1,3 +1,34 @@
+" Calendar {{
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+" }}
+
+" Cutclass & Yoink {{
+keep the x key as default (move)
+nnoremap x d
+xnoremap x d
+nnoremap xx dd
+nnoremap X D
+
+" Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
+let g:yoinkIncludeDeleteOperations=1
+
+" }}
+
+" COC {{
+" extensions in below list will be automatically installed
+let g:coc_global_extensions = [
+            \  'coc-snippet',
+            \  'coc-tabnine',
+            \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
+            \  'coc-yaml',
+            \  'coc-json',
+            \  'coc-emoji'
+            \  'coc-python',
+            \]
+
+" }}
+
 " Ale {
     " configure lightline work with ALE
     let g:lightline = {
@@ -68,3 +99,10 @@ let g:gitgutter_sign_modified_removed = emoji#for('collision')
 set completefunc=emoji#complete
 " }}
 
+" Test {{
+let test#strategy = "dispatch" " use quickfix window, not as good as vtr (async)
+let test#strategy = "neoterm" " easily crash on Unbuntu (sync)
+let test#strategy = "vimterminal" " use quickfix window, not like it (sync)
+let test#strategy = "vimux" " could be the best but heavier than vtr (async)
+let test#strategy = "vtr" " seem to be the best solution (async)
+" }}

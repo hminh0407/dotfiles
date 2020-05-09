@@ -1,15 +1,14 @@
 # this container is to test the environment setup on ubuntu
-FROM ubuntu:18.04
+FROM ubuntu:20.04
+
+# make apt installation non interactive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # install required tools
-RUN apt-get update && apt-get install --no-install-recommends -y curl software-properties-common
-# install apt-fast
-RUN add-apt-repository ppa:apt-fast/stable
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y apt-fast
-# install other tools
-RUN apt-fast install --no-install-recommends -y sudo git python python-setuptools
+RUN apt-get update -y && apt-get --no-install-recommends --fix-missing -y install sudo software-properties-common python3 python3-pip git
 
-WORKDIR /dotfiles
+# alias pip with pip3
+RUN ln -sfn /bin/pip3 /bin/pip
 
 # this keep the container running
 CMD tail -f /var/log/bootstrap.log

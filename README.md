@@ -9,10 +9,6 @@ Use [dotbot](https://github.com/anishathalye/dotbot) dotfiles manager to manage 
 
 * Git
 
-# Usage
-
-It is recommend to fork this project
-
 ## Docker
 There's a docker setup to try out the tools and config.
 * run `docker-compose up -d ubuntu` to start the container

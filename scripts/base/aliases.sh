@@ -20,13 +20,20 @@ alias evi="vi -u NONE"
 alias mv="mv -v"
 alias m="man"
 alias mk="mkdir"
+alias ls="ls --color=auto"
+alias ll="ls -l"
+alias lla="ls -la"
+alias lrt="ls -lart"
 alias now='date +"%d-%m-%Y %T"'
 alias nowdate='date +"%d-%m-%Y"'
 alias nowtime='date +"%T"'
+alias timePrefix='date +"%Y%m%d%H%M%S"' # create a date time string that can be used as prefix for file's name
+alias datePrefix='date +"%Y%m%d"' # create a date time string that can be used as prefix for file's name
 alias open="xdg-open"
 alias path='echo -e ${PATH//:/\\n}'
 alias ping='ping -c 4'
 alias ram="sudo lshw -short -C memory"
+alias rm='rm --preserve-root' # safety
 alias t="touch"
 alias tl="tldr -p linux"
 alias wget="wget -c"
@@ -43,14 +50,9 @@ alias dot="cd ~/dotfiles"
 alias wp="cd ~/vimwiki/personal"
 alias wd="cd ~/vimwiki/development"
 
-if _is_service_exist "apt-fast"; then
-    alias apt-get="apt-fast"
-    alias apti="apt-fast install --no-install-recommends -y"
-    alias aptu="apt-fast update"
-    alias aptr="sudo apt purge"
-fi
+alias apti="apt-fast install --no-install-recommends -y"
 
-if _is_service_exist "fzf"; then
+if ! [ -x "$(command -v fzf)" ]; then
     alias fs="_fzf_find_in_files" # search text in files
     alias fm="_fzf_man"
     alias ft="_fzf_tldr"
@@ -63,15 +65,22 @@ else
     alias psaux="ps aux"
 fi
 
-if _is_service_exist "safe-rm"; then
-    alias rm="safe-rm" # replace rm with safe-rm
-else
-    alias rm='rm --preserve-root' # safety
-fi
 # }
 
+# curl {{{
+# some useful curl alias
+alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --post302 --post303 --output /dev/null --write-out '%{http_code}'"
+    # example: curl -L -s -o /dev/null -w '%{http_code}' google.com
+    # get status of a site
+    # --location: to follow redirect link
+    # --max-time: to only wait for 3s if the site does not response
+    # --insecure: allows curl to proceed and operate even for server connections otherwise considered insecure
+    # --post301 --post302 --post303: not change the non-GET request method to GET after a 30x response
+# }}}
+
 # desk {
-if _is_service_exist "desk"; then
+
+if ! [ -x "$(command -v desk)" ]; then
     alias d="desk"
     alias de="desk edit"
     alias dg="_desk" # desk go to desk setup
@@ -79,7 +88,7 @@ fi
 # }
 
 # docker {
-if _is_service_exist "docker"; then
+if ! [ -x "$(command -v docker)" ]; then
     alias dk="docker"
     alias dkim="docker images"
     alias dkps="docker ps"
@@ -90,21 +99,23 @@ if _is_service_exist "docker"; then
     alias dk_rm_all_ps="docker rm -fv \$(docker ps -aq)"
 fi
 
-if _is_service_exist "docker-compose"; then
+
+if ! [ -x "$(command -v docker-compose)" ]; then
     alias dc="docker-compose"
     alias dcb="docker-compose build --force-rm"
     alias dcu="docker-compose up -d --build"
 fi
-if _is_service_exist "lazydocker"; then
+
+if ! [ -x "$(command -v lazydocker)" ]; then
     alias lzd="lazydocker"
 fi
 # }
 
-if _is_service_exist ffmpeg; then
+if ! [ -x "$(command -v ffmpeg)" ]; then
     alias ffmpeg_add_sub_to_video="_ffmpeg_add_sub_to_video"
 fi
 
-if _is_service_exist helm; then
+if ! [ -x "$(command -v helm)" ]; then
     alias helm_template="_helm_template" # locally render helm template, does not apply any update
     alias helm_upgrade="helm upgrade --reuse-values"
         # safe guard, always reuse current values
@@ -113,7 +124,7 @@ if _is_service_exist helm; then
 fi
 
 # gcloud {
-if _is_service_exist "gcloud"; then
+if ! [ -x "$(command -v gcloud)" ]; then
     alias gcp="gcloud"
     alias gcp_cluster="_gcloud_cluster"
     alias gcp_cluster_nodepool="_gcloud_cluster_nodepool"
@@ -128,7 +139,7 @@ if _is_service_exist "gcloud"; then
     alias gcp_service="_gcloud_service"
 fi
 
-if _is_service_exist "kubectl"; then
+if ! [ -x "$(command -v kubectl)" ]; then
     alias k="kubectl"
     alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
@@ -156,7 +167,7 @@ fi
 # }
 
 # git {
-if _is_service_exist "git"; then
+if ! [ -x "$(command -v git)" ]; then
     alias g="git"
     alias mgst="mgst" # https://github.com/fboender/multi-git-status
         # Show uncommited, untracked and unpushed changes in multiple Git repositories
@@ -165,6 +176,7 @@ if _is_service_exist "git"; then
 
     alias gl_projects="gitlab projects --field id --field visibility --field web_url --field web_url_to_repo --field default_branch --field creator_id --format table"
     alias gl_projects_urls="gitlab projects --field web_url --format fzf"
+    alias gl_projects_ssh="gitlab projects --field ssh_url_to_repo --format table"
     alias gl_project="gitlab project"
     alias gl_project_tags="gitlab project_tags --field name --field commit.title --field commit.created_at --field commit.author_email --format table"
     alias gl_project_url="gitlab project | fx .web_url"
@@ -181,20 +193,9 @@ if _is_service_exist "git"; then
 fi
 # }
 
-if _is_service_exist "pgcli"; then
-    alias pgcli_dev="pgcli postgres://dev:dev@localhost:5432/dev" # default connect for postgres in localhost
-fi
-
 # search {
     alias s="_rg_file_pattern"
-# }
-
-# supervisor {
-# if _is_service_exist supervisorctl; then
-#     alias s="sudo supervisorctl"
-#     alias sr="sudo supervisorctl reload"
-#     alias ss="sudo supervisorctl status"
-# fi
+    alias sf="_rg_file"
 # }
 
 # nvm {
@@ -204,7 +205,7 @@ alias loadnvm='[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
 # }
 
 # tmux {
-if _is_service_exist "tmux"; then
+if ! [ -x "$(command -v tmux)" ]; then
     alias tm="tmux"
     alias tmr="tmux source ~/.tmux.conf" # reload tmux session
     alias tmkill="tmux kill-session" # kill current tmux session
@@ -213,7 +214,7 @@ if _is_service_exist "tmux"; then
     # note that all builtin bind key will be destroyed as well, should kill and restart tmux
     alias tmunbindallkeys="tmux unbind-key -a"
 fi
-if _is_service_exist "tmuxp"; then
+if ! [ -x "$(command -v tmux)" ]; then
     alias tmp="tmuxp"
     alias tmpl="tmuxp load"
     alias tmk="tmux kill-session -t"

@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# =====================================================================================================================
-# LIBRARIES
-# =====================================================================================================================
-
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-
-# =====================================================================================================================
-# FUNCTION
-# =====================================================================================================================
-
 install () {
     # Install packages to allow apt to use a repository over HTTPS
     apt-fast install --no-install-recommends -y \
@@ -38,10 +28,4 @@ install () {
     apt-fast install --no-install-recommends -y docker-ce docker-ce-cli containerd.io docker-compose
 }
 
-main () {
-    if ! _is_service_exist docker; then
-        install
-    fi
-}
-
-main
+install

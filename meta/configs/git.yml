@@ -11,6 +11,7 @@
 
 - shell:
     - ['apt-fast install --no-install-recommends -y tig', Installing tig]
+    - ['git submodule update --init --recursive', Updating git submodule]
 
 - link:
     ~/.gitconfig : git/.gitconfig

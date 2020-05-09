@@ -33,7 +33,22 @@
 
     br-current = "rev-parse --abbrev-ref HEAD"
 
-    cl = clone --recursive --depth=1
+    ; cl = clone --recursive --depth=1
+
+    ; clone git if not exist, pull latest code if exist, accept a custom folder path
+    ; ex: git cl https://github.com/zimfw/zimfw -> clone to ./zimfw folder
+    ; ex: git cl https://github.com/zimfw/zimfw zimzsh -> clone to ./zimzsh folder
+    cl = "!f() { \
+        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
+        local repo="$1"; \
+        local localFolder="$2"; \
+        if [ -z "$localFolder" ]; then \
+            localFolder="$(basename $repo)"; \
+        else \
+            mkdir -p "$localFolder"; \
+        fi; \
+        git -C $localFolder pull || git clone --depth=1 --recursive $repo $localFolder; \
+    }; f"
 
     # dry-run, only show what would be removed
     clean-dry = clean -n
@@ -47,6 +62,10 @@
 
     f = fetch origin -p
 
+    is-in-git-repo = "!git rev-parse --is-inside-work-tree 2>/dev/null"
+        # can be used with bash script like below
+        # if [ "$(git is-in-git-repo)" ]; then echo "in git repo"; fi;
+
     # log
     log-last-comment="!git log -1 --pretty=%B | awk NF"
         # get the comment from last commit
@@ -59,6 +78,45 @@
     rb = rebase
     rba = rebase --abort
     rbc = rebase --continue
+
+    ; get repo name
+    ; ex: git rp-name https://github.com/anishathalye/dotbot -> dotbot
+    rp-name = "!f() { \
+        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
+        local repo="$1"; \
+        local name="$(basename $repo)"; \
+        local nameWithoutSuffix="${name%.*}"; \
+        echo "$nameWithoutSuffix"; \
+    }; f"
+
+    ; get repo host name
+    ; ex: git rp-name https://github.com/anishathalye/dotbot -> anishathalye
+    rp-hostname = "!f() { \
+        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
+        local repo="$1"; \
+        local name="$(git rp-name $repo)"; \
+        local hostname="$(basename ${repo%/${name}})"; \
+        echo "$hostname"; \
+    }; f"
+
+    ; get repo full name
+    ; ex: git rp-name https://github.com/anishathalye/dotbot -> anishathalye/dotbot
+    rp-fullname = "!f() { \
+        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
+        local repo="$1"; \
+        local name="$(git rp-name $repo)"; \
+        local hostname="$(git rp-hostname $repo)"; \
+        local fullname="$hostname/$name"; \
+        echo "$fullname"; \
+    }; f"
+
+    ; get repo latest release
+    rp-latest-release = "!f() { \
+        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
+        local repo="$1"; \
+        local fullname="$(git rp-fullname $repo)"; \
+        curl --silent "https://api.github.com/repos/$fullname/releases/latest" | jq '.tag_name' --raw-output; \
+    }; f"
 
     rs = reset
     rs1 = reset HEAD~1

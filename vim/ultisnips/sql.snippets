@@ -24,6 +24,15 @@
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 
+snippet ms-declare_var
+DECLARE @{1:varName} ${varType}
+SET @{1:varName} = ${varValue}
+endsnippet
+
+snippet ms-last_n_day "get datetime value of last n day" b
+${1:dateColumn} >= DATEADD(DAY, -${2:numberOfDay}, GETDATE())
+endsnippet
+
 snippet pg-db_info
 SELECT
     d.datname AS Name,

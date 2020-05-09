@@ -1,0 +1,8 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/asdf.sh, Installing asdf]

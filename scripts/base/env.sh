@@ -4,6 +4,12 @@
 export CUSTOM_SCRIPTS="$HOME/bin"
 export PROJECT_CUSTOM_SCRIPTS="$HOME/.project"
 export TMP_FOLDER="$HOME/tmp"
+export GIT_FOLDER="$HOME/git"
+    # some cli tools require cloning the git repo to work
+    # this folder is created to store the git repo of cli tools
+
+# export PROMPT='$(kube_ps1)'$PROMPT
+#     # make prompt display kubernetes cluster & namespace information
 
 # nvm
 export NVM_NO_USE=true # disable auload node https://github.com/lukechilds/zsh-nvm

@@ -1,0 +1,9 @@
+# Search google in terminal: https://github.com/jarun/googler
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ["version=$(git rp-latest-release https://raw.githubusercontent.com/jarun/googler) && sudo curl -o /usr/local/bin/googler https://raw.githubusercontent.com/jarun/googler/$version/googler && sudo chmod +x /usr/local/bin/googler", Installing Googler]

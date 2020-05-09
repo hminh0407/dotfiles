@@ -1,51 +1,27 @@
-" Asterisk {{
+" Asterisk {{{
 map *  <Plug>(asterisk-z*)
 map #  <Plug>(asterisk-z#)
 map g* <Plug>(asterisk-gz*)
 map g# <Plug>(asterisk-gz#)
-" }}
+" }}}
 
-" Calendar {{
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
-" }}
-
-" Cutclass & Yoink {{
-" keep the x key as default (move)
-" nnoremap x d
-" xnoremap x d
-" nnoremap xx dd
-" nnoremap X D
-
-" Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
-" let g:yoinkIncludeDeleteOperations=1
-
-" }}
-
+" COC {{
 if executable('node') && executable('npm') " use coc if possible
-    " Coc {{
-    " extensions in below list will be automatically installed
-    " let g:coc_global_extensions = [
-    "             \  'coc-snippet',
-    "             \  'coc-tabnine',
-    "             \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
-    "             \  'coc-yaml',
-    "             \  'coc-json',
-    "             \  'coc-emoji'
-    "             \]
     let g:coc_global_extensions = [
                 \  'coc-snippets',
                 \  'coc-sh',
-                \  'coc-tabnine',
                 \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
+                \  'coc-sql',
                 \  'coc-yaml',
-                \  'coc-python',
                 \]
+
     " Use `:Format` to format current buffer
     command! -nargs=0 Format :call CocAction('format')
     nmap <leader>af :Format<CR>
+
     " Remap for format selected region
     xmap <leader>af  <Plug>(coc-format-selected)
+
     " Remap keys for gotos
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gy <Plug>(coc-type-definition)
@@ -91,7 +67,6 @@ if executable('node') && executable('npm') " use coc if possible
                 \ },
                 \ }
 
-    " }}
 
 
     if (index(['vim','help'], &filetype) >= 0)
@@ -138,63 +113,13 @@ if executable('node') && executable('npm') " use coc if possible
         nnoremap <expr><C-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-d>"
         nnoremap <expr><C-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-u>"
     endif
-
-else
-    " Ale {{
-    " Fix file with prettier then eslint
-    let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
-    " }}
-
-    " Asyncomplete {{
-    " buffer complete
-    silent! call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-                \ 'name': 'buffer',
-                \ 'whitelist': ['*'],
-                \ 'blacklist': ['go'],
-                \ 'completor': function('asyncomplete#sources#buffer#completor'),
-                \ }))
-    " file name complete
-    silent! call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-                \ 'name': 'file',
-                \ 'whitelist': ['*'],
-                \ 'priority': 10,
-                \ 'completor': function('asyncomplete#sources#file#completor')
-                \ }))
-    " neosnippet complete
-    silent! call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-                \ 'name': 'neosnippet',
-                \ 'whitelist': ['*'],
-                \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
-                \ }))
-    " tag complete
-    silent! call asyncomplete#register_source(asyncomplete#sources#tags#get_source_options({
-                \ 'name': 'tags',
-                \ 'whitelist': ['c'],
-                \ 'completor': function('asyncomplete#sources#tags#completor'),
-                \ 'config': {
-                \    'max_file_size': 50000000,
-                \  },
-                \ }))
-    " force refresh completion, note that vim does not support <c-space>
-    imap <C-B> <Plug>(asyncomplete_force_refresh)
-    " remove duplicate
-    let g:asyncomplete_remove_duplicates = 1
-    " }}
-
-    " Neosnippet {{
-        imap <C-K> <Plug>(neosnippet_expand_or_jump)
-        smap <C-K> <Plug>(neosnippet_expand_or_jump)
-        xmap <C-K> <Plug>(neosnippet_expand_target)
-
-        " Disable snipMate compatibility feature.
-        let g:neosnippet#disable_runtime_snippets = {
-                    \   '_' : 1,
-                    \ }
-
-        " Use custom snippets
-        let g:neosnippet#snippets_directory='~/.vim/snippets'
-    " }}
 endif
+" }}
+
+" Cutclass & Yoink {{
+" Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
+let g:yoinkIncludeDeleteOperations=1
+" }}
 
 " Fzf {{
 " fuzzy search all files in root directory
@@ -350,66 +275,5 @@ let g:sneak#s_next = 1
 " Tagbar {{
 nmap <F7> :TagbarToggle<CR>
 let g:tagbar_autoclose=1 " Only open Tagbar when you want to jump to a specific tag and have it close automatically once you have selected one
-
-let g:tagbar_type_markdown = {
-          \   'ctagstype':'markdown'
-          \ , 'kinds':['h:header']
-          \ , 'sro':'&&&'
-          \ , 'kind2scope':{'h':'header'}
-          \ , 'sort':0
-          \ , 'ctagsbin':'~/bin/vwtags.py'
-          \ , 'ctagsargs': 'markdown'
-          \ }
-
-" integrate vimwiki with tagbar plugin
-" let g:tagbar_type_vimwiki = {
-"           \   'ctagstype':'vimwiki'
-"           \ , 'kinds':['h:header']
-"           \ , 'sro':'&&&'
-"           \ , 'kind2scope':{'h':'header'}
-"           \ , 'sort':0
-"           \ , 'ctagsbin':'~/bin/vwtags.py'
-"           \ , 'ctagsargs': 'markdown'
-"           \ }
-" " }}
-
-" Test {{
-" let test#strategy = "dispatch" " use quickfix window, not as good as vtr (async)
-" let test#strategy = "neoterm" " easily crash on Unbuntu (sync)
-" let test#strategy = "vimterminal" " use quickfix window, not like it (sync)
-" let test#strategy = "vimux" " could be the best but heavier than vtr (async)
-let test#strategy = "vtr" " seem to be the best solution (async)
 " }}
 
-" Wiki {{
-" " do not use vimwiki filetype for other files extensions (https://github.com/vimwiki/vimwiki/issues/95)
-" " let g:vimwiki_global_ext = 0
-" let g:vimwiki_list_margin = 0
-" let g:vimwiki_auto_tags = 1
-" let g:vimwiki_syntax = 'markdown'
-" let g:vimwiki_ext = '.md'
-" let g:vimwiki_folding = 'expr'
-
-" nmap <leader>wn <Plug>VimwikiNextLink
-" nmap <leader>wp <Plug>VimwikiPrevLink
-
-" function! VimwikiLinkHandler(link)
-"     " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
-"     "   1) [[vfile:~/Code/PythonProject/abc123.py]]
-"     "   2) [[vfile:./|Wiki Home]]
-"     let link = a:link
-"     if link =~# '^vfile:'
-"         let link = link[1:]
-"     else
-"         return 0
-"     endif
-"     let link_infos = vimwiki#base#resolve_link(link)
-"     if link_infos.filename == ''
-"         echomsg 'Vimwiki Error: Unable to resolve link!'
-"         return 0
-"     else
-"         exe 'vsplit ' . fnameescape(link_infos.filename)
-"         return 1
-"     endif
-" endfunction
-" }}

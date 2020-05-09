@@ -8,5 +8,5 @@
         relink: true
 
 - shell:
-    - [curl https://raw.githubusercontent.com/jamesob/desk/master/desk > "$CUSTOM_SCRIPTS"/desk && chmod +x "$CUSTOM_SCRIPTS"/desk, Installing direnv]
+    - [curl https://raw.githubusercontent.com/jamesob/desk/master/desk > "$DOTFILES_BIN_DIR"/desk && chmod +x "$DOTFILES_BIN_DIR"/desk, Installing desk]
 

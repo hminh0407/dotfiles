@@ -1,6 +1,6 @@
 # Compiled source #
 ###################
-*.com
+# *.com
 *.class
 *.dll
 *.exe
@@ -45,13 +45,13 @@ target/
 
 # Special folders #
 ######################
-.direnv/
-bundle/
-plugins/
-oh-my-zsh/
-s-doc/
-.ropeproject/
+.direnv
+bundle
+plugins
+oh-my-zsh
+s-doc
+.ropeproject
 .idea
-node_modules/
+node_modules
 dotbot
-.venv/
+.venv

@@ -16,6 +16,10 @@ source ~/.zplug/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-autosuggestions"
+# zplug "jonmosco/kube-ps1"
+# zplug "jonmosco/kube-ps1", as:command, rename-to:kube-ps1, use:"kube-ps1.sh"
+zplug "plugins/kube-ps1", from:oh-my-zsh
+
 # zplug "djui/alias-tips" # remind you to use the alias https://github.com/djui/alias-tips # (not necessary) as we have fzf to list all the alias
 # zplug "lukechilds/zsh-nvm"
 # zplug 'wfxr/forgit' # (not necessary) a very cool fuzzy search implement for git command https://github.com/wfxr/forgit
@@ -85,3 +89,15 @@ esac
 
 # Hook for desk activation
 # [ -n "$DESK_ENV" ] && source "$DESK_ENV" || true
+#
+
+# autoload bashcompinit && bashcompinit
+    # enables the use of bash completion scripts in zsh
+
+# =======
+# Below this section is script expand from cli tools in their installation process
+# Clear all the section on first installation
+# =======
+
+
+. /home/minh/git/asdf/asdf.sh

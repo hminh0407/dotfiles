@@ -41,11 +41,9 @@ config() { # auto config kubectl (required gcloud init first)
 }
 
 main () {
-    # if ! _is_service_exist kubectl; then
-        install
-        # config
-        # installKrew # kubectl package manager
-    # fi
+    install
+    config
+    installKrew # kubectl package manager
 }
 
 main
