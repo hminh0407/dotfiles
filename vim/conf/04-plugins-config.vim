@@ -117,6 +117,8 @@ endif
 " }}
 
 " Cutclass & Yoink {{
+" change default behavior of paste to not yank the deleted content
+vnoremap p "_dP
 " Integrate with cutlass. Otherwise the 'cut' operator that will not be added to the yank history
 let g:yoinkIncludeDeleteOperations=1
 " }}

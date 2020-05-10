@@ -13,6 +13,12 @@ _is_in_tmux() { # check if shell is in tmux session
     [ -n "$TMUX" ]
 }
 
+_is_service_exist() {
+    # https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
+    local service="$1"
+    [ -x "$(command -v $service)" ]
+}
+
 _join_by() {
     # join elements of array by a delimiter
     local delimiter="$1" # Save first argument in a variable
@@ -39,9 +45,9 @@ _join_by() {
     # '1''2''3'
 }
 
-if ! [ -x "$(command -v desk)" ]; then
+if [ -x "$(command -v desk)" ]; then
     _desk() { # list all pre-defined desk and cd to selected desk if possible
-        if ! [ -x "$(command -v fzf)" ]; then
+        if [ -x "$(command -v fzf)" ]; then
             local desk=$(desk ls | fzf | awk '{print $1}')
             if [ -n "${desk:+1}" ]; then
                 desk go $desk
@@ -54,7 +60,7 @@ fi
 
 # ======
 
-if ! [ -x "$(command -v ffmpeg)" ]; then
+if [ -x "$(command -v ffmpeg)" ]; then
     _ffmpeg_add_sub_to_video() {
         # adds the subtitles to the video as a separate optional (and user-controlled) subtitle track.
         # create new video with embedded subtitle
@@ -81,7 +87,7 @@ if ! [ -x "$(command -v ffmpeg)" ]; then
     }
 fi
 
-if ! [ -x "$(command -v fzf)" ]; then
+if [ -x "$(command -v fzf)" ]; then
     _fzf_alias() { # show all alias
         alias | fzf | awk '{split($0,a,"="); print a[1]}'
     }
@@ -152,7 +158,7 @@ if ! [ -x "$(command -v fzf)" ]; then
     }
 fi
 
-if ! [ -x "$(command -v helm)" ]; then
+if [ -x "$(command -v helm)" ]; then
     _helm_template() {
         [ -z "$1" ] && { echo  "missing chart name"; exit 1; }
         [ -z "$2" ] && { echo  "missing template file"; exit 1; }
@@ -168,7 +174,7 @@ if ! [ -x "$(command -v helm)" ]; then
     }
 fi
 
-if ! [ -x "$(command -v gcloud)" ]; then
+if [ -x "$(command -v gcloud)" ]; then
 
     _gcloud_cluster() { # list of kubernetes cluster
         local mode="$1"
@@ -225,7 +231,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
     }
 
     _gcloud_compute_display() {
-        if ! [ -x "$(command -v fzf)" ]; then
+        if [ -x "$(command -v fzf)" ]; then
             _gcloud_compute \
                 | fzf                                            \
                 | awk '{print $1}'                               \
@@ -289,7 +295,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
     }
 
     _gcloud_deployment() { # list of gcloud compute instances and describe selected instance if possible
-        if ! [ -x "$(command -v fzf)" ]; then
+        if [ -x "$(command -v fzf)" ]; then
             gcloud deployment-manager deployments list | fzf | awk '{print $1}' | xargs -r gcloud compute instances describe
         else
             gcloud deployment instances list && return
@@ -354,7 +360,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
     }
 
     _gcloud_sql() { # list of gcloud sql instances and describe selected instance if possible
-        if ! [ -x "$(command -v fzf)" ]; then
+        if [ -x "$(command -v fzf)" ]; then
             local instance=$(gcloud sql instances list | fzf | awk '{print $1}')
             if [ -n "${instance:+1}" ]; then
                 gcloud sql instances describe $instance
@@ -365,7 +371,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
     }
 
     _gcloud_service() { # list all services offered by google
-        if ! [ -x "$(command -v fzf)" ]; then
+        if [ -x "$(command -v fzf)" ]; then
             gcloud services list --format='table(config.name,config.title,config.documentation.summary)' | fzf
         else
             gcloud services list --format='table(config.name,config.title,config.documentation.summary)'
@@ -412,7 +418,7 @@ fi
     #         "${headers[@]}"
     # }
 
-if ! [ -x "$(command -v kubectl)" ]; then
+if [ -x "$(command -v kubectl)" ]; then
     _kube_get_list() {
         local service="$1"
         local mode="${2:-default}"
@@ -694,7 +700,7 @@ if ! [ -x "$(command -v kubectl)" ]; then
 
 fi
 
-if ! [ -x "$(command -v http)" ]; then
+if [ -x "$(command -v http)" ]; then
     _get() {
         echo $@
         _http GET "$@"
@@ -795,7 +801,7 @@ _redis_dump_one_key() {
     fi
 }
 
-if ! [ -x "$(command -v rg)" ]; then
+if [ -x "$(command -v rg)" ]; then
     _rg_file() {
         # search for files
         local file_pattern="${1:-*}"
@@ -812,7 +818,7 @@ if ! [ -x "$(command -v rg)" ]; then
     }
 fi
 
-if ! [ -x "$(command -v youtube-dl)" ]; then
+if [ -x "$(command -v youtube-dl)" ]; then
     _youtube_download_video_mkv() {
         # download youtube video as mkv
         local url="$1"

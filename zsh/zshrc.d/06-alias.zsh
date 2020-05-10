@@ -52,7 +52,7 @@ alias wd="cd ~/vimwiki/development"
 
 alias apti="apt-fast install --no-install-recommends -y"
 
-if ! [ -x "$(command -v fzf)" ]; then
+if [ -x "$(command -v fzf)" ]; then
     alias fs="_fzf_find_in_files" # search text in files
     alias fm="_fzf_man"
     alias ft="_fzf_tldr"

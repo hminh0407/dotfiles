@@ -52,7 +52,7 @@ alias wd="cd ~/vimwiki/development"
 
 alias apti="apt-fast install --no-install-recommends -y"
 
-if ! [ -x "$(command -v fzf)" ]; then
+if [ -x "$(command -v fzf)" ]; then
     alias fs="_fzf_find_in_files" # search text in files
     alias fm="_fzf_man"
     alias ft="_fzf_tldr"
@@ -80,7 +80,7 @@ alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --
 
 # desk {
 
-if ! [ -x "$(command -v desk)" ]; then
+if [ -x "$(command -v desk)" ]; then
     alias d="desk"
     alias de="desk edit"
     alias dg="_desk" # desk go to desk setup
@@ -88,7 +88,7 @@ fi
 # }
 
 # docker {
-if ! [ -x "$(command -v docker)" ]; then
+if [ -x "$(command -v docker)" ]; then
     alias dk="docker"
     alias dkim="docker images"
     alias dkps="docker ps"
@@ -100,22 +100,22 @@ if ! [ -x "$(command -v docker)" ]; then
 fi
 
 
-if ! [ -x "$(command -v docker-compose)" ]; then
+if [ -x "$(command -v docker-compose)" ]; then
     alias dc="docker-compose"
     alias dcb="docker-compose build --force-rm"
     alias dcu="docker-compose up -d --build"
 fi
 
-if ! [ -x "$(command -v lazydocker)" ]; then
+if [ -x "$(command -v lazydocker)" ]; then
     alias lzd="lazydocker"
 fi
 # }
 
-if ! [ -x "$(command -v ffmpeg)" ]; then
+if [ -x "$(command -v ffmpeg)" ]; then
     alias ffmpeg_add_sub_to_video="_ffmpeg_add_sub_to_video"
 fi
 
-if ! [ -x "$(command -v helm)" ]; then
+if [ -x "$(command -v helm)" ]; then
     alias helm_template="_helm_template" # locally render helm template, does not apply any update
     alias helm_upgrade="helm upgrade --reuse-values"
         # safe guard, always reuse current values
@@ -124,7 +124,7 @@ if ! [ -x "$(command -v helm)" ]; then
 fi
 
 # gcloud {
-if ! [ -x "$(command -v gcloud)" ]; then
+if [ -x "$(command -v gcloud)" ]; then
     alias gcp="gcloud"
     alias gcp_cluster="_gcloud_cluster"
     alias gcp_cluster_nodepool="_gcloud_cluster_nodepool"
@@ -139,7 +139,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
     alias gcp_service="_gcloud_service"
 fi
 
-if ! [ -x "$(command -v kubectl)" ]; then
+if [ -x "$(command -v kubectl)" ]; then
     alias k="kubectl"
     alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
@@ -167,7 +167,7 @@ fi
 # }
 
 # git {
-if ! [ -x "$(command -v git)" ]; then
+if [ -x "$(command -v git)" ]; then
     alias g="git"
     alias mgst="mgst" # https://github.com/fboender/multi-git-status
         # Show uncommited, untracked and unpushed changes in multiple Git repositories
@@ -205,7 +205,7 @@ alias loadnvm='[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
 # }
 
 # tmux {
-if ! [ -x "$(command -v tmux)" ]; then
+if [ -x "$(command -v tmux)" ]; then
     alias tm="tmux"
     alias tmr="tmux source ~/.tmux.conf" # reload tmux session
     alias tmkill="tmux kill-session" # kill current tmux session
@@ -214,7 +214,7 @@ if ! [ -x "$(command -v tmux)" ]; then
     # note that all builtin bind key will be destroyed as well, should kill and restart tmux
     alias tmunbindallkeys="tmux unbind-key -a"
 fi
-if ! [ -x "$(command -v tmux)" ]; then
+if [ -x "$(command -v tmux)" ]; then
     alias tmp="tmuxp"
     alias tmpl="tmuxp load"
     alias tmk="tmux kill-session -t"
