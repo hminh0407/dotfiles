@@ -17,6 +17,7 @@ alias chmod='chmod --preserve-root' # safety
 alias chown='chown --preserve-root' # safety
 alias cpu='lscpu'
 alias evi="vi -u NONE"
+alias gr="cat /etc/group"
 alias mv="mv -v"
 alias m="man"
 alias mk="mkdir"

@@ -1,5 +1,5 @@
 [include]
-    path = ~/workspace/.gitconfig # include workspace specific gitconfig file if exist
+    path = "~/workspace/.gitconfig-workspace"
 [core]
     editor = vim
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol

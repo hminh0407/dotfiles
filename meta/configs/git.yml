@@ -12,9 +12,12 @@
 - shell:
     - ['apt-fast install --no-install-recommends -y tig', Installing tig]
     - ['git submodule update --init --recursive', Updating git submodule]
+    - ['mkdir -p ~/workspace && cp git/.gitconfig-workspace ~/workspace/.gitconfig-workspace', Updating git submodule]
 
 - link:
-    ~/.gitconfig : git/.gitconfig
-    ~/.gitignore : git/.gitignore
-    ~/.tigrc     : git/tigrc
+    ~/.gitconfig                             : git/.gitconfig
+    ~/.gitignore                             : git/.gitignore
+    ~/.tigrc                                 : git/tigrc
+    ~/workspace/personal/.gitconfig-personal : git/.gitconfig-personal
+        # setup multiple gitconfig profile, check gitconfig-workspace
 

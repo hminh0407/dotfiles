@@ -13,6 +13,6 @@
     - ["git -C ~/opt/kubectx pull || git clone --depth=1 --recursive https://github.com/ahmetb/kubectx ~/opt/kubectx", Installing kubectx]
 
 - link:
-    ~/bin/kubectx : ~/opt/kubectx/kubectx
-    ~/bin/kubens : ~/opt/kubectx/kubens
+    ~/.dotfiles/bin/kubectx : ~/opt/kubectx/kubectx
+    ~/.dotfiles/bin/kubens : ~/opt/kubectx/kubens
 

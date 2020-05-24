@@ -25,7 +25,13 @@ install () {
     sudo apt-get update
 
     # install latest version of Docker CE
-    apt-fast install --no-install-recommends -y docker-ce docker-ce-cli containerd.io docker-compose
+    sudo apt-fast install --no-install-recommends -y docker-ce docker-ce-cli containerd.io docker-compose
+
+    # add docker group
+    sudo groupadd docker
+
+    # add current user to docker group
+    sudo gpasswd -a $USER docker
 }
 
 install

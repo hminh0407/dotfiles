@@ -1,0 +1,7 @@
+# an attemp to make multiple profile for gitconfig
+[includeIf "gitdir:~/workspace/personal/"]
+    path = "~/workspace/personal/.gitconfig-personal"
+# add more git profile here
+# check gitconfig-personal for example
+# [includeIf "gitdir:~/workspace/<company_name>/"]
+#     path = "~/workspace/<company_name>/.gitconfig-<company_name>"
