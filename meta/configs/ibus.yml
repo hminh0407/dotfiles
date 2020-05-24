@@ -6,8 +6,8 @@
 
 - shell:
     - ["sudo add-apt-repository -y ppa:teni-ime/ibus-teni", Installing ibus]
-    - ["apt-get update && apt-fast install -y --no-install-recommends ibus ibus-teni"]
-    - [./scripts/installation/ibus.sh, Installing ibus]
+    - ["sudo apt-get update && apt-fast install -y --no-install-recommends ibus ibus-teni"]
+    # - [./scripts/installation/ibus.sh, Installing ibus]
     # need a reboot
     # to setup vietnamese keyboard follow instruction on
     # * setup ibus as "Keyboard input method system" on language support

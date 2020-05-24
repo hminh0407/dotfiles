@@ -9,4 +9,5 @@
 
 - shell:
     - [curl https://raw.githubusercontent.com/jamesob/desk/master/desk > "$DOTFILES_BIN_DIR"/desk && chmod +x "$DOTFILES_BIN_DIR"/desk, Installing desk]
+      # after install run: desk init
 

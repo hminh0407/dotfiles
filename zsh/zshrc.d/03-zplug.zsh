@@ -1,5 +1,6 @@
 source ~/.zplug/init.zsh
 
+zplug "Aloxaf/fzf-tab" # https://github.com/Aloxaf/fzf-tab
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
@@ -9,6 +10,8 @@ zplug "MichaelAquilina/zsh-you-should-use" # https://github.com/MichaelAquilina/
 # Pretty minimal and fast zsh prompt: https://github.com/sindresorhus/pure
 zplug "mafredri/zsh-async", from:github
 zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
+
+zplug "zsh-users/zsh-completions" # https://github.com/zsh-users/zsh-completions
 
 # https://github.com/lukechilds/zsh-nvm
 export NVM_NO_USE=true

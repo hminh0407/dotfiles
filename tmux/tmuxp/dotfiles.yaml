@@ -7,11 +7,3 @@ windows:
   panes:
     -
       focus: true
-- window_name: wiki-personal
-  focus: true
-  layout: tiled
-  start_directory: vimwiki/personal
-# - window_name: wiki-development
-#   focus: true
-#   layout: tiled
-#   start_directory: wiki/development

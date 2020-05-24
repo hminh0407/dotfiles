@@ -37,6 +37,7 @@ Plug 'justinmk/vim-sneak'     " enhance vim f search motion https://github.com/j
 " Theme
 Plug 'morhetz/gruvbox'       " Retro color scheme for vim (the best scheme)
 Plug 'itchyny/lightline.vim' " status line and tab line plugin
+Plug 'blueyed/vim-diminactive' " https://github.com/blueyed/vim-diminactive
 
 " Text editor
 Plug 'mhinz/vim-startify'             " fancy start screen for vim

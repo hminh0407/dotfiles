@@ -9,6 +9,6 @@
         relink: true
         force: true
 - shell:
-    - ['sudo add-apt-repository ppa:mmstick76/alacritty && sudo apt-get update && apt-fast apt-fast install --no-install-recommends -y alacritty', Installing Alacritty Terminal]
+    - ['sudo add-apt-repository ppa:mmstick76/alacritty && sudo apt-get update && sudo apt-fast install --no-install-recommends -y alacritty', Installing Alacritty Terminal]
 - link:
-    ~/.conf/alacritty/alacritty.yml : alacritty/alacritty.yml
+    ~/.config/alacritty/alacritty.yml : alacritty/alacritty.yml

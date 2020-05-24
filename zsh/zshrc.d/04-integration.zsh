@@ -30,3 +30,7 @@ rg() { # override rg to invoke pager as default
         command rg "$@"
     fi
 }
+
+# seting env EDITOR=vim make zsh shell misbehave, it always use vi modes
+# do the trick to make it work as normal. Check for more detail http://matija.suklje.name/zsh-vi-and-emacs-modes
+bindkey -e

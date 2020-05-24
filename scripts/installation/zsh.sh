@@ -8,7 +8,7 @@ install() {
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 
     echo "... Changing default shell to zsh ..."
-    chsh -s /bin/zsh
+    sudo chsh -s /bin/zsh
 }
 
 install

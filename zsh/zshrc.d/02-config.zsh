@@ -11,3 +11,5 @@ setopt HIST_BEEP
 # share history with multiple shell process
 setopt inc_append_history # Appends every command to the history file once it is executed
 setopt share_history # Reloads the history whenever you use it
+
+zstyle ':completion:*' menu select

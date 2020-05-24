@@ -10,7 +10,8 @@ set showcmd
 
 " theme
 silent! colorscheme gruvbox        " colorscheme gruvbox
-let g:gruvbox_contrast_dark='medium'
+" let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_contrast_dark='hard'
 set background=dark
 " let g:gruvbox_contrast_light='soft'
 " set background=light

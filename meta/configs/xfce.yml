@@ -1,0 +1,17 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create : true
+        relink : true
+        force  : true
+- shell:
+    - ["sudo apt-fast install --no-install-recommends -y xfce4-clipman-plugin", Installing xfce plugins]
+
+- link:
+    # unsafe action, need to backup the default config first
+    # manually enable this and re-run the installation
+    # ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml: xfce/keyboard-shortcuts.xml
+

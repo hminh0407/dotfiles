@@ -36,11 +36,11 @@ _join_by() {
 }
 
 if [ -x "$(command -v desk)" ]; then
-    desk() { # list all pre-defined desk and cd to selected desk if possible
+    _desk() { # list all pre-defined desk and cd to selected desk if possible
         if [ -x "$(command -v fzf)" ]; then
-            local desk=$(desk ls | fzf | awk '{print $1}')
-            if [ -n "${desk:+1}" ]; then
-                desk go $desk
+            local folder=$(desk ls | fzf | awk '{print $1}')
+            if [ -n "${folder:+1}" ]; then
+                desk go $folder
             fi
         else
             desk ls && return
