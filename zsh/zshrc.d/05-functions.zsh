@@ -791,7 +791,7 @@ _redis_dump_one_key() {
     fi
 }
 
-if [ -x "$(command -v rg)" ]; then
+# if [ -x "$(command -v rg)" ]; then
     _rg_file() {
         # search for files
         local file_pattern="${1:-*}"
@@ -806,7 +806,7 @@ if [ -x "$(command -v rg)" ]; then
 
         rg -g "$file_pattern" "$search_pattern" "${@:3}"
     }
-fi
+# fi
 
 if [ -x "$(command -v youtube-dl)" ]; then
     _youtube_download_video_mkv() {

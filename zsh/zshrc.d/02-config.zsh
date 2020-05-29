@@ -1,15 +1,14 @@
-# remove duplicate history
-setopt EXTENDED_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_BEEP
+# history config
+# check for more detail: https://www.soberkoder.com/better-zsh-history/
+export HISTFILE=~/.zsh_history # set history file location
+export HISTFILESIZE=1000000000 # increase history file size
+export HISTSIZE=1000000000 # increase history file size
+export SAVEHIST=$HISTSIZE # history memory file
+export HISTTIMEFORMAT="[%F %T] " # time format
 
-# share history with multiple shell process
-setopt inc_append_history # Appends every command to the history file once it is executed
-setopt share_history # Reloads the history whenever you use it
+setopt INC_APPEND_HISTORY # Appends every command to the history file once it is executed
+setopt EXTENDED_HISTORY # record the timestamp of each command
+setopt HIST_FIND_NO_DUPS # no duplicate command
+setopt HIST_IGNORE_ALL_DUPS
 
 zstyle ':completion:*' menu select

@@ -1,9 +1,9 @@
-version: '3.2'
+version: "3.2"
 services:
-  ubuntu: # create a container as an environment to test shell scripts
-    build: .
-    working_dir: /dotfiles
-    volumes:
-      - .:/dotfiles
-      # - ~/.ssh:/root/.ssh
-    # command: "tail -f /var/log/bootstrap.log"
+    # create a container as an environment to test shell scripts
+    ubuntu:
+        build: .
+        working_dir: /dotfiles
+        volumes:
+            - .:/dotfiles
+

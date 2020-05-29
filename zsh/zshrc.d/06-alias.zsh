@@ -18,6 +18,7 @@ alias chown='chown --preserve-root' # safety
 alias cpu='lscpu'
 alias evi="vi -u NONE"
 alias gr="cat /etc/group"
+alias netip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias mv="mv -v"
 alias m="man"
 alias mk="mkdir"
@@ -48,8 +49,8 @@ alias untargz="tar -xvzf"
 alias targz="tar -cvzf"
 
 alias dot="cd ~/dotfiles"
-alias wp="cd ~/vimwiki/personal"
-alias wd="cd ~/vimwiki/development"
+alias wp="cd ~/wiki/personal"
+alias wd="cd ~/wiki/development"
 
 alias apti="apt-fast install --no-install-recommends -y"
 
@@ -138,10 +139,14 @@ if [ -x "$(command -v gcloud)" ]; then
     alias gcp_compute_instance="gcloud compute instances"
     alias gcp_compute_instance_list="_gcloud_compute"
     alias gcp_compute_instance_select="_gcloud_compute_display"
+    alias gcp_compute_ssh="gcloud compute ssh --internal-ip"
+    alias gcp_ip="gcloud compute addresses list"
+    alias gcp_ip_reserved="gcloud gcp compute addresses list --filter='status=RESERVED AND addressType=EXTERNAL'"
     alias gcp_log_event_hpa="_gcp_log_event_hpa"
     alias gcp_log_kevent="_gcp_log_kevent"
     alias gcp_sql="_gcloud_sql"
     alias gcp_service="_gcloud_service"
+    alias gcp_ssh="gcloud compute ssh --internal-ip"
 fi
 
 if [ -x "$(command -v kubectl)" ]; then
@@ -152,7 +157,8 @@ if [ -x "$(command -v kubectl)" ]; then
 
     alias kca="kubectl describe -n kube-system configmap cluster-autoscaler-status" # cluster autoscaler status
     alias kd="_kube_deployment"
-    alias ke="_kube_event"
+    # alias ke="_kube_event"
+    alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
     alias ke_hpa="_kube_event_hpa"
     alias khpa="_kube_hpa"
     alias khpa_multi_replica="_kube_hpa_multi_replica"
@@ -197,6 +203,18 @@ if [ -x "$(command -v git)" ]; then
     alias gl_usr="gitlab user"
 fi
 # }
+
+# nvm
+if [ -x "$(command -v tmux)" ]; then
+    alias nvmload="nvm use --lts"
+fi
+
+# request
+if [ -x "$(command -v curl)" ]; then
+    alias rq="curl"
+    alias rqo="curl -I " # request option
+fi
+
 
 # search {
     alias s="_rg_file_pattern"

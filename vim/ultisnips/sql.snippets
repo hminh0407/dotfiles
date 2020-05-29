@@ -24,6 +24,16 @@
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 
+snippet ms-ddl-tables "Show all tables"
+SELECT
+    *
+FROM
+    INFORMATION_SCHEMA.TABLES
+WHERE
+    TABLE_TYPE = 'BASE TABLE'
+;
+endsnippet
+
 snippet ms-declare_var
 DECLARE @{1:varName} ${varType}
 SET @{1:varName} = ${varValue}

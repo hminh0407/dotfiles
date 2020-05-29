@@ -20,13 +20,16 @@ installAppImage() {
     sudo update-alternatives --auto --config editor
 
     # sudo pip install pynvim # install python support
+    apt-fast install --no-install-recommends -y python3-neovim
 }
 
 installFromSource() {
     echo "... Installing NVIM prerequisite ..."
     apt-fast install --no-install-recommends -y \
         make cmake build-essential pkg-config libtool-bin gettext \
-        gperf luajit luarocks libuv1-dev libluajit-5.1-dev libunibilium-dev libmsgpack-dev libtermkey-dev libvterm-dev libutf8proc-dev
+        gperf luajit luarocks libuv1-dev libluajit-5.1-dev libunibilium-dev libmsgpack-dev \
+        libtermkey-dev libvterm-dev libutf8proc-dev \
+        python3-neovim
 
     sudo luarocks build mpack
     sudo luarocks build lpeg
@@ -42,7 +45,7 @@ installFromSource() {
 
 installFromApt() {
     echo "... Installing Nvim ..."
-    apt-fast install --no-install-recommends -y neovim
+    apt-fast install --no-install-recommends -y neovim python3-neovim
 }
 
 installFromApt

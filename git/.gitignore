@@ -55,3 +55,4 @@ s-doc
 node_modules
 dotbot
 .venv
+local

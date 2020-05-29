@@ -1,0 +1,236 @@
+: 1590326859:0;tmpl dotfiles
+: 1590326885:0;tmpl vxr_exec
+: 1590326931:0;apt search routes
+: 1590326992:0;apt search net-tools
+: 1590326997:0;apti net-tools
+: 1590327081:0;l ~/.zsh_history
+: 1590327085:0;ll ~/.zsh_history
+: 1590327654:0;./install-profiles.sh dev
+: 1590327732:0;uat_db_bms
+: 1590327745:0;uat_db_dwh
+: 1590327823:0;nvm install --lts
+: 1590327857:0;npm -V
+: 1590327873:0;vi ~/.zsh_history
+: 1590328410:0;cd workspace
+: 1590328457:0;mkdir docker-training
+: 1590328461:0;cd docker-training
+: 1590328477:0;vi docker-compose
+: 1590328616:0;dbcli
+: 1590329078:0;dc down
+: 1590329132:0;nvm
+: 1590329153:0;apti python3-nvim
+: 1590329201:0;apt search python3-nvim
+: 1590329204:0;apt search python3-neovim
+: 1590329211:0;apti python3-neovim
+: 1590329624:0;dc up -d
+: 1590329875:0;dk logs docker-training_postgres_1
+: 1590330028:0;pgsh
+: 1590331503:0;apt search redis-cli
+: 1590331544:0;apti erlang-redis-client
+: 1590331574:0;sudo apt autoremove
+: 1590331805:0;./install-profiles.sh rediscli
+: 1590331819:0;./install-standalone.sh rediscli
+: 1590331832:0;dk
+: 1590331843:0;iredis -h localhost
+: 1590332353:0;. l
+: 1590333131:0;chmod +x -r ./*.sh
+: 1590333137:0;chmod +x -r ./**/*.sh
+: 1590333143:0;sudo chmod +x -r ./**/*.sh
+: 1590333149:0;sudo chmod +x ./**/*.sh
+: 1590333193:0;cd pg
+: 1590333202:0;chmod +x docker-run.sh
+: 1590333204:0;./docker-run.sh
+: 1590333233:0;chmod +x pg/docker-run.sh
+: 1590333235:0;./pg/docker-run.sh
+: 1590333253:0;docker volume create pg_data
+: 1590333407:0;ll pg
+: 1590333427:0;ll pg/docker-run.sh
+: 1590333434:0;rm pg/docker-run.sh
+: 1590333515:0;rm util.sh
+: 1590333518:0;vi util.sh
+: 1590333529:0;sudo vi util.sh
+: 1590333563:0;unset PREFIX
+: 1590333906:0;dk volumn ls
+: 1590333914:0;dk volume ls
+: 1590333919:0;dk volume rm pg_data
+: 1590334687:0;pg-setup
+: 1590334888:0;rd-setup
+: 1590334904:0;rdcli
+: 1590334914:0;rdsh
+: 1590334937:0;pg-teardown
+: 1590334942:0;rd-teardown
+: 1590335497:0;nvm use --lts
+: 1590335509:0;npm install -g express-generator
+: 1590335577:0;mk app
+: 1590335579:0;cd app
+: 1590335581:0;express
+: 1590335597:0;npm install
+: 1590335613:0;vi package.json
+: 1590335620:0;npm start
+: 1590336207:0;git clone git@github.com:olinations/crud-starter-frontend.git
+: 1590336221:0;g cl git@github.com:olinations/crud-starter-api.git
+: 1590336254:0;mv crud-starter-frontend ..
+: 1590336259:0;mv crud-starter-api.git ..
+: 1590336288:0;mv crud-starter-api.git crud-starter-api
+: 1590336290:0;ll
+: 1590336459:0;cd setup
+: 1590336461:0;./setup.sh
+: 1590336725:0;g init
+: 1590337022:0;vi
+: 1590338180:0;dk image
+: 1590338187:0;dk images
+: 1590338327:0;dk ps
+: 1590338371:0;dk logs app-fe
+: 1590338516:0;dc up -d app-fe --build
+: 1590338621:0;dk logs -f app-api
+: 1590338693:0;dk logs -f app-fe
+: 1590338897:0;. ./util.sh
+: 1590340338:0;pgcli
+: 1590340959:0;dc_down
+: 1590340969:0;dc_up
+: 1590341033:0;dc up --build -d app-api
+: 1590341201:0;dc up --build -d app-fe
+: 1590375694:0;tmpl vxr
+: 1590380280:0;gcp container cluster list
+: 1590380285:0;gcp container clusters list
+: 1590380435:0;gcp ssh --internal-ip webnhaxe-firewall
+: 1590380440:0;gcp compute ssh --internal-ip webnhaxe-firewall
+: 1590380584:0;gcp_ssh webnhaxe-firewall
+: 1590381348:0;echo | timeout 2 openssl s_client -servername bms.vexere.com -connect bms.vexere.com:443 2>/dev/null | openssl x509 -noout -dates
+: 1590382519:0;prod_db_bms_slave
+: 1590383307:0;cd ~/workspace/vxr
+: 1590383351:0;apt search rg
+: 1590383357:0;apt search ripgrep
+: 1590383392:0;which s
+: 1590383426:0;command -v rg
+: 1590383438:0;which rg
+: 1590383484:0;s "sp_cdc_enable_table" "*.*"
+: 1590386006:0;apt search postman
+: 1590386013:0;snap search postman
+: 1590386027:0;snap install postman
+: 1590387789:0;apt search kafkacat
+: 1590387795:0;apti kafkacat
+: 1590387915:0;prod_kafka_message_0
+: 1590387979:0;prod_kafka_message_0 vxr.dbo.Images
+: 1590387995:0;prod_kafka_message_1 vxr.dbo.Images
+: 1590388004:0;prod_kafka_message_2 vxr.dbo.Images
+: 1590388120:0;k logs -f prod-gms-confluent-cp-kafka-connect-7875958fd9-rb4gv
+: 1590388129:0;k logs -f prod-gms-confluent-cp-kafka-connect-7875958fd9-rb4gv cp-kafka-connect-server
+: 1590388139:0;k logs -f prod-gms-confluent-cp-kafka-connect-7875958fd9-rb4gv cp-kafka-connect-server | grep Images
+: 1590388249:0;nvmload
+: 1590388364:0;g pl
+: 1590388704:0;g co develop
+: 1590388706:0;g co dev
+: 1590388722:0;g cob feature/consumer-images
+: 1590388725:0;tig
+: 1590388844:0;g a .
+: 1590388845:0;g st
+: 1590388888:0;g cm "VEX-2557 update gms source connector to collect images data"
+: 1590388892:0;g ps feature/consumer-images
+: 1590388899:0;gl_create_project_pr
+: 1590389253:0;./install-standalone.sh gcp
+: 1590389411:0;cloud_sql_proxy -h
+: 1590389504:0;cloud_sql_proxy -instances=vexere-218206:asia-southeast1:prod-account-service=tcp:55431
+: 1590389558:0;gcp cloud sql list
+: 1590389562:0;gcp sql list
+: 1590389567:0;gcp sql instances list
+: 1590389723:0;prod_proxy_connection
+: 1590389787:0;\e
+: 1590389800:0;g
+: 1590389832:0;dg
+: 1590389835:0;prod_db_account_admin
+: 1590389842:0;d edit
+: 1590389966:0;routes
+: 1590389973:0;route
+: 1590389976:0;route -n
+: 1590390026:0;ln -sfn ~/Dropbox/Apps/vim/wiki/development ~/wiki/development
+: 1590390049:0;wd
+: 1590390075:0;sudo route del -net 0.0.0.0 gw 10.11.0.41 netmask 0.0.0.0 dev tun0
+: 1590390088:0;prod_db_user_admin
+: 1590391823:0;vi ~/.config/nvim/after/ftplugin/uml.vim
+: 1590391852:0;cd ..
+: 1590391854:0;vi
+: 1590396260:0;dk ps -a
+: 1590396896:0;kss
+: 1590396906:0;k get pod | grep connect
+: 1590396973:0;k get statulset
+: 1590396980:0;k get statullset
+: 1590396988:0;k get statefulset
+: 1590396999:0;k get deployment
+: 1590397044:0;k ssh beepre-webnhaxe
+: 1590397101:0;kcx
+: 1590397421:0;k get pod
+: 1590397441:0;k describe xethanhthuy-webnhaxe-db6597d45-rpp2k
+: 1590397451:0;k describe deployment xethanhthuy-webnhaxe-db6597d45-rpp2k
+: 1590397458:0;k describe deployment xethanhthuy-webnhaxe
+: 1590402825:0;k8s
+: 1590402839:0;./install-standalone.sh k9s
+: 1590402853:0;k9s
+: 1590402864:0;ll ~/.dotfiles/bin
+: 1590402881:0;./install-standalone.sh k9s
+: 1590402936:0;ll ~/.dotfiles/bin
+: 1590402939:0;l
+: 1590402940:0;ll
+: 1590402962:0;ll /tmp
+: 1590403182:0;k get pod | grep ams
+: 1590403185:0;kcx
+: 1590403189:0;k get pod | grep ams
+: 1590403211:0;k logs -f production-ams-55bd57c998-nltpz production-ams
+: 1590403232:0;k get pod | grep vsysinfo
+: 1590403252:0;k logs -f uat-vsysinfo-745bf77cb5-vzpzq
+: 1590403258:0;k logs -f uat-vsysinfo-745bf77cb5-vzpzq domain-healthcheck
+: 1590403282:0;uat_db_vsysinfo
+: 1590403283:0;dg
+: 1590403286:0;uat_db_vsysinfo
+: 1590403310:0;pgcli postgres://vsysinfo:'pEtIonsOToMp'@10.148.0.47:5432/vsysinfo
+: 1590403346:0;uat_db_vsysinfo
+: 1590403597:0;k9s
+: 1590403610:0;ll /tmp
+: 1590403659:0;./install-standalone.sh k9s
+: 1590403713:0;curl -L https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz --create-dirs -o /tmp/k9s
+: 1590403889:0;./install-standalone.sh k9s
+: 1590403899:0;ll /tmp
+: 1590403911:0;ll ~/.dotfiles/bin
+: 1590403927:0;./install-standalone.sh k9s
+: 1590404017:0;    wget -qO /tmp/k9s "https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz"
+: 1590404023:0;ll /tmp/k9s
+: 1590404064:0;cd /tmp/k9s
+: 1590404115:0;    wget -qO "/tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz" "https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz"
+: 1590404187:0;./install-standalone.sh k9s
+: 1590404242:0;wget https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz
+: 1590404395:0;wget https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_Linux_x86_64.tar.gz
+: 1590404399:0;l
+: 1590404400:0;ll
+: 1590404404:0;rm k9s_Linux_x86_64.tar.gz
+: 1590404421:0;./install-standalone.sh k9s
+: 1590404447:0;ll /tmp/k9s
+: 1590404450:0;ll ~/.dotfiles/bin
+: 1590404457:0;./install-standalone.sh k9s
+: 1590404504:0;ll
+: 1590404533:0;curl -L https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz --create-dirs -o /tmp/k9s/k9s_Linux_x86_64.tar.gz
+: 1590404543:0;ll /tmp/k9s
+: 1590404560:0;rm /tmp/k9s/k9s_Linux_x86_64.tar.gz
+: 1590404561:0;./install-standalone.sh k9s
+: 1590404629:0;wget -qO "/tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz" "https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz"
+: 1590404634:0;rm -r /tmp/k9s
+: 1590404636:0;wget -qO "/tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz" "https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz"
+: 1590404674:0;mk /tmp/k9s
+: 1590404676:0;wget -qO "/tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz" "https://github.com/derailed/k9s/releases/download/v0.19.7/k9s_v0.19.7_Linux_x86_64.tar.gz"
+: 1590404683:0;ll /tmp/k9s
+: 1590404719:0;rm /tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz
+: 1590404723:0;./install-standalone.sh k9s
+: 1590404752:0;ll ~/.dotfiles/bin
+: 1590404756:0;ll /tmp/k9s
+: 1590404766:0;rm /tmp/k9s/k9s_v0.19.7_Linux_x86_64.tar.gz
+: 1590404771:0;rm /tmp/k9s/k9s_Linux_x86_64.tar.gz
+: 1590404773:0;./install-standalone.sh k9s
+: 1590404846:0;ll ~/.dotfiles/bin
+: 1590404849:0;k9s
+: 1590404895:0;ll ~/.zsh_history
+: 1590404897:0;vi ~/.zsh_history
+: 1590404986:0;ll ~/.zsh_history
+: 1590404990:0;vi ~/.zsh_history
+: 1590405159:0;kss
+: 1590405248:0;dg
+: 1590405254:0;g pl
+: 1590405257:0;tig

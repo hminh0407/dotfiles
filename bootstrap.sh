@@ -11,7 +11,7 @@ _installEssentials() {
     echo "... Installing Essential Packages ..."
     sudo apt-fast install --no-install-recommends -y \
         python3 python3-pip \
-        gawk xclip wget curl exuberant-ctags ripgrep jq
+        gawk xclip wget curl exuberant-ctags ripgrep jq net-tools
 }
 
 _grantPermissions() {
