@@ -12,15 +12,21 @@ installKrew() {
     echo "Installing krew..."
 
     local repo="https://github.com/kubernetes-sigs/krew"
-    local version="$(git rp-latest-release $repo | cut -c 2-)"
+    local version="$(git rp-latest-release $repo)"
+    local url="$repo/releases/download/$version/krew.{tar.gz,yaml}"
+    echo $url
 
-    set -x; cd "$(mktemp -d)"
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v$version/krew.{tar.gz,yaml}"
+    local tmpFolder="$(mktemp -d)"
+    set -x; cd $tmpFolder
+    curl -fsSLO "$url"
     tar zxvf krew.tar.gz
 
     KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
     "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
     "$KREW" update
+    # also need to update PATH environment variable, which taken care in zsh/zshrc.d/04-integration.zsh
+
+    rm -r $tmpFolder
 }
 
 installKrewPlugins() {
@@ -44,6 +50,7 @@ main () {
     install
     config
     installKrew # kubectl package manager
+    installKrewPlugins
 }
 
 main

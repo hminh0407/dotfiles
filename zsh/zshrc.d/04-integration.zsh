@@ -1,8 +1,9 @@
 # Setup global path for custom scripts
 declare EXPORT_PATH="$PATH"
-declare PATH_MODULES=($DOTFILES_BIN_DIR)
+declare KREW_PATH="${KREW_ROOT:-$HOME/.krew}/bin"
+declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH)
 
-for module in "$PATH_MODULES[@]"; do
+for module in ${PATH_MODULES[@]}; do
     if [ -d "$module" ] && [[ ":$EXPORT_PATH:" != *":$module:"* ]]; then
         EXPORT_PATH="${EXPORT_PATH:+"$EXPORT_PATH:"}$module"
     fi

@@ -14,8 +14,6 @@ zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug "zsh-users/zsh-completions" # https://github.com/zsh-users/zsh-completions
 
 # https://github.com/lukechilds/zsh-nvm
-export NVM_NO_USE=true
-export NVM_LAZY_LOAD=true
 zplug "lukechilds/zsh-nvm" # https://github.com/lukechilds/zsh-nvm
 
 # Install plugins if there are plugins that have not been installed
