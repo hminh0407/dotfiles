@@ -35,6 +35,7 @@ _join_by() {
     # '1''2''3'
 }
 
+# ===============================================
 if [ -x "$(command -v desk)" ]; then
     _desk() { # list all pre-defined desk and cd to selected desk if possible
         if [ -x "$(command -v fzf)" ]; then
@@ -47,8 +48,6 @@ if [ -x "$(command -v desk)" ]; then
         fi
     }
 fi
-
-# ======
 
 if [ -x "$(command -v ffmpeg)" ]; then
     _ffmpeg_add_sub_to_video() {
@@ -807,6 +806,18 @@ _redis_dump_one_key() {
         rg -g "$file_pattern" "$search_pattern" "${@:3}"
     }
 # fi
+
+if [ -x "$(command -v shnsplit)" ]; then
+    _splitFlac() {
+        [ -z "$1" ] && { echo  "missing cue file"; exit 1; }
+        [ -z "$2" ] && { echo  "missing flac file"; exit 1; }
+
+        local cueFile="$1"
+        local flacFile="$2"
+
+        shnsplit -f $cueFile -t %t-%p-%a -o flac $flacFile
+    }
+fi
 
 if [ -x "$(command -v youtube-dl)" ]; then
     _youtube_download_video_mkv() {

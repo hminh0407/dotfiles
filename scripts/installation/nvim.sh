@@ -45,7 +45,10 @@ installFromSource() {
 
 installFromApt() {
     echo "... Installing Nvim ..."
-    apt-fast install --no-install-recommends -y neovim python3-neovim
+    # instal plantweb to support plantuml render
+    apt-fast install --no-install-recommends -y \
+        neovim python3-neovim \
+        plantweb
 }
 
 installFromApt

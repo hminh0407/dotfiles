@@ -43,7 +43,15 @@ snippet ms-last_n_day "get datetime value of last n day" b
 ${1:dateColumn} >= DATEADD(DAY, -${2:numberOfDay}, GETDATE())
 endsnippet
 
-snippet pg-db_info
+snippet pg-db_alter_db_owner
+ALTER DATABASE ${1:database} OWNER TO ${2:owner};
+endsnippet
+
+snippet pg-create_role
+CREATE ROLE ${1:role} LOGIN PASSWORD '${2:pass}';
+endsnippet
+
+snippet pg-info_db
 SELECT
     d.datname AS Name,
     pg_catalog.pg_get_userbyid(d.datdba) AS Owner,
@@ -62,26 +70,89 @@ ORDER BY
 LIMIT 20
 endsnippet
 
-snippet pg-db_alter_db_owner
-ALTER DATABASE ${1:database} OWNER TO ${2:owner};
+snippet pg-info_ddl
+SELECT
+  table_name,
+  column_name,
+  data_type,
+  udt_name,
+  is_nullable,
+  character_maximum_length
+FROM
+  information_schema.columns
+WHERE
+  table_schema = 'public'
+ORDER BY
+  table_name,
+  ordinal_position;
 endsnippet
 
-snippet pg-create_role
-CREATE ROLE ${1:role} LOGIN PASSWORD '${2:pass}';
+snippet pg-info_index "Show index of all tables"
+SELECT
+    *
+FROM
+    pg_indexes
+WHERE
+    schemaname = 'public'
+ORDER BY
+    tablename,
+    indexname;
 endsnippet
 
-snippet pg-ddl-columns
-	SELECT
-		table_name
-		,column_name
-		,data_type
-		,udt_name
-		,is_nullable
-		,character_maximum_length
-	FROM information_schema.columns
-	WHERE table_schema = '${0:public}'
-	ORDER BY table_name,ordinal_position
-	;
+snippet pg-info_ref "Show table references"
+SELECT
+  tc.table_schema,
+  tc.constraint_name,
+  tc.table_name,
+  kcu.column_name,
+  ccu.table_schema AS foreign_table_schema,
+  ccu.table_name AS foreign_table_name,
+  ccu.column_name AS foreign_column_name
+FROM
+  information_schema.table_constraints AS tc
+  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+  AND tc.table_schema = kcu.table_schema
+  JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+  AND ccu.table_schema = tc.table_schema
+WHERE
+  tc.constraint_type = 'FOREIGN KEY'
+endsnippet
+
+snippet pg-info_table_size "Show tables size"
+SELECT
+  oid,
+  table_schema,
+  table_name,
+  row_estimate,
+  pg_size_pretty(total_bytes) AS total,
+  pg_size_pretty(index_bytes) AS INDEX,
+  pg_size_pretty(toast_bytes) AS toast,
+  pg_size_pretty(table_bytes) AS TABLE
+FROM
+  (
+    SELECT
+      *,
+      total_bytes - index_bytes - COALESCE(toast_bytes, 0) AS table_bytes
+    FROM
+      (
+        SELECT
+          c.oid,
+          nspname AS table_schema,
+          relname AS TABLE_NAME,
+          c.reltuples AS row_estimate,
+          pg_total_relation_size(c.oid) AS total_bytes,
+          pg_indexes_size(c.oid) AS index_bytes,
+          pg_total_relation_size(reltoastrelid) AS toast_bytes
+        FROM
+          pg_class c
+          LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+        WHERE
+          relkind = 'r'
+          AND nspname IN ('public')
+      ) a
+  ) a
+ORDER BY
+  total_bytes DESC
 endsnippet
 
 snippet pg-insert
@@ -95,34 +166,6 @@ endsnippet
 
 snippet pg-view_def
 	select pg_get_viewdef('${0:name}', true);
-endsnippet
-
-snippet pg-table_size
-SELECT
-    *
-    , pg_size_pretty(total_bytes) AS total
-    , pg_size_pretty(index_bytes) AS INDEX
-    , pg_size_pretty(toast_bytes) AS toast
-    , pg_size_pretty(table_bytes) AS TABLE
-FROM (
-    SELECT
-        *,
-        total_bytes-index_bytes-COALESCE(toast_bytes,0) AS table_bytes
-    FROM (
-        SELECT
-            c.oid
-	    ,nspname                                 AS table_schema
-            , relname                                AS TABLE_NAME
-            , c.reltuples                            AS row_estimate
-            , pg_total_relation_size(c.oid)          AS total_bytes
-            , pg_indexes_size(c.oid)                 AS index_bytes
-            , pg_total_relation_size(reltoastrelid)  AS toast_bytes
-        FROM pg_class c
-        LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
-        WHERE relkind = 'r'
-	    AND nspname = 'public'
-    ) a
-) a;
 endsnippet
 
 snippet pg-truncate-all-tables-query

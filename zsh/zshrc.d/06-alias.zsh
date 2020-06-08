@@ -221,6 +221,10 @@ fi
     alias sf="_rg_file"
 # }
 
+if [ -x "$(command -v shnsplit)" ]; then
+    alias splitFlac="_splitFlac"
+fi
+
 # tmux {
 if [ -x "$(command -v tmux)" ]; then
     alias tm="tmux"

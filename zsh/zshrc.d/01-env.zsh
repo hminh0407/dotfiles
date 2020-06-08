@@ -5,7 +5,7 @@ export DOTFILES_BIN_DIR="$DOTFILES_DIR/bin"
 export DOTFILES_TMP_DIR="$DOTFILES_DIR/tmp"
 
 # nvm zsh plugin config
-export NVM_LAZY_LOAD=true
+export NVM_LAZY_LOAD=false
 export NVM_NO_USE=false
 export NVM_AUTO_USE=false
 

@@ -12,7 +12,7 @@ _installEssentials() {
     sudo apt-fast install --no-install-recommends -y \
         python3 python3-pip \
         g++ build-essential \
-        gawk xclip wget curl exuberant-ctags ripgrep jq net-tools
+        gawk xclip wget curl exuberant-ctags ripgrep jq net-tools rename
 }
 
 _grantPermissions() {

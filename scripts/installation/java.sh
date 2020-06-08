@@ -11,10 +11,4 @@ install () {
         echo 'JAVA_HOME="/usr/lib/jvm/java-8-oracle"' | sudo tee --append /etc/environment
 }
 
-main () {
-    if ! _is_service_exist java; then
-        install
-    fi
-}
-
-main
+install

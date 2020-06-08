@@ -1,0 +1,294 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+# ======
+
+### NOTE ###
+
+# dynamic command #
+# reference: https://unix.stackexchange.com/questions/473241/build-a-command-dynamically
+# building dynamic command with bash variable should notice below things
+# * do not use "" as with normal variables
+# * should avoid eval at all cost because it is unstable and dangerous
+
+# ======
+
+# Shebang. Executing bash via /usr/bin/env makes scripts more portable.
+snippet safe
+set -euo pipefail
+endsnippet
+
+snippet bash
+#!/usr/bin/env bash
+endsnippet
+
+snippet sbash
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+endsnippet
+
+snippet if
+if [[ ${1:condition} ]]; then
+	${0:${VISUAL}}
+fi
+endsnippet
+
+snippet if-command-exist "check if a command is exist"
+if ! [ -x "$(command -v ${1:command} ]; then
+	${0:${VISUAL}}
+fi
+endsnippet
+
+snippet elif
+elif [[ ${1:condition} ]]; then
+	${0:${VISUAL}}
+endsnippet
+
+snippet for
+for (( ${2:i} = 0; $2 < ${1:count}; $2++ )); do
+	${0:${VISUAL}}
+done
+endsnippet
+
+snippet fori
+for ${1:needle} in ${2:haystack} ; do
+	${0:${VISUAL}}
+done
+endsnippet
+
+snippet wh
+while [[ ${1:condition} ]]; do
+	${0:${VISUAL}}
+done
+endsnippet
+
+snippet until
+until [[ ${1:condition} ]]; do
+	${0:${VISUAL}}
+done
+endsnippet
+
+snippet case
+case ${1:word} in
+	${2:pattern})
+		${0};;
+esac
+endsnippet
+
+snippet go
+while getopts '${1:o}' ${2:opts}
+do
+	case $$2 in
+		${3:o0})
+			${0:#staments}
+			;;
+	esac
+done
+endsnippet
+
+# Set SCRIPT_DIR variable to directory script is located.
+snippet sdir
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+endsnippet
+
+# getopt
+snippet getopt
+__ScriptVersion="${1:version}"
+
+#===  FUNCTION  ================================================================
+#         NAME:  usage
+#  DESCRIPTION:  Display usage information.
+#===============================================================================
+function usage ()
+{
+	echo "Usage :  $${0:0} [options] [--]
+
+	Options:
+	-h|help       Display this message
+	-v|version    Display script version"
+
+}    # ----------  end of function usage  ----------
+
+#-----------------------------------------------------------------------
+#  Handle command line arguments
+#-----------------------------------------------------------------------
+
+while getopts ":hv" opt
+do
+  case $opt in
+
+	h|help     )  usage; exit 0   ;;
+
+	v|version  )  echo "$${0:0} -- Version $__ScriptVersion"; exit 0   ;;
+
+	* )  echo -e "\n  Option does not exist : $OPTARG\n"
+		  usage; exit 1   ;;
+
+  esac    # --- end of case ---
+done
+shift $(($OPTIND-1))
+endsnippet
+
+snippet root
+if [ \$(id -u) -ne 0 ]; then exec sudo \$0; fi
+endsnippet
+
+snippet fun-sh
+${1:function_name}() {
+	${0:#function_body}
+}
+endsnippet
+
+snippet fun
+function ${1:function_name}() {
+	${0:#function_body}
+}
+endsnippet
+
+# ===Custom snippets===
+
+snippet array-contain
+inarray=$(printf '%s\n' \${array[@]} | grep -P "^$1$" | wc -w)
+	# non zero value indicates a match was found.
+	# https://stackoverflow.com/a/28032613
+endsnippet
+
+# comment section
+snippet cm-section
+# =============================================================================
+# ${1:section}
+# =============================================================================
+endsnippet
+
+snippet filename-from-path
+basename "${1}" | cut -d. -f1
+# extract filename from path
+# get filename without extension
+endsnippet
+
+snippet fun-opts
+copy() {
+	# a function that support long command option
+	# https://stackoverflow.com/a/12128447/1530178
+	# ex usage: copy --from /tmp/a --to /tmp/b
+	local from to
+
+	while [[ \${1} ]]; do
+		case "${1}" in
+			--from)
+				from=\${2}
+				shift
+				;;
+			--to)
+				to=\${2}
+				shift
+				;;
+			*)
+				echo "Unknown parameter: \${1}" >&2
+				return 1
+		esac
+
+		if ! shift; then
+			echo 'Missing parameter argument.' >&2
+			return 1
+		fi
+	done
+}
+endsnippet
+
+snippet join-by
+_join_by() {
+	# join elements of array by a delimiter
+	local delimiter="\$1" # Save first argument in a variable
+	shift				 # Shift all arguments to the left (original $1 gets lost)
+	local items=("$@")   # Rebuild the array with rest of arguments
+
+	# local IFS=$delimiter; shift; echo "$*";
+	local IFS=$delimiter; echo "${items[*]}";
+	# example usages
+	# join_by , a "b c" d     # a,b c,d
+	# join_by / var local tmp # var/local/tmp
+	# join_by , "${FOO[@]}"   # a,b,c
+
+	# Reference (from `man bash`)
+	# If the word is double-quoted, ${name[*]} expands to a single word
+	#     with the value of each array member separated by the first character of the IFS special variable,
+	# and ${name[@]} expands each element of name to a separate word.
+
+	# Example
+	# array=("1" "2" "3")
+	# printf "'%s'" "${array[*]}"
+	# '1 2 3'
+	# printf "'%s'" "${array[@]}"
+	# '1''2''3'
+}
+endsnippet
+
+snippet if-array-empty
+if [ ${#$1[@]} -eq 0 ]; then
+	$2
+fi
+endsnippet
+
+snippet if-exists
+# check if a variable exist and is not empty
+if [ -n "${$1:+1}" ]; then
+fi
+endsnippet
+
+snippet if-file-exists
+if [ -f "$1" ]; then
+	$2
+fi
+endsnippet
+
+snippet path-absolute
+echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+	# Get absolute path if receive relative path or else return absolute path
+	# * get relative path as argument "$1"
+	# * get dirname part of that path (can pass either dir or file to this script): dirname "$1"
+	# * cd "$(dirname "$1") into this relative dir and get absolute path by running pwd shell command
+	# * append basename to absolute path: $(basename "$1")
+	# * echo it
+endsnippet
+
+snippet timestamp-duration
+date --iso-8601=s --date="3 hours ago"
+endsnippet
+
+snippet var-validate-required
+[ -z "\$1" ] && { echo  "missing argument"; exit 1; }
+endsnippet
+# vim: set noexpandtab :
+
+snippet loop-file "loop through each line in a file"
+# proper way to read lines through file https://unix.stackexchange.com/a/107801
+while read -u 10 ${1:lineAlias}; do
+
+done 10< ${2:filePath}
+endsnippet
+

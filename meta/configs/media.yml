@@ -1,0 +1,11 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [sudo apt-fast install --no-install-recommends -y cuetools shntool, Installing flac utils flac]
+    - [sudo apt-fast install --no-install-recommends -y clementine libqt5sql5-sqlite, Installing Clementine Music Player]
+    - [sudo apt-fast install --no-install-recommends -y mpv, Installing MPV Movie Player]
+

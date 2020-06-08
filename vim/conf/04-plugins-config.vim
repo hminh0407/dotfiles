@@ -5,6 +5,8 @@ map g* <Plug>(asterisk-gz*)
 map g# <Plug>(asterisk-gz#)
 " }}}
 
+autocmd FileType plantuml nnoremap <buffer> <leader>b :!plantuml -o %:p:h %<cr>
+
 " COC {{
 if executable('node') && executable('npm') " use coc if possible
     let g:coc_global_extensions = [
