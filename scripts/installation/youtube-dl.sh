@@ -1,21 +1,12 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-. $(dirname ${BASH_SOURCE[0]})/../base/env.sh
-
 install () {
     apt-fast install --no-install-recommends -y ffmpeg
 
-    local location="$CUSTOM_SCRIPTS/youtube-dl"
+    local location="$DOTFILES_BIN_DIR/youtube-dl"
     local link="https://yt-dl.org/downloads/latest/youtube-dl"
 
     wget -qO $location $link && chmod +x $location
 }
 
-main() {
-    if ! _is_service_exist youtube-dl; then
-        install
-    fi
-}
-
-main
+install

@@ -1,0 +1,11 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    # https://github.com/faressoft/terminalizer
+    # Record your terminal and generate animated gif images
+    - [npm install -g terminalizer, Installing Terminalizer]
+

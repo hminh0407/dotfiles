@@ -1,18 +1,12 @@
-global._ = require("lodash");
+global.messageString = "global string";
 
-global.list = json => (json.forEach(x => console.log(x)), "");
+global.raw = json => (json.forEach(x => console.log(x)), undefined);
 
 global.find = re => json => [...find(json, re)];
 
 global.mapReduce = mapReduce;
-// global.mapReduce = (json, fields) => {
-//     return json.map(x =>
-//         fields.reduce((acc, cur) => {
-//             acc[cur] = _.get(x, cur);
-//             return acc;
-//         }, {})
-//     );
-// };
+
+global._ = require("lodash");
 
 // ======
 

@@ -1,0 +1,17 @@
+# Install essential packages
+- defaults:
+    shell:
+      stdin : true
+      stdout: true
+      quiet : false
+    link:
+      create: true
+      relink: true
+      force: true
+
+- shell:
+  - ['apt-fast install --no-install-recommends -y httpie && npm install -g fx json2csv lodash && sudo pip install csvkit', Installing Dependencies]
+
+- link:
+    $DOTFILES_BIN_DIR/gitlab: scripts/custom/gitlab
+

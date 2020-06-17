@@ -205,9 +205,9 @@ fi
 # }
 
 # nvm
-if [ -x "$(command -v tmux)" ]; then
-    alias nvmload="nvm use --lts"
-fi
+# if [ -x "$(command -v tmux)" ]; then
+#     alias nvmload="nvm use --lts"
+# fi
 
 # request
 if [ -x "$(command -v curl)" ]; then
@@ -256,7 +256,8 @@ alias xinput_enable_keyboard="xinput reattach \$(_xinput_list_keyboard_id) 3"
 # download the best 1080p video quality
 # download the best mp4 compatible audio quality
 # convert output format to mp4
-alias yt-dl-mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
-alias yt-dl-mkv="_youtube_download_video_mkv"
-alias yt-dl-sub="_youtube_download_sub"
-alias yt-dl-sub-auto="youtube-dl --write-auto-sub --skip-download"
+alias yt_dl_mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
+alias yt_dl_mkv="_youtube_download_video_mkv"
+alias yt_dl_sub="_youtube_download_sub"
+alias yt_dl_sub_auto="youtube-dl --write-auto-sub --skip-download"
+alias vtt_to_srt="_vtt_to_srt"

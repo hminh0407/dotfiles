@@ -1,0 +1,11 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ["apt-fast install -y --no-install-recommends fcitx fcitx-config-gtk fcitx-unikey", Installing fcitx input method]
+      # after installation, set global config key to switch input method
+      # command: `fcitx-remote -t`
+      # https://camratus.com/2018/03/21/switch-input-method-global-in-ubuntu/

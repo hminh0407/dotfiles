@@ -5,5 +5,13 @@
         quiet : false
 
 - shell:
-    - ["sudo npm install -g fx", Installing NPM Tools - fx json processing]
-    - ["sudo npm install -g json2csv", Installing NPM Tools - json2csv]
+    - ["npm install -g fx", Installing NPM Tools - fx json processing]
+    - ["npm install -g json2csv", Installing NPM Tools - json2csv]
+    - ["npm install -g generate-schema", Installing NPM Tools - generate-schema]
+      # https://github.com/Nijikokun/generate-schema#cli
+      # generate json schema from json file
+      # ex: generate-schema --json-schema <file>
+    - ["npm install -g json-schema-faker-cli", Installing NPM Tools - json-schema-faker-cli]
+      # https://github.com/oprogramador/json-schema-faker-cli
+      # generate json with random data from json schema
+

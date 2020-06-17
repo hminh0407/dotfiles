@@ -104,6 +104,24 @@ snippet foro "for (element of array) {...}"
 endsnippet
 
 # ===Custom Snippets===
+snippet class_method_apply "dynamically evoke class method with apply"
+#class Abc() {
+#  method1(var1, var2) {}
+#}
+#
+#const abc = new Abc();
+#abc['method1'].apply(abc, ['var1', 'var2'])
+endsnippet
+
+snippet class_method_call "dynamically evoke class method with call"
+#class Abc() {
+#  method1(var1, var2) {}
+#}
+#
+#const abc = new Abc();
+#abc['method1'].call(abc, 'var1', 'var2')
+endsnippet
+
 snippet object_case_convert
 function to change case of object with nested properties also work well with array object
 use with change-case: https://github.com/blakeembrey/change-case

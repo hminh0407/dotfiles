@@ -20,7 +20,7 @@ function! OpenUml()
     endif
 
     " generate svg file
-    silent execute "!plantweb --format svg " . currentFolder . "/" . currentFile
+    execute "!plantweb --format svg " . currentFolder . "/" . currentFile
 
     let generatedFile = currentFileWithoutExtension . ".svg"
     let generatedFilePath = currentFolder . "/" . generatedFile

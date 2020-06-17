@@ -819,6 +819,14 @@ if [ -x "$(command -v shnsplit)" ]; then
     }
 fi
 
+if [ -x "$(command -v ffmpeg)" ]; then
+    _vtt_to_srt() {
+        local file="$1"
+
+        ffmpeg -i $file "$(basename $file .srt)"
+    }
+fi
+
 if [ -x "$(command -v youtube-dl)" ]; then
     _youtube_download_video_mkv() {
         # download youtube video as mkv

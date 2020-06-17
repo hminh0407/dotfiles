@@ -234,3 +234,11 @@
 : 1590405248:0;dg
 : 1590405254:0;g pl
 : 1590405257:0;tig
+: 1591951453:0;l ~/.zsh_history
+: 1591951455:0;ll ~/bin
+: 1591951458:0;./install-standalone.sh zsh
+: 1591951464:0;ll ~/bin
+: 1591951491:0;rm ~/.dotfiles/gitlab
+: 1591951498:0;ll ~/.dotfiles
+: 1591951507:0;./install-standalone.sh zsh
+: 1591951539:0;ll ~/.dotfiles/bin

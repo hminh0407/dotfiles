@@ -16,6 +16,8 @@ zplug "zsh-users/zsh-completions" # https://github.com/zsh-users/zsh-completions
 # https://github.com/lukechilds/zsh-nvm
 zplug "lukechilds/zsh-nvm" # https://github.com/lukechilds/zsh-nvm
 
+zplug "plugins/kube-ps1", from:oh-my-zsh
+
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "

@@ -49,7 +49,7 @@ Plug 'tpope/vim-commentary'               " comment plugin
 Plug 'jiangmiao/auto-pairs'               " auto close pairs (quotes, parens, brackets ...)
 " Plug 'rhysd/vim-grammarous' " https://github.com/rhysd/vim-grammarous
 Plug 'majutsushi/tagbar'           " display tag of current file in a window
-Plug 'chiedo/vim-case-convert' " https://github.com/chiedo/vim-case-convert
+Plug 'tpope/vim-abolish'              " Abbreviation & Coercion. Ex: crc-camel, crs-snake (could just write custom function)
 Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
 
 " Utilities
