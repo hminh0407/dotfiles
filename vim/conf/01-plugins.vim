@@ -23,7 +23,7 @@ Plug 'tpope/vim-fugitive'     " extend git support
 Plug 'airblade/vim-gitgutter' " show git diff for each line
 
 " Markdown
-" Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
+Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
 Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': { -> mkdp#util#install() } } " https://github.com/iamcco/markdown-preview.nvim
 
 " Search
@@ -50,7 +50,8 @@ Plug 'jiangmiao/auto-pairs'               " auto close pairs (quotes, parens, br
 " Plug 'rhysd/vim-grammarous' " https://github.com/rhysd/vim-grammarous
 Plug 'majutsushi/tagbar'           " display tag of current file in a window
 Plug 'tpope/vim-abolish'              " Abbreviation & Coercion. Ex: crc-camel, crs-snake (could just write custom function)
-Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
+" Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
+Plug 'tpope/vim-unimpaired' " support some encode/decode functions. ex url encode/decode with '[u' and ']u' https://github.com/tpope/vim-unimpaired
 
 " Utilities
 Plug 'sk1418/HowMuch'       " calculator for visual selection

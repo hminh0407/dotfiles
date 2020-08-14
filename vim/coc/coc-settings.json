@@ -19,5 +19,8 @@
     },
     "python.analysis.diagnosticEnabled": false,
     "snippets.userSnippetsDirectory": "~/.vim/snippets",
+    "snippets.extends": {
+        "sh": ["zsh"]
+    },
     "yaml.format.enable": true
 }

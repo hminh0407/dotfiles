@@ -119,8 +119,8 @@ endsnippet
 snippet getopt
 __ScriptVersion="${1:version}"
 
-#===  FUNCTION  ================================================================
-#         NAME:  usage
+#===  FUNCTION	================================================================
+#	  NAME:  usage
 #  DESCRIPTION:  Display usage information.
 #===============================================================================
 function usage ()
@@ -139,16 +139,16 @@ function usage ()
 
 while getopts ":hv" opt
 do
-  case $opt in
+    case $opt in
 
-	h|help     )  usage; exit 0   ;;
+	h|help	   )  usage; exit 0   ;;
 
 	v|version  )  echo "$${0:0} -- Version $__ScriptVersion"; exit 0   ;;
 
 	* )  echo -e "\n  Option does not exist : $OPTARG\n"
-		  usage; exit 1   ;;
+		usage; exit 1   ;;
 
-  esac    # --- end of case ---
+    esac	  # --- end of case ---
 done
 shift $(($OPTIND-1))
 endsnippet
@@ -175,6 +175,10 @@ snippet array-contain
 inarray=$(printf '%s\n' \${array[@]} | grep -P "^$1$" | wc -w)
 	# non zero value indicates a match was found.
 	# https://stackoverflow.com/a/28032613
+endsnippet
+
+snippet basedir "get absolute path of current file"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 endsnippet
 
 # comment section
@@ -230,7 +234,7 @@ _join_by() {
 	# local IFS=$delimiter; shift; echo "$*";
 	local IFS=$delimiter; echo "${items[*]}";
 	# example usages
-	# join_by , a "b c" d     # a,b c,d
+	# join_by , a "b c" d	  # a,b c,d
 	# join_by / var local tmp # var/local/tmp
 	# join_by , "${FOO[@]}"   # a,b,c
 
@@ -281,7 +285,7 @@ date --iso-8601=s --date="3 hours ago"
 endsnippet
 
 snippet var-validate-required
-[ -z "\$1" ] && { echo  "missing argument"; exit 1; }
+[ -z "\$1" ] && { echo	"missing argument"; exit 1; }
 endsnippet
 # vim: set noexpandtab :
 

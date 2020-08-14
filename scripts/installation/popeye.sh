@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-. $(dirname ${BASH_SOURCE[0]})/../base/functions.sh
-
 install () {
     local version="0.4.3"
     local downloadFile="popeye_${version}_Linux_x86_64.tar.gz"
@@ -20,10 +18,4 @@ install () {
 
 }
 
-main () {
-    if ! _is_service_exist popeye; then
-        install
-    fi
-}
-
-main
+install

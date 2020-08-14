@@ -36,6 +36,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias ping='ping -c 4'
 alias ram="sudo lshw -short -C memory"
 alias rm='rm --preserve-root' # safety
+alias services='systemctl list-units --type=service'
 alias t="touch"
 alias tl="tldr -p linux"
 alias wget="wget -c"
@@ -54,6 +55,8 @@ alias wd="cd ~/wiki/development"
 
 alias apti="apt-fast install --no-install-recommends -y"
 
+alias sysinfo="ps -o pid,user,%cpu,%mem,command ax | sort -b -k3 -r"
+
 if [ -x "$(command -v fzf)" ]; then
     alias fs="_fzf_find_in_files" # search text in files
     alias fm="_fzf_man"
@@ -71,10 +74,14 @@ else
     alias psaux="ps aux"
 fi
 
+alias check_udp_port="nc -z -v -u"
+    # nc -z -v -u [hostname/IP address] [port number]
+
 # }
 
 # curl {{{
 # some useful curl alias
+alias curl_check_redirect="_check_redirect"
 alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --post302 --post303 --output /dev/null --write-out '%{http_code}'"
     # example: curl -L -s -o /dev/null -w '%{http_code}' google.com
     # get status of a site
@@ -141,7 +148,7 @@ if [ -x "$(command -v gcloud)" ]; then
     alias gcp_compute_instance_select="_gcloud_compute_display"
     alias gcp_compute_ssh="gcloud compute ssh --internal-ip"
     alias gcp_ip="gcloud compute addresses list"
-    alias gcp_ip_reserved="gcloud gcp compute addresses list --filter='status=RESERVED AND addressType=EXTERNAL'"
+    alias gcp_ip_reserved_external="gcloud gcp compute addresses list --filter='status=RESERVED AND addressType=EXTERNAL'"
     alias gcp_log_event_hpa="_gcp_log_event_hpa"
     alias gcp_log_kevent="_gcp_log_kevent"
     alias gcp_sql="_gcloud_sql"

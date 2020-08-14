@@ -59,8 +59,8 @@ nmap <leader>w :w!<cr>
 set so=7
 
 " Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
-set langmenu=en
+" let $LANG='en' " set this will prevent neovim from using system locale (cause problem with vimwiki)
+" set langmenu=en " set this will prevent neovim from using system locale (cause problem with vimwiki)
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 

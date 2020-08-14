@@ -1,36 +1,36 @@
 # A valid snippet should starts with:
 #
-#		snippet trigger_word [ "description" [ options ] ]
+#				snippet trigger_word [ "description" [ options ] ]
 #
 # and end with:
 #
-#		endsnippet
+#				endsnippet
 #
 # Snippet options:
 #
-#		b - Beginning of line.
-#		i - In-word expansion.
-#		w - Word boundary.
-#		r - Regular expression
-#		e - Custom context snippet
-#		A - Snippet will be triggered automatically, when condition matches.
+#				b - Beginning of line.
+#				i - In-word expansion.
+#				w - Word boundary.
+#				r - Regular expression
+#				e - Custom context snippet
+#				A - Snippet will be triggered automatically, when condition matches.
 #
 # Basic example:
 #
-#		snippet emitter "emitter properties" b
-#		private readonly ${1} = new Emitter<$2>()
-#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
-#		endsnippet
+#				snippet emitter "emitter properties" b
+#				private readonly ${1} = new Emitter<$2>()
+#				public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#				endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 
 snippet ms-ddl-tables "Show all tables"
 SELECT
-    *
+	*
 FROM
-    INFORMATION_SCHEMA.TABLES
+	INFORMATION_SCHEMA.TABLES
 WHERE
-    TABLE_TYPE = 'BASE TABLE'
+	TABLE_TYPE = 'BASE TABLE'
 ;
 endsnippet
 
@@ -43,6 +43,129 @@ snippet ms-last_n_day "get datetime value of last n day" b
 ${1:dateColumn} >= DATEADD(DAY, -${2:numberOfDay}, GETDATE())
 endsnippet
 
+# https://stackoverflow.com/questions/7272157/how-to-identify-all-stored-procedures-referring-a-particular-table
+snippet ms-check-table-dependencies "Check if tables are used in store procedures or functions"
+select
+	distinct [Table Name] = o.Name,
+	[Found In] = sp.Name,
+	sp.type_desc
+from
+	sys.objects o
+inner join sys.sql_expression_dependencies sd on
+	o.object_id = sd.referenced_id
+inner join sys.objects sp on
+	sd.referencing_id = sp.object_id
+	and sp.type in ('P', 'FN')
+order by
+	sp.Name;
+endsnippet
+
+snippet ms-check-slow-queries "Find the slowest queries"
+SELECT
+  TOP 10 SUBSTRING(
+    qt.TEXT,
+    (qs.statement_start_offset / 2) + 1,
+    (
+      (
+        CASE
+          qs.statement_end_offset
+          WHEN -1 THEN DATALENGTH(qt.TEXT)
+          ELSE qs.statement_end_offset
+        END - qs.statement_start_offset
+      ) / 2
+    ) + 1
+  ),
+  qs.execution_count,
+  qs.total_logical_reads,
+  qs.last_logical_reads,
+  qs.total_logical_writes,
+  qs.last_logical_writes,
+  qs.total_worker_time,
+  qs.last_worker_time,
+  qs.total_elapsed_time / 1000000 total_elapsed_time_in_S,
+  qs.last_elapsed_time / 1000000 last_elapsed_time_in_S,
+  qs.last_execution_time,
+  qp.query_plan
+FROM
+  sys.dm_exec_query_stats qs
+  CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) qt
+  CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) qp
+ORDER BY
+  qs.total_logical_reads DESC -- logical reads
+  -- ORDER BY qs.total_logical_writes DESC -- logical writes
+  -- ORDER BY qs.total_worker_time DESC -- CPU time
+endsnippet
+
+snippet ms-user-permissions "Show permissions of all user"
+SELECT
+	DISTINCT
+	pr.principal_id,
+	pr.name,
+	--pr.type_desc,
+	--pr.authentication_type_desc,
+	--pe.state_desc,
+	pe.permission_name
+FROM
+	sys.database_principals AS pr
+JOIN sys.database_permissions AS pe ON
+	pe.grantee_principal_id = pr.principal_id
+ORDER BY pr.name
+endsnippet
+
+snippet ms-user-roles "Show roles of all user"
+SELECT
+   isnull (DP2.name, 'No members') AS DatabaseUserName,
+   DP1.name AS DatabaseRoleName
+ FROM sys.database_role_members AS DRM
+ RIGHT OUTER JOIN sys.database_principals AS DP1
+   ON DRM.role_principal_id = DP1.principal_id
+ LEFT OUTER JOIN sys.database_principals AS DP2
+   ON DRM.member_principal_id = DP2.principal_id
+WHERE DP1.type = 'R'
+ORDER BY DP2.name;
+endsnippet
+
+snippet ms-info-open-connection "Check current connection and who is connecting to db"
+SELECT sdest.DatabaseName
+    ,sdes.session_id
+    ,sdes.[host_name]
+    ,sdes.[program_name]
+    ,sdes.client_interface_name
+    ,sdes.login_name
+    ,sdes.login_time
+    ,sdes.nt_domain
+    ,sdes.nt_user_name
+    ,sdec.client_net_address
+    ,sdec.local_net_address
+    ,sdest.ObjName
+    ,sdest.Query
+FROM sys.dm_exec_sessions AS sdes
+INNER JOIN sys.dm_exec_connections AS sdec ON sdec.session_id = sdes.session_id
+CROSS APPLY (
+    SELECT db_name(dbid) AS DatabaseName
+        ,object_id(objectid) AS ObjName
+        ,ISNULL((
+                SELECT TEXT AS [processing-instruction(definition)]
+                FROM sys.dm_exec_sql_text(sdec.most_recent_sql_handle)
+                FOR XML PATH('')
+                    ,TYPE
+                ), '') AS Query
+
+    FROM sys.dm_exec_sql_text(sdec.most_recent_sql_handle)
+    ) sdest
+where sdes.session_id <> @@SPID
+--and sdes.nt_user_name = '' -- Put the username here !
+ORDER BY sdec.session_id
+endsnippet
+
+snippet pg-tb-add-column "Add new Column to table"
+ALTER TABLE ${1:table_name} ADD COLUMN IF NOT EXISTS ${2:column_name} ${3:column_type};
+endsnippet
+
+snippet pg-tb-drop-column "Add new Column to table"
+ALTER TABLE ${1:table_name} DROP COLUMN IF EXISTS ${2:column_name} ${3:column_type};
+endsnippet
+
 snippet pg-db_alter_db_owner
 ALTER DATABASE ${1:database} OWNER TO ${2:owner};
 endsnippet
@@ -53,128 +176,161 @@ endsnippet
 
 snippet pg-info_db
 SELECT
-    d.datname AS Name,
-    pg_catalog.pg_get_userbyid(d.datdba) AS Owner,
-    CASE
-        WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
-            THEN pg_catalog.pg_size_pretty(pg_catalog.pg_database_size(d.datname))
-        ELSE 'No Access'
-    END AS SIZE
+	d.datname AS Name,
+	pg_catalog.pg_get_userbyid(d.datdba) AS Owner,
+	CASE
+		WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
+			THEN pg_catalog.pg_size_pretty(pg_catalog.pg_database_size(d.datname))
+		ELSE 'No Access'
+	END AS SIZE
 FROM pg_catalog.pg_database d
 ORDER BY
-    CASE
-        WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
-            THEN pg_catalog.pg_database_size(d.datname)
-        ELSE NULL
-    END DESC -- nulls first
+	CASE
+		WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT')
+			THEN pg_catalog.pg_database_size(d.datname)
+		ELSE NULL
+	END DESC -- nulls first
 LIMIT 20
 endsnippet
 
 snippet pg-info_ddl
 SELECT
-  table_name,
-  column_name,
-  data_type,
-  udt_name,
-  is_nullable,
-  character_maximum_length
+	table_name,
+	column_name,
+	data_type,
+	udt_name,
+	is_nullable,
+	character_maximum_length
 FROM
-  information_schema.columns
+	information_schema.columns
 WHERE
-  table_schema = 'public'
+	table_schema = 'public'
 ORDER BY
-  table_name,
-  ordinal_position;
+	table_name,
+	ordinal_position;
 endsnippet
 
 snippet pg-info_index "Show index of all tables"
 SELECT
-    *
+	*
 FROM
-    pg_indexes
+	pg_indexes
 WHERE
-    schemaname = 'public'
+	schemaname = 'public'
 ORDER BY
-    tablename,
-    indexname;
+	tablename,
+	indexname;
 endsnippet
 
 snippet pg-info_ref "Show table references"
 SELECT
-  tc.table_schema,
-  tc.constraint_name,
-  tc.table_name,
-  kcu.column_name,
-  ccu.table_schema AS foreign_table_schema,
-  ccu.table_name AS foreign_table_name,
-  ccu.column_name AS foreign_column_name
+	tc.table_schema,
+	tc.constraint_name,
+	tc.table_name,
+	kcu.column_name,
+	ccu.table_schema AS foreign_table_schema,
+	ccu.table_name AS foreign_table_name,
+	ccu.column_name AS foreign_column_name
 FROM
-  information_schema.table_constraints AS tc
-  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
-  AND tc.table_schema = kcu.table_schema
-  JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
-  AND ccu.table_schema = tc.table_schema
+	information_schema.table_constraints AS tc
+	JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+	AND tc.table_schema = kcu.table_schema
+	JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+	AND ccu.table_schema = tc.table_schema
 WHERE
-  tc.constraint_type = 'FOREIGN KEY'
+	tc.constraint_type = 'FOREIGN KEY'
+endsnippet
+
+snippet pg-info-role-previleges "Show role and its previleges"
+SELECT
+	grantee AS user,
+	CONCAT(table_schema, '.', table_name) AS table,
+	CASE
+		WHEN COUNT(privilege_type) = 7 THEN 'ALL'
+		ELSE ARRAY_TO_STRING(ARRAY_AGG(privilege_type), ', ')
+	END AS grants
+FROM
+	information_schema.role_table_grants
+GROUP BY
+	table_name,
+	table_schema,
+	grantee
+ORDER BY
+	grantee;
+endsnippet
+
+snippet pg-info-role-users "Show role and user information"
+SELECT r.rolname, r.rolsuper, r.rolinherit,
+  r.rolcreaterole, r.rolcreatedb, r.rolcanlogin,
+  r.rolconnlimit, r.rolvaliduntil,
+  ARRAY(SELECT b.rolname
+        FROM pg_catalog.pg_auth_members m
+        JOIN pg_catalog.pg_roles b ON (m.roleid = b.oid)
+        WHERE m.member = r.oid) as memberof
+, r.rolreplication
+, r.rolbypassrls
+FROM pg_catalog.pg_roles r
+WHERE r.rolname !~ '^pg_'
+ORDER BY 1;
 endsnippet
 
 snippet pg-info_table_size "Show tables size"
 SELECT
-  oid,
-  table_schema,
-  table_name,
-  row_estimate,
-  pg_size_pretty(total_bytes) AS total,
-  pg_size_pretty(index_bytes) AS INDEX,
-  pg_size_pretty(toast_bytes) AS toast,
-  pg_size_pretty(table_bytes) AS TABLE
+	oid,
+	table_schema,
+	table_name,
+	row_estimate,
+	pg_size_pretty(total_bytes) AS total,
+	pg_size_pretty(index_bytes) AS INDEX,
+	pg_size_pretty(toast_bytes) AS toast,
+	pg_size_pretty(table_bytes) AS TABLE
 FROM
-  (
-    SELECT
-      *,
-      total_bytes - index_bytes - COALESCE(toast_bytes, 0) AS table_bytes
-    FROM
-      (
-        SELECT
-          c.oid,
-          nspname AS table_schema,
-          relname AS TABLE_NAME,
-          c.reltuples AS row_estimate,
-          pg_total_relation_size(c.oid) AS total_bytes,
-          pg_indexes_size(c.oid) AS index_bytes,
-          pg_total_relation_size(reltoastrelid) AS toast_bytes
-        FROM
-          pg_class c
-          LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
-        WHERE
-          relkind = 'r'
-          AND nspname IN ('public')
-      ) a
-  ) a
+	(
+		SELECT
+			*,
+			total_bytes - index_bytes - COALESCE(toast_bytes, 0) AS table_bytes
+			FROM
+			(
+				SELECT
+					c.oid,
+					nspname AS table_schema,
+					relname AS TABLE_NAME,
+					c.reltuples AS row_estimate,
+					pg_total_relation_size(c.oid) AS total_bytes,
+					pg_indexes_size(c.oid) AS index_bytes,
+					pg_total_relation_size(reltoastrelid) AS toast_bytes
+				FROM
+					pg_class c
+					LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+				WHERE
+					relkind = 'r'
+					AND nspname IN ('public')
+			) a
+	) a
 ORDER BY
-  total_bytes DESC
+	total_bytes DESC
 endsnippet
 
 snippet pg-insert
 INSERT
-    INTO ${1:table}
-        (${2:columns})
-    VALUES
-        (${3:values}),
-	();
+	INTO ${1:table}
+		(${2:columns})
+	VALUES
+		(${3:values}),
+		();
 endsnippet
 
 snippet pg-view_def
-	select pg_get_viewdef('${0:name}', true);
+		select pg_get_viewdef('${0:name}', true);
 endsnippet
 
 snippet pg-truncate-all-tables-query
-	SELECT
-		'TRUNCATE ' || input_table_name || ' CASCADE;' AS truncate_query
-	FROM (
 		SELECT
-			table_schema || '.' || table_name AS input_table_name
-		FROM information_schema.tables
-		WHERE table_schema NOT IN ('pg_catalog', 'information_schema') AND table_schema NOT LIKE 'pg_toast%'
-	) AS information;
+				'TRUNCATE ' || input_table_name || ' CASCADE;' AS truncate_query
+		FROM (
+				SELECT
+						table_schema || '.' || table_name AS input_table_name
+				FROM information_schema.tables
+				WHERE table_schema NOT IN ('pg_catalog', 'information_schema') AND table_schema NOT LIKE 'pg_toast%'
+		) AS information;
 endsnippet

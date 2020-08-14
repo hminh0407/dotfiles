@@ -9,6 +9,17 @@ _append_to_file_if_not_exist() {
     grep -qF -- "$line" "$file" || echo "$line" >> "$file"
 }
 
+_check_redirect() {
+    echo
+    for domain in $@; do
+    echo --------------------
+    echo $domain
+    echo --------------------
+    curl -sILk $domain | egrep 'HTTP|Loc' | sed 's/Loc/ -> Loc/g'
+    echo
+    done
+}
+
 _join_by() {
     # join elements of array by a delimiter
     local delimiter="$1" # Save first argument in a variable
@@ -206,7 +217,8 @@ if [ -x "$(command -v gcloud)" ]; then
             'networkInterfaces[0].networkIP:label=INTERNAL_IP'
             'networkInterfaces[0].accessConfigs[0].natIP:label=EXTERNAL_IP'
             'status'
-            'labels.list()'
+            # 'labels.list()'
+            'disks[0].licenses.list()'
         )
         local format_str="table($(_join_by ',' ${fields[@]}))"
 
@@ -360,6 +372,7 @@ if [ -x "$(command -v gcloud)" ]; then
     }
 
     _gcloud_service() { # list all services offered by google
+        # use `gcloud sql instances list --format json` to check the json schema
         if [ -x "$(command -v fzf)" ]; then
             gcloud services list --format='table(config.name,config.title,config.documentation.summary)' | fzf
         else
@@ -609,13 +622,56 @@ if [ -x "$(command -v kubectl)" ]; then
         done;
     }
 
-    _kube_pod() { # list all pod in current context and current namespace
-        local mode="${1:-default}"
+    # _kube_pod() { # list all pod in current context and current namespace
+    #     local mode="${1:-default}"
 
-        _kube_get_list "pod" $mode -owide --show-labels
+    #     _kube_get_list "pod" $mode -owide --show-labels
 
-        # wip
-        # k get pod -o json | jq -r '(["NAME","STATUS"] | (., map(length*"-"))), (.items[] | [.metadata.name, .status.phase]) | @tsv'
+    #     # wip
+    #     # k get pod -o json | jq -r '(["NAME","STATUS"] | (., map(length*"-"))), (.items[] | [.metadata.name, .status.phase]) | @tsv'
+    # }
+
+    _kube_pod() {
+        local namespace=${1:default}
+        local skipHeader=${2:false}
+
+
+        if [ "$skipHeader" = "true" ]; then
+            kubectl get pod -o json --namespace=$namespace --no-headers \
+                | fx "x => x.items.map(item => {return {pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
+                | json2csv \
+                | csvformat -D ',' \
+                | column -t -s ',' \
+                | sort -k 1,1
+        else
+            kubectl get pod -o json --namespace=$namespace \
+                | fx "x => x.items.map(item => {return {pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
+                | json2csv \
+                | csvformat -D ',' \
+                | column -t -s ',' \
+                | sort -k 1,1
+        fi
+
+        # kubectl get pod -o json \
+        #     | fx "x => x.items.map(item => {return {namespace: item.metadata.namespace, pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
+        #     | json2csv \
+        #     | csvformat -D ',' \
+        #     | column -t -s ','
+    }
+
+    _kube_top_pod() {
+        local namespace=${1:default}
+
+        local pod_usage="$(kubectl top pod --namespace=$namespace --no-headers | sort -k 1,1)"
+        local pod_detail="$(_kube_pod $namespace 'true')"
+
+        local header="NAMESPACE NAME CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM NODE"
+        local data="$(join -1 1 -2 2 -o '2.1,2.2,1.2,1.3,2.3,2.4,2.5,2.6,2.7' <(echo $pod_usage) <(echo $pod_detail) | sort -n -k 4,4 -k 2,2)"
+            # join 2 data from $pod_usage and $pod_detail on pod_usage.column1 = pod_detail.column1
+            # order columns with -o
+            # use `sort -k 4,4 -k 2,2` to sort by the 4rd column (RAM_USAGE), 2nd column (NAME)
+
+        ( echo $header ; echo $data ) | column -t
     }
 
     _kube_pod_all() { # list all pod in all context and all namespace

@@ -1,0 +1,28 @@
+version: "3.2"
+services:
+    # create a container as an environment to test shell scripts
+    ubuntu:
+        build: .
+        working_dir: /dotfiles
+        volumes:
+            - .:/dotfiles
+
+    # plantuml server to test uml render in local env
+    plantuml:
+        container_name: plantuml
+        image: plantuml/plantuml-server:jetty
+        ports:
+            - 8080:8080
+
+    # mssql
+    mssql:
+        # image: mcr.microsoft.com/mssql/server:2017-latest
+        build:
+            context: ./docker
+            dockerfile: mssql.Dockerfile
+        ports:
+            - 1433:1433
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "Vxr@2019"
+            TCP_PORT: 1433

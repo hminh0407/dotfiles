@@ -1,0 +1,11 @@
+- defaults:
+      shell:
+          stdin: true
+          stdout: true
+          quiet: false
+      link:
+          create: true
+          relink: true
+          force: true
+- shell:
+    - [./scripts/installation/terraform.sh, Installing terraform]

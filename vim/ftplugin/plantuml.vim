@@ -10,10 +10,11 @@ function! OpenUml()
     let home = $HOME
     let plantwebExist = executable('plantweb')
     let currentFolder = expand('%:p:h')
-    let currentFile = expand('%')
-    let currentFileWithoutExtension = expand('%:r')
+    let currentFile = expand('%:t')
+    let currentFileWithoutExtension = expand('%:t:r')
     let tmpFolder = home . "/tmp"
     let createFolder = mkdir(tmpFolder, "p")
+    let rootFolder = getcwd()
 
     if !plantwebExist
         return
@@ -23,7 +24,7 @@ function! OpenUml()
     execute "!plantweb --format svg " . currentFolder . "/" . currentFile
 
     let generatedFile = currentFileWithoutExtension . ".svg"
-    let generatedFilePath = currentFolder . "/" . generatedFile
+    let generatedFilePath = rootFolder . "/" . generatedFile
     let tmpFilePath = tmpFolder . "/" . generatedFile
 
     " move file to tmp folder
