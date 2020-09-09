@@ -6,7 +6,8 @@ setopt +o nomatch
 # Setup global path for custom scripts
 declare EXPORT_PATH="$PATH"
 declare KREW_PATH="${KREW_ROOT:-$HOME/.krew}/bin"
-declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH)
+declare MSSQL_PATH="/opt/mssql-tools/bin"
+declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH $MSSQL_PATH)
 
 for module in ${PATH_MODULES[@]}; do
     if [ -d "$module" ] && [[ ":$EXPORT_PATH:" != *":$module:"* ]]; then

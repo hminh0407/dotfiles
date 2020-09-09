@@ -125,6 +125,9 @@
 
     project = "!git remote get-url origin | sed -E 's#^.*:(.*).git$#\\1#'"
         ; get name of the current repo
+    platform = "!git remote get-url origin | sed -E 's#^.*@(.*):.*.git$#\\1#'"
+    platform-url = "!echo http://$(git platform)/$(git project)"
+    open = "!xdg-open $(git platform-url)"
 
     st = status
 

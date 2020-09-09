@@ -52,6 +52,7 @@ Plug 'majutsushi/tagbar'           " display tag of current file in a window
 Plug 'tpope/vim-abolish'              " Abbreviation & Coercion. Ex: crc-camel, crs-snake (could just write custom function)
 " Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
 Plug 'tpope/vim-unimpaired' " support some encode/decode functions. ex url encode/decode with '[u' and ']u' https://github.com/tpope/vim-unimpaired
+Plug 'will133/vim-dirdiff' " compare 2 folders https://github.com/will133/vim-dirdiff
 
 " Utilities
 Plug 'sk1418/HowMuch'       " calculator for visual selection

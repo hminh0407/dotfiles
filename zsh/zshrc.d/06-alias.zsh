@@ -91,6 +91,10 @@ alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --
     # --post301 --post302 --post303: not change the non-GET request method to GET after a 30x response
 # }}}
 
+# dirdiff {{
+alias dirdiff="_dirdiff"
+# }}
+
 # desk {
 
 if [ -x "$(command -v desk)" ]; then
@@ -177,6 +181,7 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kp="_kube_pod"
     alias kpa="_kube_pod_all"
     alias kpi="_kube_pod_inactive"
+    alias kp_failed="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
 
@@ -210,6 +215,10 @@ if [ -x "$(command -v git)" ]; then
     alias gl_usr="gitlab user"
 fi
 # }
+
+if [ -x "$(command -v mssql-cli)" ]; then
+    alias mssql="mssql-cli --mssqlclirc ~/.mssqlclirc"
+fi
 
 # nvm
 # if [ -x "$(command -v tmux)" ]; then
