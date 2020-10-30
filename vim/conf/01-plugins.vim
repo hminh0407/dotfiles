@@ -78,6 +78,7 @@ Plug 'chr4/nginx.vim', { 'for': 'conf' } " support nginx syntax (https://github.
 Plug 'aklt/plantuml-syntax', { 'for': 'uml' } " syntax support for plantuml
 " Plug 'jidn/vim-dbml', { 'for': 'dbml' } " https://github.com/jidn/vim-dbml support dbml language
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " support JS syntax and folding (https://github.com/pangloss/vim-javascript)
+Plug 'hashivim/vim-vagrant' " https://github.com/hashivim/vim-vagrant
 
 " Initialize plugin system
 call plug#end()

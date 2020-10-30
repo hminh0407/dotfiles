@@ -60,7 +60,7 @@ order by
 	sp.Name;
 endsnippet
 
-snippet ms-check-slow-queries "Find the slowest queries"
+snippet ms-check-slow-queries "Find the slowest completed queries in cache"
 SELECT
   TOP 10 SUBSTRING(
     qt.TEXT,
@@ -131,7 +131,17 @@ from cdc.change_tables ct
 join sys.tables tb on ct.source_object_id = tb.object_id
 endsnippet
 
-snippet ms-info-open-connection "Check current connection and who is connecting to db"
+snippet ms-info-open-connection "Description" b
+SELECT
+    DB_NAME(DBID) AS DataBaseName
+    ,COUNT(DBID) AS NumberOfConnections
+    ,LogiName
+FROM sys.sysprocesses
+WHERE DBID > 0
+GROUP BY DBID, LogiName
+endsnippet
+
+snippet ms-info-open-connection-detail "Check current connection and who is connecting to db"
 SELECT sdest.DatabaseName
     ,sdes.session_id
     ,sdes.[host_name]
@@ -162,6 +172,18 @@ CROSS APPLY (
 where sdes.session_id <> @@SPID
 --and sdes.nt_user_name = '' -- Put the username here !
 ORDER BY sdec.session_id
+endsnippet
+
+snippet ms-info-running-query "Description" b
+SELECT sqltext.TEXT,
+req.session_id,
+req.status,
+req.start_time,
+req.command,
+req.cpu_time,
+req.total_elapsed_time
+FROM sys.dm_exec_requests req
+CROSS APPLY sys.dm_exec_sql_text(sql_handle) AS sqltext
 endsnippet
 
 snippet ms-info-sp "show all store procedures in db"
@@ -357,6 +379,22 @@ snippet pg-create_role
 CREATE ROLE ${1:role} LOGIN PASSWORD '${2:pass}';
 endsnippet
 
+snippet pg-info-active-connection "Show all active connection"
+SELECT
+    pid
+    ,datname
+    ,usename
+    ,application_name
+    ,client_hostname
+    ,client_port
+    ,backend_start
+    ,query_start
+    ,query
+    ,state
+FROM pg_stat_activity
+WHERE state = 'active';
+endsnippet
+
 snippet pg-info_db
 SELECT
 	d.datname AS Name,
@@ -501,6 +539,10 @@ INSERT
 	VALUES
 		(${3:values}),
 		();
+endsnippet
+
+snippet pg-drop-process "drop a postgres process by its id"
+pg_terminate_backend($1)
 endsnippet
 
 snippet pg-view_def

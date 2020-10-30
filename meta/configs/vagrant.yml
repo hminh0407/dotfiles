@@ -1,0 +1,15 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
+
+- shell:
+    # install avahi to provide mDNS
+    # https://manski.net/2016/09/vagrant-multi-machine-tutorial/
+    - [sudo apt-fast install --no-install-recommends -y vagrant avahi-daemon libnss-mdns]
+

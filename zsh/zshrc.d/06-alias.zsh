@@ -130,6 +130,9 @@ fi
 
 if [ -x "$(command -v ffmpeg)" ]; then
     alias ffmpeg_add_sub_to_video="_ffmpeg_add_sub_to_video"
+    alias ffmpeg_add_sub_to_mp4_video="_ffmpeg_add_sub_to_mp4_video"
+    alias ffmpeg_add_hard_ass_sub_to_mp4_video="_ffmpeg_add_hard_ass_sub_to_mp4_video"
+    alias ffmpeg_cut_video="_ffmpeg_cut_video"
 fi
 
 if [ -x "$(command -v helm)" ]; then
@@ -185,7 +188,11 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
 
+    alias k_check_apiversion="k get all -o custom-columns='NAME:metadata.name,KIND:kind,VERSION:apiVersion' --all-namespaces"
+
     alias k_resource="kubectl-resource_capacity --pods --util --sort cpu.request"
+
+    alias k_event="kubectl get events --sort-by=.metadata.creationTimestamp"
 fi
 # }
 
@@ -258,6 +265,15 @@ if [ -x "$(command -v tmuxp)" ]; then
 fi
 # }
 
+if [ -x "$(command -v wavemon)" ]; then
+    alias wifi_info="sudo wavemon"
+fi
+
+# troubleshoot {
+    # https://askubuntu.com/questions/768463/laptop-headphone-jack-produces-no-sound
+    alias fix_sound="alsactl restore"
+# }
+
 # xinput {
 declare builtinKeyboard="AT Translated Set 2 keyboard"
 # Normal use of awk with alias will not run as expected, check for more detail on https://stackoverflow.com/a/24247870
@@ -273,6 +289,7 @@ alias xinput_enable_keyboard="xinput reattach \$(_xinput_list_keyboard_id) 3"
 # download the best mp4 compatible audio quality
 # convert output format to mp4
 alias yt_dl_mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
+alias yt_dl_mp3="youtube-dl --format 'bestaudio/best' --extract-audio --audio-format mp3 -o '%(title)s.%(ext)s'"
 alias yt_dl_mkv="_youtube_download_video_mkv"
 alias yt_dl_sub="_youtube_download_sub"
 alias yt_dl_sub_auto="youtube-dl --write-auto-sub --skip-download"
