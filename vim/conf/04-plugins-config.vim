@@ -276,6 +276,10 @@ map S <Plug>Sneak_S
 let g:sneak#s_next = 1
 " }}
 
+"  Startify {{
+let g:startify_skiplist = [ 'people' ]
+"  }}
+
 " Tagbar {{
 nmap <F7> :TagbarToggle<CR>
 let g:tagbar_autoclose=1 " Only open Tagbar when you want to jump to a specific tag and have it close automatically once you have selected one

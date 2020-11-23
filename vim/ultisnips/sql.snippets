@@ -43,6 +43,310 @@ snippet ms-last_n_day "get datetime value of last n day"
 ${1:dateColumn} >= DATEADD(DAY, -${2:numberOfDay}, GETDATE())
 endsnippet
 
+snippet ms-check-cdc-columns-match "Check if the number of columns in cdc instance match with original table"
+SELECT
+  replace(col.table_name, 'dbo_', '') AS table_name,
+  COUNT(col.column_name) AS column_count
+FROM
+  INFORMATION_SCHEMA.COLUMNS col
+  JOIN information_schema.tables tbl ON tbl.table_name = col.table_name
+  AND tbl.table_schema = col.table_schema
+  AND tbl.table_catalog = col.table_catalog
+  AND tbl.table_type <> 'VIEW'
+WHERE
+  col.column_name NOT LIKE '__$%' --
+GROUP BY
+  col.table_name
+ORDER BY
+  1;
+endsnippet
+
+snippet ms-check-database-info "Check database info"
+SELECT name,database_id,create_date,recovery_model_desc,is_cdc_enabled FROM sys.databases
+endsnippet
+
+snippet ms-check-jobs "List all jobs"
+select
+sysjobs.name job_name
+--,sysjobs.job_id
+,sysjobs.enabled job_enabled
+,sysjobs.description
+,sysschedules.name schedule_name
+--,sysschedules.schedule_id
+--,sysschedules.schedule_uid
+,sysschedules.enabled schedule_enabled
+from msdb.dbo.sysjobs
+inner join msdb.dbo.sysjobschedules on sysjobs.job_id = sysjobschedules.job_id
+inner join msdb.dbo.sysschedules on sysjobschedules.schedule_id = sysschedules.schedule_id
+order by sysjobs.enabled desc
+endsnippet
+
+snippet ms-check-jobs-status "List all jobs and their status, last, next run time"
+SELECT
+    [sJOB].[job_id] AS [JobID]
+    , [sJOB].[name] AS [JobName]
+    , CASE
+        WHEN [sJOBH].[run_date] IS NULL OR [sJOBH].[run_time] IS NULL THEN NULL
+        ELSE CAST(
+                CAST([sJOBH].[run_date] AS CHAR(8))
+                + ' '
+                + STUFF(
+                    STUFF(RIGHT('000000' + CAST([sJOBH].[run_time] AS VARCHAR(6)),  6)
+                        , 3, 0, ':')
+                    , 6, 0, ':')
+                AS DATETIME)
+      END AS [LastRunDateTime]
+    , CASE [sJOBH].[run_status]
+        WHEN 0 THEN 'Failed'
+        WHEN 1 THEN 'Succeeded'
+        WHEN 2 THEN 'Retry'
+        WHEN 3 THEN 'Canceled'
+        WHEN 4 THEN 'Running' -- In Progress
+      END AS [LastRunStatus]
+    , STUFF(
+            STUFF(RIGHT('000000' + CAST([sJOBH].[run_duration] AS VARCHAR(6)),  6)
+                , 3, 0, ':')
+            , 6, 0, ':')
+        AS [LastRunDuration (HH:MM:SS)]
+    , [sJOBH].[message] AS [LastRunStatusMessage]
+    , CASE [sJOBSCH].[NextRunDate]
+        WHEN 0 THEN NULL
+        ELSE CAST(
+                CAST([sJOBSCH].[NextRunDate] AS CHAR(8))
+                + ' '
+                + STUFF(
+                    STUFF(RIGHT('000000' + CAST([sJOBSCH].[NextRunTime] AS VARCHAR(6)),  6)
+                        , 3, 0, ':')
+                    , 6, 0, ':')
+                AS DATETIME)
+      END AS [NextRunDateTime]
+FROM
+    [msdb].[dbo].[sysjobs] AS [sJOB]
+    LEFT JOIN (
+                SELECT
+                    [job_id]
+                    , MIN([next_run_date]) AS [NextRunDate]
+                    , MIN([next_run_time]) AS [NextRunTime]
+                FROM [msdb].[dbo].[sysjobschedules]
+                GROUP BY [job_id]
+            ) AS [sJOBSCH]
+        ON [sJOB].[job_id] = [sJOBSCH].[job_id]
+    LEFT JOIN (
+                SELECT
+                    [job_id]
+                    , [run_date]
+                    , [run_time]
+                    , [run_status]
+                    , [run_duration]
+                    , [message]
+                    , ROW_NUMBER() OVER (
+                                            PARTITION BY [job_id]
+                                            ORDER BY [run_date] DESC, [run_time] DESC
+                      ) AS RowNumber
+                FROM [msdb].[dbo].[sysjobhistory]
+                WHERE [step_id] = 0
+            ) AS [sJOBH]
+        ON [sJOB].[job_id] = [sJOBH].[job_id]
+        AND [sJOBH].[RowNumber] = 1
+WHERE
+    [sJOB].enabled = 1
+ORDER BY [JobName]
+endsnippet
+
+snippet ms-check-jobs-with-schedule "List all jobs with their schedule"
+select
+  S.name AS JobName,
+  S.enabled AS JobEnabled,
+  SS.name AS ScheduleName,
+  --SS.enabled AS ScheduleEnabled,
+  CASE
+    (SS.freq_type)
+    WHEN 1 THEN 'Once'
+    WHEN 4 THEN 'Daily'
+    WHEN 8 THEN (
+      case
+        when (SS.freq_recurrence_factor > 1) then 'Every ' + convert(varchar(3), SS.freq_recurrence_factor) + ' Weeks'
+        else 'Weekly'
+      end
+    )
+    WHEN 16 THEN (
+      case
+        when (SS.freq_recurrence_factor > 1) then 'Every ' + convert(varchar(3), SS.freq_recurrence_factor) + ' Months'
+        else 'Monthly'
+      end
+    )
+    WHEN 32 THEN 'Every ' + convert(varchar(3), SS.freq_recurrence_factor) + ' Months' -- RELATIVE
+    WHEN 64 THEN 'SQL Startup'
+    WHEN 128 THEN 'SQL Idle'
+    ELSE '??'
+  END AS Frequency,
+  CASE
+    WHEN (freq_type = 1) then 'One time only'
+    WHEN (
+      freq_type = 4
+      and freq_interval = 1
+    ) then 'Every Day'
+    WHEN (
+      freq_type = 4
+      and freq_interval > 1
+    ) then 'Every ' + convert(varchar(10), freq_interval) + ' Days'
+    WHEN (freq_type = 8) then (
+      select
+        'Weekly Schedule' = MIN(D1 + D2 + D3 + D4 + D5 + D6 + D7)
+      from
+        (
+          select
+            SS.schedule_id,
+            freq_interval,
+            'D1' = CASE
+              WHEN (freq_interval & 1 <> 0) then 'Sun '
+              ELSE ''
+            END,
+            'D2' = CASE
+              WHEN (freq_interval & 2 <> 0) then 'Mon '
+              ELSE ''
+            END,
+            'D3' = CASE
+              WHEN (freq_interval & 4 <> 0) then 'Tue '
+              ELSE ''
+            END,
+            'D4' = CASE
+              WHEN (freq_interval & 8 <> 0) then 'Wed '
+              ELSE ''
+            END,
+            'D5' = CASE
+              WHEN (freq_interval & 16 <> 0) then 'Thu '
+              ELSE ''
+            END,
+            'D6' = CASE
+              WHEN (freq_interval & 32 <> 0) then 'Fri '
+              ELSE ''
+            END,
+            'D7' = CASE
+              WHEN (freq_interval & 64 <> 0) then 'Sat '
+              ELSE ''
+            END
+          from
+            msdb..sysschedules ss
+          where
+            freq_type = 8
+        ) as F
+      where
+        schedule_id = SJ.schedule_id
+    )
+    WHEN (freq_type = 16) then 'Day ' + convert(varchar(2), freq_interval)
+    WHEN (freq_type = 32) then (
+      select
+        freq_rel + WDAY
+      from
+        (
+          select
+            SS.schedule_id,
+            'freq_rel' = CASE
+              (freq_relative_interval)
+              WHEN 1 then 'First'
+              WHEN 2 then 'Second'
+              WHEN 4 then 'Third'
+              WHEN 8 then 'Fourth'
+              WHEN 16 then 'Last'
+              ELSE '??'
+            END,
+            'WDAY' = CASE
+              (freq_interval)
+              WHEN 1 then ' Sun'
+              WHEN 2 then ' Mon'
+              WHEN 3 then ' Tue'
+              WHEN 4 then ' Wed'
+              WHEN 5 then ' Thu'
+              WHEN 6 then ' Fri'
+              WHEN 7 then ' Sat'
+              WHEN 8 then ' Day'
+              WHEN 9 then ' Weekday'
+              WHEN 10 then ' Weekend'
+              ELSE '??'
+            END
+          from
+            msdb..sysschedules SS
+          where
+            SS.freq_type = 32
+        ) as WS
+      where
+        WS.schedule_id = SS.schedule_id
+    )
+  END AS Interval,
+  CASE
+    (freq_subday_type)
+    WHEN 1 then left(
+      stuff(
+        (
+          stuff(
+            (replicate('0', 6 - len(active_start_time))) + convert(varchar(6), active_start_time),
+            3,
+            0,
+            ':'
+          )
+        ),
+        6,
+        0,
+        ':'
+      ),
+      8
+    )
+    WHEN 2 then 'Every ' + convert(varchar(10), freq_subday_interval) + ' seconds'
+    WHEN 4 then 'Every ' + convert(varchar(10), freq_subday_interval) + ' minutes'
+    WHEN 8 then 'Every ' + convert(varchar(10), freq_subday_interval) + ' hours'
+    ELSE '??'
+  END AS [Time],
+  CASE
+    SJ.next_run_date
+    WHEN 0 THEN cast('n/a' as char(10))
+    ELSE convert(
+      char(10),
+      convert(datetime, convert(char(8), SJ.next_run_date)),
+      120
+    ) + ' ' + left(
+      stuff(
+        (
+          stuff(
+            (replicate('0', 6 - len(next_run_time))) + convert(varchar(6), next_run_time),
+            3,
+            0,
+            ':'
+          )
+        ),
+        6,
+        0,
+        ':'
+      ),
+      8
+    )
+  END AS NextRunTime
+from
+  msdb.dbo.sysjobs S
+  left join msdb.dbo.sysjobschedules SJ on S.job_id = SJ.job_id
+  left join msdb.dbo.sysschedules SS on SS.schedule_id = SJ.schedule_id
+order by
+  S.enabled,S.name
+endsnippet
+
+snippet ms-check-last-backup "check database last backup from history"
+SELECT   d.name,
+	--b.backup_set_uuid, b.name as backup_file_name, b.software_major_version,
+	b.user_name, b.database_creation_date, b.backup_start_date, b.backup_finish_date
+FROM     master.sys.sysdatabases d
+LEFT OUTER JOIN msdb..backupset b ON b.database_name = d.name AND b.type = 'L'
+ORDER BY backup_finish_date DESC
+endsnippet
+
+snippet mms-check-last-restore "check database last restore from history"
+SELECT
+    a.restore_history_id, a.restore_date, a.destination_database_name, a.user_name, a.restore_type
+    --,b.type backup_type, b.first_lsn, b.last_lsn, b.checkpoint_lsn, b.database_backup_lsn
+FROM msdb..restorehistory a
+INNER JOIN msdb..backupset b ON a.backup_set_id = b.backup_set_id
+ORDER BY restore_date DESC
+endsnippet
+
 # https://stackoverflow.com/questions/7272157/how-to-identify-all-stored-procedures-referring-a-particular-table
 snippet ms-check-table-dependencies "Check if tables are used in store procedures or functions"
 select
@@ -58,6 +362,10 @@ inner join sys.objects sp on
 	and sp.type in ('P', 'FN')
 order by
 	sp.Name;
+endsnippet
+
+snippet ms-check-log-space "Check log space"
+DBCC SQLPERF(logspace)
 endsnippet
 
 snippet ms-check-slow-queries "Find the slowest completed queries in cache"

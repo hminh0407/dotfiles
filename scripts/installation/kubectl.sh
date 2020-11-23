@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare VERSION="v1.13.10" # https://github.com/kubernetes/kubectl/issues/675
+declare VERSION="v1.15.12" # https://github.com/kubernetes/kubectl/issues/675
 # declare VERSION="v1.12.10-gke.17" # https://github.com/kubernetes/kubectl/issues/675
 
 install () {
@@ -21,10 +21,12 @@ installKrew() {
     curl -fsSLO "$url"
     tar zxvf krew.tar.gz
 
-    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
-    "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
-    "$KREW" update
+    # KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+    # "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+    # "$KREW" update
     # also need to update PATH environment variable, which taken care in zsh/zshrc.d/04-integration.zsh
+
+    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/arm.*$/arm/')" && "$KREW" install krew
 
     rm -r $tmpFolder
 }

@@ -139,6 +139,7 @@
     sm = submodule
     ism = submodule init
     asm = submodule add -f
+    lsm = submodule status --recursive
     usm = submodule update --init --recursive
     dsm = "!f() { \
         git submodule deinit -f "$@"; \

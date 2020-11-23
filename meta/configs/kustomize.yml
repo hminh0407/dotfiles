@@ -1,0 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ["rm kustomize && curl -s 'https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh' | bash && mv kustomize $DOTFILES_BIN_DIR", Installing kustomize]
+

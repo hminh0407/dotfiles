@@ -46,6 +46,27 @@ _join_by() {
     # '1''2''3'
 }
 
+_urlencode() {
+    # https://stackoverflow.com/a/10660730/1530178
+    local string="${1}"
+    local strlen=${#string}
+    local encoded=""
+    local pos=""
+    local c=""
+    local o=""
+
+    for (( pos=0 ; pos<strlen ; pos++ )); do
+        c=${string:$pos:1}
+        case "$c" in
+           [-_.~a-zA-Z0-9] ) o="${c}" ;;
+           * )               printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="${o}"
+    done
+    echo "${encoded}"    # You can either set a return variable (FASTER)
+    REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
+}
+
 # ===============================================
 #
 _dirdiff() {
@@ -408,6 +429,16 @@ if [ -x "$(command -v gcloud)" ]; then
 
     _gcp_log_event_hpa() {
         _gcp_log_kevent "jsonPayload.source.component=horizontal-pod-autoscaler" "$@"
+    }
+
+    _gcp_service_account_iam_policy() {
+        [ -z "$1" ] && { echo "missing serviceAccount argument"; exit 1; }
+        local serviceAccount="$1"
+
+        gcloud projects get-iam-policy $GCP_PROJECT_ID  \
+        --flatten="bindings[].members" \
+        --format='table(bindings.role)' \
+        --filter="bindings.members:$serviceAccount"
     }
 
     _gcloud_project() { # get current project

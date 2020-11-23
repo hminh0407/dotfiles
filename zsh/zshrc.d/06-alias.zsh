@@ -158,6 +158,7 @@ if [ -x "$(command -v gcloud)" ]; then
     alias gcp_ip_reserved_external="gcloud gcp compute addresses list --filter='status=RESERVED AND addressType=EXTERNAL'"
     alias gcp_log_event_hpa="_gcp_log_event_hpa"
     alias gcp_log_kevent="_gcp_log_kevent"
+    alias gcp_service_account_policy="_gcp_service_account_iam_policy"
     alias gcp_sql="_gcloud_sql"
     alias gcp_service="_gcloud_service"
     alias gcp_ssh="gcloud compute ssh --internal-ip"
