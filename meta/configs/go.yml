@@ -1,0 +1,10 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        sterr : true
+        quiet : false
+
+- shell:
+    - [./scripts/installation/go.sh, Installing Go]
+

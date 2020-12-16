@@ -1,0 +1,11 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        sterr : true
+        quiet : false
+
+- shell:
+    - [apt-fast install --no-install-recommends -y jsonnet, Installing jsonnet]
+    - [go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb, Installing jsonnet-bundler]
+

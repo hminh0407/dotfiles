@@ -1,5 +1,6 @@
 docker
 nodejs
+go
 pgcli
 kafkacat
 vagrant

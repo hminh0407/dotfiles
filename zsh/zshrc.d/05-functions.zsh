@@ -20,6 +20,20 @@ _check_redirect() {
     done
 }
 
+_cleanup_disk_space() {
+    # steps are referred from this article https://itsfoss.com/free-up-space-ubuntu-linux/
+    sudo apt-get autoremove
+
+    # clean up apt cache
+    sudo apt-get autoclean
+
+    # Clear systemd journal logs
+    journalctl --disk-usage && sudo journalctl --vacuum-time=3d
+
+    # remove thumbnails cache
+    sudo rm -rf ~/.cache/thumbnails/*
+}
+
 _join_by() {
     # join elements of array by a delimiter
     local delimiter="$1" # Save first argument in a variable
@@ -44,6 +58,16 @@ _join_by() {
     # '1 2 3'
     # printf "'%s'" "${array[@]}"
     # '1''2''3'
+}
+
+_rq_domain_ip_mapping() {
+    # use in situation when we need to send request to a proxy with ip address with DNS resolve
+    local domain="$1"
+    local ip="$2"
+
+    curl -L -v $domain --resolve $domain:80:$ip --resolve $domain:443:$ip
+    # which will force cURL to use  "127.0.0.1" as the IP address for requests to "www.example.com " over ports 80 (HTTP and 443 (HTTPS).
+    # This can be useful for sites that automatically redirect HTTP requests to HTTPS requests as a security measure.
 }
 
 _urlencode() {
@@ -306,6 +330,20 @@ if [ -x "$(command -v gcloud)" ]; then
         fi
     }
 
+    _gcloud_compute_disk_find_unused() {
+        gcloud compute disks list --format json \
+            | fx '.filter(item => !item.users ).map( item => { return { id: item.id, name: item.name, last_attach: item.lastAttachTimestamp, last_dettach: item.lastDetachTimestamp, users: item.users } })' \
+            | json2csv --quote '' \
+            | csvformat -D ' '
+    }
+
+    _gcloud_compute_disk_delete_unused() {
+        _gcloud_compute_disk_find_unused \
+            | tail -n +2 \
+            | awk '{print $2}' \
+            | xargs -r gcloud compute disks delete
+    }
+
     _gcloud_compute_display() {
         if [ -x "$(command -v fzf)" ]; then
             _gcloud_compute \
@@ -528,6 +566,19 @@ if [ -x "$(command -v kubectl)" ]; then
             *)
                 kubectl get $service ${@:3} && return
         esac
+    }
+
+    _kube_config_current_context() {
+        # example:
+            # context with name 'project-name-218206_asia-southeast1-a_cluster-name'
+            # will be printed 'cluster-name'
+        local delimiter="_"
+
+        kubectl config current-context | awk '{n=split($1,A,"'$delimiter'"); print A[n]}'
+    }
+
+    _kube_config_current_namespace() {
+        kubectl config view --output 'jsonpath={..namespace}'
     }
 
     _kube_context() {
@@ -826,6 +877,28 @@ if [ -x "$(command -v kubectl)" ]; then
         local mode="$1"
 
         _kube_get_list "services" $mode
+    }
+
+    _kube_find_unused_pvc_more_detail() {
+        kubectl describe pvc --all-namespaces | grep -E "^Name:.*$|^Namespace:.*$|^Mounted By:.*$" | grep -B 2 "<none>"
+    }
+
+    _kube_find_unused_pvc() {
+        _kube_find_unused_pvc_more_detail \
+            | grep -E "^Name:.*$|^Namespace:.*$" \
+            | cut -f2 -d: \
+            | paste -d " " - - \
+    }
+
+    _kube_delete_unused_pvc() {
+        # find all pvc that are not mounted to any pod
+        # this taken from stackoverflow answer https://stackoverflow.com/a/59758937
+        # It looks like the -o=go-template=... doesn't have a variable for Mounted By: as shown in kubectl describe pvc. Therefore this kind of hack is needed
+        _kube_find_unused_pvc \
+            | xargs -n2 bash -c 'kubectl -n ${1} delete pvc ${0}'
+            # cut removes Name: and Namespace: since they just get in the way
+            # paste puts the Name of the PVC and it's Namespace on the same line
+            # xargs -n bash makes it so the PVC name is ${0} and the namespace is ${1}
     }
 
 fi

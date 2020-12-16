@@ -79,6 +79,8 @@ alias check_udp_port="nc -z -v -u"
 
 # }
 
+alias disk_cleanup=_cleanup_disk_space
+
 # curl {{{
 # some useful curl alias
 alias curl_check_redirect="_check_redirect"
@@ -189,6 +191,9 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
 
+    alias k_config_current_ctx="_kube_config_current_context"
+    alias k_config_current_ns="_kube_config_current_namespace"
+
     alias k_check_apiversion="k get all -o custom-columns='NAME:metadata.name,KIND:kind,VERSION:apiVersion' --all-namespaces"
 
     alias k_resource="kubectl-resource_capacity --pods --util --sort cpu.request"
@@ -235,7 +240,8 @@ fi
 
 # request
 if [ -x "$(command -v curl)" ]; then
-    alias rq="curl"
+    alias rq="curl -L"
+    alias rq_domain_ip_mapping="_rq_domain_ip_mapping"
     alias rqo="curl -I " # request option
 fi
 

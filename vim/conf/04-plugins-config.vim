@@ -235,6 +235,24 @@ nnoremap <C-F><C-G> :CtrlSFToggle<CR>
 inoremap <C-F><C-G> <Esc>:CtrlSFToggle<CR>
 " }}
 
+" Goyo {{
+nmap <F4> :Goyo<CR>
+
+" limelight integration
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+" toggle limelight
+nmap <F6> :Limelight!!<CR>
+
+" " invoke :Limelight for a visual range. There are also <Plug> mappings for normal and visual mode for the purpose.
+" nmap <F6> <Plug>(Limelight)
+" xmap <F6> <Plug>(Limelight)
+
+let g:goyo_width = 120
+
+" }}
+
 " Gutentags {{
 "
 " Specifies command(s) to use to list files for which tags should be generated,

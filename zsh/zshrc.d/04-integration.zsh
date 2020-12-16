@@ -7,7 +7,9 @@ setopt +o nomatch
 declare EXPORT_PATH="$PATH"
 declare KREW_PATH="${KREW_ROOT:-$HOME/.krew}/bin"
 declare MSSQL_PATH="/opt/mssql-tools/bin"
-declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH $MSSQL_PATH)
+declare GO_BIN="$DOTFILES_BIN_DIR/go/bin"
+declare GO_PATH="$HOME/go/bin"
+declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH $MSSQL_PATH $GO_BIN $GO_PATH)
 
 for module in ${PATH_MODULES[@]}; do
     if [ -d "$module" ] && [[ ":$EXPORT_PATH:" != *":$module:"* ]]; then

@@ -63,6 +63,12 @@ if ! [ -x "$(command -v ${1:command} ]; then
 fi
 endsnippet
 
+snippet if-dir-empty "check if directory is empty"
+if [ "$(ls -A $0)" ]; then
+	$1
+fi
+endsnippet
+
 snippet elif
 elif [[ ${1:condition} ]]; then
 	${0:${VISUAL}}
@@ -177,6 +183,9 @@ inarray=$(printf '%s\n' \${array[@]} | grep -P "^$1$" | wc -w)
 	# https://stackoverflow.com/a/28032613
 endsnippet
 
+# https://stackoverflow.com/questions/59895/how-to-get-the-source-directory-of-a-bash-script-from-within-the-script-itself?rq=1
+# There's an alternative version, but seems not to work properly on zsh
+# BASE_DIR="$(dirname $(readlink -f $0))"
 snippet basedir "get absolute path of current file"
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 endsnippet
@@ -186,6 +195,11 @@ snippet cm-section
 # =============================================================================
 # ${1:section}
 # =============================================================================
+endsnippet
+
+snippet echo_file_function_line "echo with information on the context of running script: file, function, line" b
+local message="$1"
+echo "File $(basename \$0) - Function ${FUNCNAME[@]} - line ${BASH_LINENO[0]}: $message"
 endsnippet
 
 snippet filename-from-path
@@ -280,12 +294,16 @@ echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 	# * echo it
 endsnippet
 
+snippet str-split-last-el "split string by delimiter and get the last element"
+| awk '{n=split(\$1,A,"$1"); print A[n]}'
+endsnippet
+
 snippet timestamp-duration
 date --iso-8601=s --date="3 hours ago"
 endsnippet
 
 snippet var-validate-required
-[ -z "\$1" ] && { echo	"missing argument"; exit 1; }
+[ -z "\$1" ] && { echo "missing argument"; exit 1; }
 endsnippet
 # vim: set noexpandtab :
 

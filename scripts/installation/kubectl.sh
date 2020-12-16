@@ -21,12 +21,8 @@ installKrew() {
     curl -fsSLO "$url"
     tar zxvf krew.tar.gz
 
-    # KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
-    # "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
-    # "$KREW" update
-    # also need to update PATH environment variable, which taken care in zsh/zshrc.d/04-integration.zsh
-
     KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/arm.*$/arm/')" && "$KREW" install krew
+    # also need to update PATH environment variable, which taken care in zsh/zshrc.d/04-integration.zsh
 
     rm -r $tmpFolder
 }
