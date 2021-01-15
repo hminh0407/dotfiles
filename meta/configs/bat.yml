@@ -4,6 +4,12 @@
         stdin : true
         stdout: true
         quiet : false
+    link:
+        create: true
+        relink: true
+        force: true
 
-- shell:
-    - [./scripts/installation/bat.sh, Installing bat]
+# - shell:
+    # - [./scripts/installation/bat.sh, Installing bat] # better install with zinit
+- link:
+    ~/.config/bat/config : bat/bat.conf

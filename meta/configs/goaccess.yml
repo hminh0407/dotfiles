@@ -1,0 +1,11 @@
+# Search google in terminal: https://github.com/jarun/googler
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - ["sudo rm -f /etc/apt/sources.list.d/goaccess.list && echo \"deb https://deb.goaccess.io/ $(lsb_release -cs) main\" | sudo tee -a /etc/apt/sources.list.d/goaccess.list", Adding Goaccess repo]
+    - ["wget -O - https://deb.goaccess.io/gnugpg.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/goaccess.gpg add -", Adding Goaccess key]
+    - ["sudo apt-get update && sudo apt-get install goaccess", Installing Goaccess]

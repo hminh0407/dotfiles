@@ -213,7 +213,7 @@ _api() {
 create_project_pr() {
 
     local source_branch="$(git br-current)" # get current git branch (git alias)
-    local project_name="$(git project)" # get current repo (git alias)
+    local project_name="$(git rp)" # get current repo (git alias)
     local target_branch="$(gitlab project | fx .default_branch)" # get the default branch of current project
     local assignee_id="$(gitlab project | fx .creator_id)" # assign to creator by default
     local title="$(_urlencode "$(git log-last-comment)")" # get comment from last commit (git alias)
@@ -223,8 +223,6 @@ create_project_pr() {
         --method POST \
         --path "$path" \
         --param "source_branch=$source_branch" \
-        --param "target_branch=$target_branch" \
-        --param "assignee_id=$assignee_id" \
         --param "title=$title" \
         --param "remove_source_branch=true" \
         --param "squash=true"
@@ -272,7 +270,7 @@ projects() {
 }
 
 project() {
-    local project_name="$(git project)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
+    local project_name="$(git rp)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
     local path="projects/$(_urlencode $project_name)"
 
     _api \
@@ -283,7 +281,7 @@ project() {
 }
 
 project_tags() {
-    local project_name="$(git project)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
+    local project_name="$(git rp)" # git alias to get current git project name (Ex: hminh0407/dotfiles)
     local path="projects/$(_urlencode $project_name)/repository/tags"
 
     _api \

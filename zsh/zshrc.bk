@@ -1,0 +1,40 @@
+declare ZSH_CONFIG_DIR="$HOME/.dotfiles/zshrc.d"
+
+# # Speed up zsh load time
+# # =======================================
+# zmodload zsh/zprof # uncomment this to profile zsh function https://htr3n.github.io/2018/07/faster-zsh/
+# # zprof # run this after shell start to show profiling info
+# # https://htr3n.github.io/2018/07/faster-zsh/#lazy-loading
+# # https://gist.github.com/ctechols/ca1035271ad134841284
+# # https://carlosbecker.com/posts/speeding-up-zsh
+
+autoload -Uz compinit
+# compatible with bash completion
+autoload bashcompinit
+bashcompinit
+
+case $SYSTEM in
+  Darwin)
+    if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
+      compinit;
+    else
+      compinit -C;
+    fi
+    ;;
+  Linux)
+    # not yet match GNU & BSD stat
+  ;;
+esac
+
+# Load all files from .dotfiles/zshrc.d directory
+# =======================================
+if [ -d $ZSH_CONFIG_DIR ]; then
+  for file in $ZSH_CONFIG_DIR/*.zsh; do
+    source $file
+  done
+fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Hook for desk activation
+[ -n "$DESK_ENV" ] && source "$DESK_ENV" || true

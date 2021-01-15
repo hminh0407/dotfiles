@@ -24,6 +24,10 @@ set splitright                     " split window to the right
 " }}
 
 " Buffer {{
+
+" Fast reload buffer with latest file version
+map <leader>r :edit!<cr>
+
 map <C-B><C-J> :bnext     <CR>
 map <C-B><C-K> :bprevious <CR>
 map <C-B><C-W> :bd        <CR>

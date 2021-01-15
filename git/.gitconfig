@@ -1,33 +1,49 @@
 [include]
     path = "~/workspace/.gitconfig-workspace"
+
 [core]
     editor = vim
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
     excludesfile = ~/.gitignore
+    pager = delta
+
 [diff]
     tool = vimdiff
+    colorMoved = zebra
+
+[delta]
+    syntax-theme = gruvbox
+    line-numbers = true
+    side-by-side = true
+    inspect-raw-lines = false
+
 [difftool]
     prompt = false
+
 [alias]
     # list all git alias
     # do not use "_" when naming alias
-    la = "!git config -l | grep alias | cut -c 7-"
+    alias-ls = "!git config -l | grep alias | cut -c 7-"
 
     a = add
 
     br = branch
-    local-br  = "!git fetch -p && git branch -vv | cut -c 3- | grep -v origin | awk '{ print $1 }'"
-    remote-br = "!git fetch -p && git branch -vv | cut -c 3- | grep origin | awk '{ print $1 }'"
+
+    br-ls-local  = "!git fetch -p && git branch -vv | cut -c 3- | grep -v origin | awk '{ print $1 }'"
+    br-ls-remote = "!git fetch -p && git branch -vv | cut -c 3- | grep origin | awk '{ print $1 }'"
+
     # branch that has been removed from remote
-    gone-br   = "!git fetch -p && git branch -vv | cut -c 3- | awk '/: gone]/{print $1}'"
+    br-ls-gone   = "!git fetch -p && git branch -vv | cut -c 3- | awk '/: gone]/{print $1}'"
+
     # delete both local and remote
-    dbr = "!f() { \
+    br-dl = "!f() { \
         git push -d origin "$@"; \
         git branch -D "$@"; \
     }; f"
-    d-local-br = branch -D
-    d-untracked-local-br = "!git branch -D $(git local-branches)"
-    d-gone-local-br = "!git branch -D $(git gone-branches)"
+    br-dl-local-untracked = "!git branch -D $(git local-branches)"
+    br-dl-local-gone = "!git branch -D $(git br-ls-gone)"
+    br-dl-local = branch -d
+    br-dl-remote = push -d
 
     br-ck-exist = "rev-parse --verify --quiet"
 
@@ -79,42 +95,42 @@
     rba = rebase --abort
     rbc = rebase --continue
 
+    rp = "!git remote get-url origin | sed -E 's#^.*:(.*).git$#\\1#'"
+    rp-platform = "!git remote get-url origin | sed -E 's#^.*@(.*):.*.git$#\\1#'"
+    rp-url = "!echo http://$(git rp-platform)/$(git rp)"
+
     ; get repo name
-    ; ex: git rp-name https://github.com/anishathalye/dotbot -> dotbot
-    rp-name = "!f() { \
-        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
-        local repo="$1"; \
+    ; ex: git rp-extract-name https://github.com/anishathalye/dotbot -> dotbot
+    rp-extract-name = "!f() { \
+        local repo="${1:-$(git rp-url)}"; \
         local name="$(basename $repo)"; \
         local nameWithoutSuffix="${name%.*}"; \
         echo "$nameWithoutSuffix"; \
     }; f"
 
     ; get repo host name
-    ; ex: git rp-name https://github.com/anishathalye/dotbot -> anishathalye
-    rp-hostname = "!f() { \
-        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
-        local repo="$1"; \
-        local name="$(git rp-name $repo)"; \
+    ; ex: git rp-extract-hostname https://github.com/anishathalye/dotbot -> anishathalye
+    rp-extract-hostname = "!f() { \
+        local repo="${1:-$(git rp-url)}"; \
+        local name="$(git rp-extract-name $repo)"; \
         local hostname="$(basename ${repo%/${name}})"; \
         echo "$hostname"; \
     }; f"
 
     ; get repo full name
-    ; ex: git rp-name https://github.com/anishathalye/dotbot -> anishathalye/dotbot
-    rp-fullname = "!f() { \
-        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
-        local repo="$1"; \
-        local name="$(git rp-name $repo)"; \
-        local hostname="$(git rp-hostname $repo)"; \
+    ; ex: git rp-extract-fullname https://github.com/anishathalye/dotbot -> anishathalye/dotbot
+    rp-extract-fullname = "!f() { \
+        local repo="${1:-$(git rp-url)}"; \
+        local name="$(git rp-extract-name $repo)"; \
+        local hostname="$(git rp-extract-hostname $repo)"; \
         local fullname="$hostname/$name"; \
         echo "$fullname"; \
     }; f"
 
     ; get repo latest release
     rp-latest-release = "!f() { \
-        [ -z "$1" ] && { echo  "missing argument: repo"; exit 1; }; \
-        local repo="$1"; \
-        local fullname="$(git rp-fullname $repo)"; \
+        local repo="${1:-$(git rp-url)}"; \
+        local fullname="$(git rp-extract-fullname $repo)"; \
         curl --silent "https://api.github.com/repos/$fullname/releases/latest" | jq '.tag_name' --raw-output; \
     }; f"
 
@@ -123,11 +139,7 @@
     rs2 = reset HEAD~2
     rs3 = reset HEAD~3
 
-    project = "!git remote get-url origin | sed -E 's#^.*:(.*).git$#\\1#'"
-        ; get name of the current repo
-    platform = "!git remote get-url origin | sed -E 's#^.*@(.*):.*.git$#\\1#'"
-    platform-url = "!echo http://$(git platform)/$(git project)"
-    open = "!xdg-open $(git platform-url)"
+    open = "!xdg-open $(git rp-url)"
 
     st = status
 

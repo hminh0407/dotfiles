@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-declare VERSION="v1.15.12" # https://github.com/kubernetes/kubectl/issues/675
+declare VERSION="v1.20.1" # https://github.com/kubernetes/kubectl/issues/675
+# declare VERSION="v1.15.12" # https://github.com/kubernetes/kubectl/issues/675
 # declare VERSION="v1.12.10-gke.17" # https://github.com/kubernetes/kubectl/issues/675
 
 install () {
+    # to get the latest version: https://storage.googleapis.com/kubernetes-release/release/stable.txt
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$VERSION/bin/linux/amd64/kubectl
     chmod +x ./kubectl && mv ./kubectl $DOTFILES_BIN_DIR/kubectl
 }

@@ -39,3 +39,5 @@ export VISUAL='vi'
 
 # fzf
 export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search
+
+export COLORTERM="truecolor"

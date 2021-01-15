@@ -1,5 +1,6 @@
 ############################################### KEY BINDING ###########################################################
 # Key Binding {
+
 # alias {
 alias_widget() LBUFFER+=$(_fzf_alias | join_lines)
 zle -N alias_widget
