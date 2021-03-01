@@ -91,6 +91,7 @@ alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --
     # --max-time: to only wait for 3s if the site does not response
     # --insecure: allows curl to proceed and operate even for server connections otherwise considered insecure
     # --post301 --post302 --post303: not change the non-GET request method to GET after a 30x response
+alias curl_check_outbound_ip="curl icanhazip.com"
 # }}}
 
 # dirdiff {{
@@ -108,6 +109,8 @@ fi
 
 # docker {
 if [ -x "$(command -v docker)" ]; then
+    alias dfimage="sudo docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage"
+        # https://stackoverflow.com/questions/19104847/how-to-generate-a-dockerfile-from-an-image
     alias dk="docker"
     alias dkim="docker images"
     alias dkps="docker ps"
@@ -192,6 +195,8 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kpu="_kube_pod_usage"
     alias ks="_kube_service"
 
+    alias k_image="_kube_image"
+
     alias k_config_current_ctx="_kube_config_current_context"
     alias k_config_current_ns="_kube_config_current_namespace"
 
@@ -257,6 +262,12 @@ fi
 if [ -x "$(command -v shnsplit)" ]; then
     alias splitFlac="_splitFlac"
 fi
+
+# terraform {
+if [ -x "$(command -v terraform)" ]; then
+    alias tf="terraform"
+fi
+# }
 
 # tmux {
 if [ -x "$(command -v tmux)" ]; then

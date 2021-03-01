@@ -41,3 +41,5 @@ export VISUAL='vi'
 export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search
 
 export COLORTERM="truecolor"
+
+export ANSIBLE_NOCOWS=1

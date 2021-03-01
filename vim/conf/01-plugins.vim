@@ -17,6 +17,9 @@ Plug 'ntpeters/vim-better-whitespace' " hightlight trailing whitespace
     " but they are quite buggy at the moment
 Plug 'svermeulen/vim-cutlass' " make delete operation only delete and not affect yank history
 Plug 'svermeulen/vim-yoink'   " auto copy vim yank to clipboard and via versa
+Plug 'djoshea/vim-autoread'
+    " Automatically causes vim to reload files which have been written on disk but not modified in the buffer since the last write from vim
+    " https://github.com/djoshea/vim-autoread
 
 " Git
 Plug 'tpope/vim-fugitive'     " extend git support
@@ -55,6 +58,7 @@ Plug 'tpope/vim-unimpaired' " support some encode/decode functions. ex url encod
 Plug 'will133/vim-dirdiff' " compare 2 folders https://github.com/will133/vim-dirdiff
 Plug 'junegunn/goyo.vim' " toggle writing mode https://github.com/junegunn/goyo.vim
 Plug 'junegunn/limelight.vim' " integrate with goyo to dim the light https://github.com/junegunn/limelight.vim
+Plug 'hashivim/vim-terraform', { 'for': ['terraform'] } " terraform file syntax https://github.com/hashivim/vim-terraform
 
 " Utilities
 Plug 'sk1418/HowMuch'       " calculator for visual selection

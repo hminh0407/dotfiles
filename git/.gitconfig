@@ -96,6 +96,7 @@
     rbc = rebase --continue
 
     rp = "!git remote get-url origin | sed -E 's#^.*:(.*).git$#\\1#'"
+    rp-local-dir = "!git rev-parse --show-toplevel" # find the full local path of current project dir
     rp-platform = "!git remote get-url origin | sed -E 's#^.*@(.*):.*.git$#\\1#'"
     rp-url = "!echo http://$(git rp-platform)/$(git rp)"
 

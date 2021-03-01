@@ -682,6 +682,16 @@ if [ -x "$(command -v kubectl)" ]; then
         done
     }
 
+    _kube_image() { # list all image used in cluster
+        local image_pattern="$1"
+
+        if [[ -n $image_pattern ]]; then
+            kubectl get deployment --all-namespaces -o jsonpath="{..metadata.name}" | tr -s '[[:space:]]' '\n' | sort -u | grep "$image_pattern"
+        else
+            kubectl get deployment --all-namespaces -o jsonpath="{..metadata.name}" | tr -s '[[:space:]]' '\n' | sort -u
+        fi
+    }
+
     _kube_ingress() { # list of kubernetes deployment and describe selected item if possible
         local mode="$1"
 

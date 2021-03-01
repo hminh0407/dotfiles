@@ -3,7 +3,7 @@
 install () {
     local localBin="$DOTFILES_BIN_DIR"
 
-    local version="0.13.5"
+    local version="0.14.5"
     local zipFilename="terraform_${version}_linux_amd64.zip"
     local unzippedFolderName="terraform"
 

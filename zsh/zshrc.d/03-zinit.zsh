@@ -37,6 +37,7 @@ zinit ice as"command" from"gh-r" mv"delta* -> delta" pick"delta/delta"
 zinit light dandavison/delta
 
 zinit light lukechilds/zsh-nvm
+# zinit light supercrabtree/k
 
 ### oh-my-zsh plugins ###
 zinit snippet OMZP::urltools

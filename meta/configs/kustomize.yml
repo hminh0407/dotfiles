@@ -5,5 +5,5 @@
         quiet : false
 
 - shell:
-    - ["rm kustomize && curl -s 'https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh' | bash && mv kustomize $DOTFILES_BIN_DIR", Installing kustomize]
+    - ["rm -f kustomize && curl -s 'https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh' | bash && mv kustomize $DOTFILES_BIN_DIR", Installing kustomize]
 

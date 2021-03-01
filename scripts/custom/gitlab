@@ -225,7 +225,8 @@ create_project_pr() {
         --param "source_branch=$source_branch" \
         --param "title=$title" \
         --param "remove_source_branch=true" \
-        --param "squash=true"
+        --param "squash=true" \
+        --param "target_branch=$target_branch"
         "$@"
 }
 
