@@ -148,6 +148,9 @@ if [ -x "$(command -v helm)" ]; then
     alias helm_values="helm get values"
 fi
 
+# alias helm3="docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube -v ~/.helm3:/root/.helm alpine/helm:3.5.2"
+alias helm2="/snap/bin/helm"
+
 # gcloud {
 if [ -x "$(command -v gcloud)" ]; then
     alias gcp="gcloud"
@@ -172,29 +175,60 @@ fi
 
 if [ -x "$(command -v kubectl)" ]; then
     alias k="kubectl"
+    alias kg="kubectl get"
+    alias ke="kubectl edit"
+    alias kd="kubectl describe"
+
     alias kss="k9s"
     alias kcx="kubectx" # switch kubernetes context
     alias kns="kubens" # switch namespace
 
-    alias kca="kubectl describe -n kube-system configmap cluster-autoscaler-status" # cluster autoscaler status
-    alias kd="_kube_deployment"
-    # alias ke="_kube_event"
-    alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
-    alias ke_hpa="_kube_event_hpa"
-    alias khpa="_kube_hpa"
-    alias khpa_multi_replica="_kube_hpa_multi_replica"
-    alias khpa_validate="_kube_hpa_validate"
-    alias ki="_kube_ingress"
-    alias kn="_kube_node"
-    alias knu="_kube_node_usage"
-    alias knpd="_kube_nodepool_drain"
-    alias kp="_kube_pod"
-    alias kpa="_kube_pod_all"
-    alias kpi="_kube_pod_inactive"
-    alias kp_failed="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
-    alias kpu="_kube_pod_usage"
-    alias ks="_kube_service"
+    alias kgp="kubectl get pod"
+    alias kgp_crash="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
 
+    alias kgd="kubectl get deployment"
+    alias ked="kubectl edit deployment"
+
+    alias kgn="kubectl get node"
+
+    alias kgs="kubectl get service"
+    alias kes="kubectl edit service"
+
+    alias kgss="kubectl get statefulset"
+    alias kess="kubectl edit statefulset"
+
+    alias kgi="kubectl get ingress"
+    alias kei="kubectl edit ingress"
+
+    alias kl="kubectl logs -f --tail 100"
+
+    alias kge="kubectl get event"
+
+    alias kgh="kubectl get hpa"
+    alias keh="kubectl edit hpa"
+
+
+    # alias kca="kubectl describe -n kube-system configmap cluster-autoscaler-status" # cluster autoscaler status
+    # alias kd="_kube_deployment"
+    # # alias ke="_kube_event"
+    # alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
+    # alias ke_hpa="_kube_event_hpa"
+    # alias khpa="_kube_hpa"
+    # alias khpa_multi_replica="_kube_hpa_multi_replica"
+    # alias khpa_validate="_kube_hpa_validate"
+    # alias ki="_kube_ingress"
+    # alias kn="_kube_node"
+    # alias knu="_kube_node_usage"
+    # alias knpd="_kube_nodepool_drain"
+    # alias kp="_kube_pod"
+    # alias kpa="_kube_pod_all"
+    # alias kpi="_kube_pod_inactive"
+    # alias kp_failed="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
+    # alias kp_failed_remove="kubectl delete pod --field-selector='status.phase==Failed' --all-namespaces"
+    # alias kpu="_kube_pod_usage"
+    # alias ks="_kube_service"
+
+    alias k_api_resources="kubectl api-resources"
     alias k_image="_kube_image"
 
     alias k_config_current_ctx="_kube_config_current_context"
@@ -205,6 +239,13 @@ if [ -x "$(command -v kubectl)" ]; then
     alias k_resource="kubectl-resource_capacity --pods --util --sort cpu.request"
 
     alias k_event="kubectl get events --sort-by=.metadata.creationTimestamp"
+
+    alias k_netshoot="kubectl run tmp-netshoot --rm -i --tty --image nicolaka/netshoot -- /bin/bash"
+        # https://github.com/nicolaka/netshoot
+        # run a tmp pod to debug kubernetes network
+    alias k_pods="get pods"
+
+    # _kube_alias
 fi
 # }
 

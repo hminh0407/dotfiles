@@ -31,6 +31,6 @@ function! OpenUml()
     silent execute "!mv " . generatedFilePath . " " . tmpFilePath
 
     " open file with chrome
-    silent execute "!chromium-browser " . tmpFilePath
+    silent execute "!google-chrome " . tmpFilePath
 
 endfunction

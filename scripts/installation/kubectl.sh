@@ -40,12 +40,23 @@ config() { # auto config kubectl (required gcloud init first)
     local clusters=( $(gcloud container clusters list --format='table[no-heading](name)') )
 
     gcloud config configurations activate default # activate default gcloud config
+
+    _clear_kubectl_contexts # clear context to setup latest contexts from server
+
     if [ -n "$clusters" ] && [ ${#clusters[@]} -gt 0 ]; then
         # generate config for each cluster
         for cluster in ${clusters[@]}; do
-            gcloud container clusters get-credentials $cluster
+            if gcloud container clusters get-credentials $cluster; then
+                local kubectl_context="$(kubectl config current-context)"
+                # rename context to shorter name
+                kubectl config rename-context $kubectl_context $cluster
+            fi
         done
     fi
+}
+
+_clear_kubectl_contexts() {
+    kubectl config view -o jsonpath='{range .contexts[*]}{"\n"}{.name}' | xargs -I {} kubectl config delete-context {}
 }
 
 main () {

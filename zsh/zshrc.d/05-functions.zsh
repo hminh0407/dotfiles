@@ -316,7 +316,7 @@ if [ -x "$(command -v gcloud)" ]; then
             'networkInterfaces[0].networkIP:label=INTERNAL_IP'
             'networkInterfaces[0].accessConfigs[0].natIP:label=EXTERNAL_IP'
             'status'
-            # 'labels.list()'
+            'labels.list()'
             'disks[0].licenses.list()'
         )
         local format_str="table($(_join_by ',' ${fields[@]}))"
@@ -544,6 +544,31 @@ fi
     # }
 
 if [ -x "$(command -v kubectl)" ]; then
+    # setup alias based on kubeconfig
+
+    _kube_alias() {
+        local clusters=( $(kubectl config view -o jsonpath='{range .contexts[*]}{"\n"}{.name}' | tail -n +2) )
+
+        if [ -n "$clusters" ] && [ ${#clusters[@]} -gt 0 ]; then
+            for cluster in ${clusters[@]}; do
+                local namespaces=( $(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers --context $cluster) )
+                    # cluster <-- from variable foo
+                    # ##      <-- greedy front trim
+                    # *       <-- matches anything
+                    # _       <-- until the last '_'
+
+                # k9s alias for each cluster
+                alias kss_$cluster="k9s --context $cluster"
+
+                # echo ${clusters[@]}
+                # echo ${namespaces[@]}
+                for namespace in ${namespaces[@]}; do
+                    alias k_${cluster}_${namespace}="kubectl --context $cluster --namespace $namespace"
+                done
+            done
+        fi
+    }
+
     _kube_get_list() {
         local service="$1"
         local mode="${2:-default}"
@@ -890,7 +915,7 @@ if [ -x "$(command -v kubectl)" ]; then
     }
 
     _kube_find_unused_pvc_more_detail() {
-        kubectl describe pvc --all-namespaces | grep -E "^Name:.*$|^Namespace:.*$|^Mounted By:.*$" | grep -B 2 "<none>"
+        kubectl describe pvc --all-namespaces | grep -E "^Name:.*$|^Namespace:.*$|^Used By:.*$" | grep -B 2 "<none>"
     }
 
     _kube_find_unused_pvc() {

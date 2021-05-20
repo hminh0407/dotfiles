@@ -112,8 +112,8 @@ if executable('node') && executable('npm') " use coc if possible
         "coc#util#float_scroll({forward})
         "Return expr for scrolling a floating window forward or backward. ex: >
 
-        nnoremap <expr><C-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-d>"
-        nnoremap <expr><C-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-u>"
+        " nnoremap <expr><C-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-d>"
+        " nnoremap <expr><C-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-u>"
     endif
 endif
 " }}

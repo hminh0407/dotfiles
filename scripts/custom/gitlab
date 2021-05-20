@@ -219,6 +219,10 @@ create_project_pr() {
     local title="$(_urlencode "$(git log-last-comment)")" # get comment from last commit (git alias)
     local path="projects/$(_urlencode $project_name)/merge_requests"
 
+    if [ -n "$1" ]; then
+        target_branch="$1"
+    fi
+
     _api \
         --method POST \
         --path "$path" \
@@ -227,7 +231,6 @@ create_project_pr() {
         --param "remove_source_branch=true" \
         --param "squash=true" \
         --param "target_branch=$target_branch"
-        "$@"
 }
 
 update_project_pr() {

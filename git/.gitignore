@@ -40,6 +40,7 @@
 .attach*
 .zsh_config*
 tags*
+wip.md
 
 # Build folders #
 ######################
@@ -58,3 +59,4 @@ node_modules
 dotbot
 .venv
 local
+tmp

@@ -18,11 +18,126 @@ services:
     mssql:
         # image: mcr.microsoft.com/mssql/server:2017-latest
         build:
-            context: ./docker
-            dockerfile: mssql.Dockerfile
+            context: ./mssql
+            # dockerfile: Dockerfile
         ports:
             - 1433:1433
         environment:
             ACCEPT_EULA: "Y"
             SA_PASSWORD: "Vxr@2019"
             TCP_PORT: 1433
+
+    # get compose config from https://raw.githubusercontent.com/confluentinc/cp-all-in-one/6.1.1-post/cp-all-in-one/docker-compose.yml
+    zookeeper:
+        image: confluentinc/cp-zookeeper:6.1.1
+        hostname: zookeeper
+        container_name: zookeeper
+        ports:
+            - "2181:2181"
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+
+    # get compose config from https://raw.githubusercontent.com/confluentinc/cp-all-in-one/6.1.1-post/cp-all-in-one/docker-compose.yml
+    broker:
+        image: confluentinc/cp-server:6.1.1
+        hostname: broker
+        container_name: broker
+        depends_on:
+            - zookeeper
+        ports:
+            - "9092:9092"
+            - "9101:9101"
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+            KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+            KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_JMX_PORT: 9101
+            KAFKA_JMX_HOSTNAME: localhost
+            KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+            CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+            CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+            CONFLUENT_METRICS_ENABLE: "true"
+            CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
+
+    # === Graylog stack ===
+    mongo:
+        container_name: mongo
+        image: mongo:3
+        volumes:
+            - mongo_data:/data/db
+
+    # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/6.x/docker.html
+    elasticsearch:
+        container_name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+        volumes:
+            - es_data:/usr/share/elasticsearch/data
+        environment:
+            - http.host=0.0.0.0
+            - transport.host=localhost
+            - network.host=0.0.0.0
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - cluster.routing.allocation.disk.threshold_enabled=false
+        # ulimits:
+        #     memlock:
+        #         soft: -1
+        #         hard: -1
+        # deploy:
+        #     resources:
+        #         limits:
+        #             memory: 1g
+
+    # Graylog: https://hub.docker.com/r/graylog/graylog/
+    graylog:
+        container_name: graylog
+        image: graylog/graylog:4.0
+        volumes:
+            - graylog_journal:/usr/share/graylog/data/journal
+            - ./graylog-input.json:/usr/share/graylog/data/contentpacks/graylog-input.json:ro
+        environment:
+            # CHANGE ME (must be at least 16 characters)!
+            - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
+            # Password: admin
+            - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+            - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
+            - GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=graylog-input.json
+            - GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true
+            - GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks
+        depends_on:
+            - mongo
+            - elasticsearch
+        restart: on-failure
+        ports:
+            # Graylog web interface and REST API
+            - 9000:9000
+            # plain text log TCP
+            - 5555:5555
+            # Syslog TCP
+            - 1514:1514
+            # Syslog UDP
+            - 1514:1514/udp
+            # GELF TCP
+            - 12201:12201
+            # GELF UDP
+            - 12201:12201/udp
+        entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 -- /docker-entrypoint.sh
+    # Note
+    # after provisioning
+    # * access graylog ui at: localhost:9000
+    # * create input to allow message sent from outside. Ex: GELF UDP or Syslog UDP
+    # * check if message can be sent to graylog: `echo 'First log message' | nc localhost 12201`
+    # === Graylog stack ===
+
+volumes:
+    mongo_data:
+    es_data:
+    graylog_journal:

@@ -23,6 +23,76 @@
 #				endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+snippet ms-create-server-login "create login account"
+USE master;
+IF NOT EXISTS
+    (select * from sys.server_principals where type_desc = 'SQL_LOGIN' AND name = '${1:username}')
+BEGIN
+    CREATE LOGIN ${1:username} WITH PASSWORD = ${2:password}
+END;
+endsnippet
+
+snippet ms-create-server-role-monitor "create a server role that has view access to all db and server state"
+USE master;
+
+/* create if role not exist */
+IF NOT EXISTS
+    ( SELECT 1 FROM sys.server_principals WHERE type_desc = 'SERVER_ROLE' AND name = 'monitor')
+BEGIN
+    CREATE SERVER ROLE monitor;
+END;
+
+/* grant permissions */
+GRANT VIEW ANY DATABASE TO monitor;
+GRANT VIEW SERVER STATE TO monitor;
+endsnippet
+
+snippet ms-create-db-role-reader "create a role that have read permission to db"
+USE ${1:dbname};
+
+/* create if role not exist */
+IF NOT EXISTS
+    ( SELECT 1 FROM sys.database_principals WHERE type_desc = 'DATABASE_ROLE' AND name = 'reader')
+BEGIN
+    CREATE ROLE reader;
+END;
+
+/* grant permissions */
+GRANT SELECT, SHOW PLAN, VIEW DEFINITION TO reader;
+endsnippet
+
+snippet ms-create-db-role-writer "create a role that have write permission to db"
+USE ${1:dbname};
+
+/* create if role not exist */
+IF NOT EXISTS
+    ( SELECT 1 FROM sys.database_principals WHERE type_desc = 'DATABASE_ROLE' AND name = 'writer')
+BEGIN
+    CREATE ROLE writer;
+END;
+
+/* grant permissions */
+GRANT INSERT, UPDATE, DELETE, EXECUTE TO writer;
+endsnippet
+
+snippet ms-create-db-role-admin "create a role that have all permission to db"
+USE ${1:dbname};
+
+/* create if role not exist */
+IF NOT EXISTS
+    ( SELECT 1 FROM sys.database_principals WHERE type_desc = 'DATABASE_ROLE' AND name = 'admin')
+BEGIN
+    CREATE ROLE admin;
+END;
+
+/* grant permissions */
+ALTER ROLE db_securityadmin  ADD MEMBER admin;
+ALTER ROLE db_accessadmin    ADD MEMBER admin;
+ALTER ROLE db_backupoperator ADD MEMBER admin;
+ALTER ROLE db_ddladmin       ADD MEMBER admin;
+ALTER ROLE db_datawriter     ADD MEMBER admin;
+ALTER ROLE db_datareader     ADD MEMBER admin;
+endsnippet
 
 snippet ms-ddl-tables "Show all tables"
 SELECT

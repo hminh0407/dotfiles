@@ -187,7 +187,7 @@ endsnippet
 # There's an alternative version, but seems not to work properly on zsh
 # BASE_DIR="$(dirname $(readlink -f $0))"
 snippet basedir "get absolute path of current file"
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 endsnippet
 
 # comment section
