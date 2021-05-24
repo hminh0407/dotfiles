@@ -102,14 +102,14 @@ services:
         image: graylog/graylog:4.0
         volumes:
             - graylog_journal:/usr/share/graylog/data/journal
-            - ./graylog-input.json:/usr/share/graylog/data/contentpacks/graylog-input.json:ro
+            - ./graylog-contentpacks:/usr/share/graylog/data/contentpacks:ro
         environment:
             # CHANGE ME (must be at least 16 characters)!
             - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
             # Password: admin
             - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
             - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
-            - GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=graylog-input.json
+            - GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=init-inputs.json
             - GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true
             - GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks
         depends_on:

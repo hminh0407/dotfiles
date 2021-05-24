@@ -1,0 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [sudo add-apt-repository ppa:linrunner/tlp && sudo apt update -y && apt-fast install --no-install-recommends -y tlp tlp-rdw, Installing tlp]
+
