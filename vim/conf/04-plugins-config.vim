@@ -14,6 +14,7 @@ if executable('node') && executable('npm') " use coc if possible
                 \  'coc-sh',
                 \  'coc-eslint', 'coc-prettier', 'coc-tsserver',
                 \  'coc-sql',
+                \  'coc-json',
                 \  'coc-yaml',
                 \]
 

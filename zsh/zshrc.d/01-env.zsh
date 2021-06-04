@@ -43,3 +43,6 @@ export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search
 export COLORTERM="truecolor"
 
 export ANSIBLE_NOCOWS=1
+export AUTO_NOTIFY_THRESHOLD=30
+
+export GUI_SUPPORT=$(type Xorg > /dev/null && echo 1)

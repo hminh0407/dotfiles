@@ -1,4 +1,4 @@
-declare ZSH_CONFIG_DIR="$HOME/.dotfiles/zshrc.d"
+declare ZSH_CONFIG_DIR="$HOME/.zshrc.d"
 
 # Speed up zsh load time
 # =======================================
@@ -33,7 +33,7 @@ zinit light-mode for \
 ### End of Zinit's installer chunk
 
 
-# Load all files from .dotfiles/zshrc.d directory
+# Load all files from zshrc.d directory
 # =======================================
 if [ -d $ZSH_CONFIG_DIR ]; then
   for file in $ZSH_CONFIG_DIR/*.zsh; do
@@ -43,6 +43,7 @@ fi
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f /etc/profile.d/undistract-me.sh ] && source /etc/profile.d/undistract-me.sh
 
 # Hook for desk activation
 [ -n "$DESK_ENV" ] && source "$DESK_ENV" || true

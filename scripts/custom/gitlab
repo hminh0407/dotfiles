@@ -233,6 +233,23 @@ create_project_pr() {
         --param "target_branch=$target_branch"
 }
 
+create_project_tag() {
+    [ -z "$1" ] && { echo "need to provide tag name"; exit 1; }
+    [ -z "$2" ] && { echo "need to provide base branch"; exit 1; }
+
+    local tag="$1"
+    local base_branch="$2"
+
+    local project_name="$(git rp)" # get current repo (git alias)
+    local path="projects/$(_urlencode $project_name)/repository/tags"
+
+    _api \
+        --method POST \
+        --path "$path" \
+        --param "tag_name=$tag" \
+        --param "ref=$base_branch"
+}
+
 update_project_pr() {
     local project_id="$1" # could be an id number or string as project path (ex: hminh0407/dotfiles)
     local pr_id="$2"
@@ -352,6 +369,10 @@ main() {
         create_project_pr)
             shift
             create_project_pr "$@"
+            ;;
+        create_project_tag)
+            shift
+            create_project_tag "$@"
             ;;
         project)
             shift

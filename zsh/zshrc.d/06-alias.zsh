@@ -16,7 +16,6 @@ alias chgrp='chgrp --preserve-root' # safety
 alias chmod='chmod --preserve-root' # safety
 alias chown='chown --preserve-root' # safety
 alias cpu='lscpu'
-alias evi="vi -u NONE"
 alias gr="cat /etc/group"
 alias netip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias mv="mv -v"
@@ -57,13 +56,18 @@ alias apti="apt-fast install --no-install-recommends -y"
 
 alias sysinfo="ps -o pid,user,%cpu,%mem,command ax | sort -b -k3 -r"
 
+if [ -x "$(command -v chezmoi)" ]; then
+    alias c="chezmoi"
+    alias c_sourcepath="chezmoi source-path"
+fi
+
 if [ -x "$(command -v fzf)" ]; then
     alias fs="_fzf_find_in_files" # search text in files
     alias fm="_fzf_man"
     alias ft="_fzf_tldr"
         # ex: fs abc - search all files contain 'abc'
         # ex: fs abc vim - search all '.vim' files contain 'abc'
-    alias ports="netstat -tulanp | fzf"
+    alias fp="netstat -tulanp | fzf"
     alias psaux="ps aux | fzf"
 
     # if [ -x "$(command -v enable-fzf-tab)" ]; then
@@ -74,24 +78,31 @@ else
     alias psaux="ps aux"
 fi
 
-alias check_udp_port="nc -z -v -u"
-    # nc -z -v -u [hostname/IP address] [port number]
-
 # }
 
 alias disk_cleanup=_cleanup_disk_space
 
-# curl {{{
+# check {{{
+
 # some useful curl alias
-alias curl_check_redirect="_check_redirect"
-alias curl_status="curl --max-time 3 --location --silent --insecure --post301 --post302 --post303 --output /dev/null --write-out '%{http_code}'"
+alias check_req_redirect="_check_redirect"
+alias check_req_status="curl --max-time 3 --location --silent --insecure --post301 --post302 --post303 --output /dev/null --write-out '%{http_code}'"
     # example: curl -L -s -o /dev/null -w '%{http_code}' google.com
     # get status of a site
     # --location: to follow redirect link
     # --max-time: to only wait for 3s if the site does not response
     # --insecure: allows curl to proceed and operate even for server connections otherwise considered insecure
     # --post301 --post302 --post303: not change the non-GET request method to GET after a 30x response
-alias curl_check_outbound_ip="curl icanhazip.com"
+
+alias check_out_ip="curl icanhazip.com"
+alias check_network_private_ip="ip route get 1.2.3.4 | awk '{print $7}'"
+
+alias check_port="sudo netstat -lntup"
+
+alias check_route="route -n"
+    # this can follow with below command to delete a specific route
+    # `sudo route del -net 0.0.0.0 gw 10.11.0.41 netmask 0.0.0.0 dev tun0`
+
 # }}}
 
 # dirdiff {{
@@ -114,6 +125,7 @@ if [ -x "$(command -v docker)" ]; then
     alias dk="docker"
     alias dkim="docker images"
     alias dkps="docker ps"
+    alias dkpsa="docker ps -a"
     alias dke="docker exec -it"
     alias dk_rm_dangling_image="docker images -qf dangling=true | xargs -r docker rmi"
     alias dk_rm_dangling_volume="docker volume ls -qf dangling=true | xargs -r docker volume rm"
@@ -128,9 +140,6 @@ if [ -x "$(command -v docker-compose)" ]; then
     alias dcu="docker-compose up -d --build"
 fi
 
-if [ -x "$(command -v lazydocker)" ]; then
-    alias lzd="lazydocker"
-fi
 # }
 
 if [ -x "$(command -v ffmpeg)" ]; then
@@ -157,20 +166,24 @@ if [ -x "$(command -v gcloud)" ]; then
     alias gcp_cluster="_gcloud_cluster"
     alias gcp_cluster_nodepool="_gcloud_cluster_nodepool"
     alias gcp_compute="gcloud compute"
-    alias gcp_compute_disk="_gcloud_disk"
+    alias gcp_compute_disk="gcloud compute disks list"
+    alias gcp_compute_disk_list_unused="_gcloud_compute_disk_find_unused"
+    alias gcp_compute_disk_delete_unused="_gcloud_compute_disk_delete_unused"
     alias gcp_compute_instance="gcloud compute instances"
     alias gcp_compute_instance_list="_gcloud_compute"
     alias gcp_compute_instance_select="_gcloud_compute_display"
     alias gcp_compute_ssh="gcloud compute ssh --internal-ip"
+    alias gcp_deployment="gcloud deployment-manager deployments list"
     alias gcp_ip="gcloud compute addresses list"
     alias gcp_ip_reserved_external="gcloud gcp compute addresses list --filter='status=RESERVED AND addressType=EXTERNAL'"
-    alias gcp_log_event_hpa="_gcp_log_event_hpa"
-    alias gcp_log_kevent="_gcp_log_kevent"
+    # alias gcp_log_event_hpa="_gcp_log_event_hpa"
+    # alias gcp_log_kevent="_gcp_log_kevent"
     alias gcp_scp="gcp compute scp --internal-ip"
-    alias gcp_service_account_policy="_gcp_service_account_iam_policy"
-    alias gcp_sql="_gcloud_sql"
-    alias gcp_service="_gcloud_service"
+    # alias gcp_service_account_policy="_gcp_service_account_iam_policy"
+    alias gcp_sql="gcloud sql instances list"
+    alias gcp_service="gcloud services list --format='table(config.name,config.title,config.documentation.summary)'"
     alias gcp_ssh="gcloud compute ssh --internal-ip"
+    alias gcp_project="gcloud config get-value project -q"
 fi
 
 if [ -x "$(command -v kubectl)" ]; then
@@ -184,6 +197,8 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kns="kubens" # switch namespace
 
     alias kgp="kubectl get pod"
+    alias kgpi="kubectl get pod --field-selector='status.phase!=Running,status.phase!=Succeeded'"
+        # get inactive pods
     alias kgp_crash="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
 
     alias kgd="kubectl get deployment"
@@ -206,27 +221,6 @@ if [ -x "$(command -v kubectl)" ]; then
 
     alias kgh="kubectl get hpa"
     alias keh="kubectl edit hpa"
-
-
-    # alias kca="kubectl describe -n kube-system configmap cluster-autoscaler-status" # cluster autoscaler status
-    # alias kd="_kube_deployment"
-    # # alias ke="_kube_event"
-    # alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
-    # alias ke_hpa="_kube_event_hpa"
-    # alias khpa="_kube_hpa"
-    # alias khpa_multi_replica="_kube_hpa_multi_replica"
-    # alias khpa_validate="_kube_hpa_validate"
-    # alias ki="_kube_ingress"
-    # alias kn="_kube_node"
-    # alias knu="_kube_node_usage"
-    # alias knpd="_kube_nodepool_drain"
-    # alias kp="_kube_pod"
-    # alias kpa="_kube_pod_all"
-    # alias kpi="_kube_pod_inactive"
-    # alias kp_failed="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
-    # alias kp_failed_remove="kubectl delete pod --field-selector='status.phase==Failed' --all-namespaces"
-    # alias kpu="_kube_pod_usage"
-    # alias ks="_kube_service"
 
     alias k_api_resources="kubectl api-resources"
     alias k_image="_kube_image"
@@ -256,6 +250,7 @@ if [ -x "$(command -v git)" ]; then
         # Show uncommited, untracked and unpushed changes in multiple Git repositories
 
     alias gl_create_project_pr="gitlab create_project_pr"
+    alias gl_create_project_tag="gitlab create_project_tag"
 
     alias gl_projects="gitlab projects --field id --field visibility --field web_url --field web_url_to_repo --field default_branch --field creator_id --format table"
     alias gl_projects_urls="gitlab projects --field web_url --format fzf"
@@ -350,9 +345,9 @@ alias xinput_enable_keyboard="xinput reattach \$(_xinput_list_keyboard_id) 3"
 # download the best 1080p video quality
 # download the best mp4 compatible audio quality
 # convert output format to mp4
-alias yt_dl_mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
-alias yt_dl_mp3="youtube-dl --format 'bestaudio/best' --extract-audio --audio-format mp3 -o '%(title)s.%(ext)s'"
-alias yt_dl_mkv="_youtube_download_video_mkv"
-alias yt_dl_sub="_youtube_download_sub"
-alias yt_dl_sub_auto="youtube-dl --write-auto-sub --skip-download"
-alias vtt_to_srt="_vtt_to_srt"
+# alias yt_dl_mp4="youtube-dl --format 'bestvideo[height=1080]+bestaudio[ext=m4a]/bestvideo[height=1080]+bestaudio/best' --merge-output-format mp4 -o '%(title)s.%(ext)s'"
+# alias yt_dl_mp3="youtube-dl --format 'bestaudio/best' --extract-audio --audio-format mp3 -o '%(title)s.%(ext)s'"
+# alias yt_dl_mkv="_youtube_download_video_mkv"
+# alias yt_dl_sub="_youtube_download_sub"
+# alias yt_dl_sub_auto="youtube-dl --write-auto-sub --skip-download"
+# alias vtt_to_srt="_vtt_to_srt"

@@ -10,9 +10,15 @@ zinit wait lucid light-mode for \
   atinit"zicompinit; zicdreplay" \
       zdharma/fast-syntax-highlighting \
   atload"_zsh_autosuggest_start" \
-      zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
+      zsh-users/zsh-autosuggestions
+
+# zinit wait lucid light-mode for \
+#   atinit"zicompinit; zicdreplay" \
+#       zdharma/fast-syntax-highlighting \
+#   atload"_zsh_autosuggest_start" \
+#       zsh-users/zsh-autosuggestions \
+#   blockf atpull'zinit creinstall -q .' \
+#       zsh-users/zsh-completions
 
 # Load the pure theme, with zsh-async library that's bundled with it.
 zinit ice pick"async.zsh" src"pure.zsh"
@@ -37,8 +43,9 @@ zinit ice as"command" from"gh-r" mv"delta* -> delta" pick"delta/delta"
 zinit light dandavison/delta
 
 zinit light lukechilds/zsh-nvm
-# zinit light supercrabtree/k
 
 ### oh-my-zsh plugins ###
 zinit snippet OMZP::urltools
 
+zinit ice load'[[ $GUI_SUPPORT = 1 ]]'
+zinit light MichaelAquilina/zsh-auto-notify

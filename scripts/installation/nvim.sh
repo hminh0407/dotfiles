@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 installAppImage() {
     echo "... Installing Nvim ..."
@@ -45,10 +46,33 @@ installFromSource() {
 
 installFromApt() {
     echo "... Installing Nvim ..."
-    # instal plantweb to support plantuml render
-    apt-fast install --no-install-recommends -y \
-        neovim python3-neovim \
-        plantweb
+    apt-fast install --no-install-recommends -y neovim
 }
 
-installFromApt
+config() {
+    echo "... Configuring Vim ..."
+    # use Neovim for some (or all) of the editor alternatives, use the following commands
+    sudo update-alternatives --install /usr/bin/vi vi $(which nvim) 60
+    sudo update-alternatives --auto vi
+    sudo update-alternatives --install /usr/bin/editor editor $(which nvim) 60
+    sudo update-alternatives --auto editor
+
+    # setup custom viminfo
+    mkdir -p ~/.vim/files/info
+
+    echo "... Installing Vim Plugins ..."
+    nvim -E -c ':PlugInstall!' -c qa
+
+    # install essential packages for vim support
+    apt-fast install --no-install-recommends -y python3-neovim
+
+    # instal plantweb to support plantuml render
+    sudo pip3 install plantweb
+}
+
+main() {
+    installFromApt
+    config
+}
+
+main

@@ -1,0 +1,9 @@
+- defaults:
+    shell:
+        stdin : true
+        stdout: true
+        quiet : false
+
+- shell:
+    - [npm install -g @bitwarden/cli, Installing Bitwarden...]
+

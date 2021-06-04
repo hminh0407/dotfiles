@@ -202,6 +202,12 @@ local message="$1"
 echo "File $(basename \$0) - Function ${FUNCNAME[@]} - line ${BASH_LINENO[0]}: $message"
 endsnippet
 
+snippet export_env_from_file "export environment variables from file"
+set -o allexport
+source ${1:file}
+set +o allexport
+endsnippet
+
 snippet filename-from-path
 basename "${1}" | cut -d. -f1
 # extract filename from path

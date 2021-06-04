@@ -16,5 +16,5 @@
 - link:
     ~/.zshrc            : zsh/zshrc
     ~/.zsh_history      : zsh/zsh_history
-    ~/.dotfiles/zshrc.d : zsh/zshrc.d
+    ~/.zshrc.d          : zsh/zshrc.d
 

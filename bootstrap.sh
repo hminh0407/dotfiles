@@ -42,8 +42,8 @@ install() {
     _installAptFast
     _installEssentials
     _grantPermissions
-    _setupGlobal
-    _installTerminalBundle
+    # _setupGlobal
+    # _installTerminalBundle
     _cleanup
 }
 

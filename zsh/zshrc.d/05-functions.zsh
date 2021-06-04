@@ -113,79 +113,6 @@ if [ -x "$(command -v desk)" ]; then
     }
 fi
 
-if [ -x "$(command -v ffmpeg)" ]; then
-    _ffmpeg_add_sub_to_video() {
-        # adds the subtitles to the video as a separate optional (and user-controlled) subtitle track.
-        # create new video with embedded subtitle
-        #https://stackoverflow.com/a/33289845/1530178
-        # only support mkv video and srt sub
-
-        local video="$1"
-        local sub="$2"
-        local videoName=$(basename $video | cut -d '.' -f1)
-        local videoExtension=$(basename $video | cut -d '.' -f2)
-
-        # this will add an additional subtitle with metadata 'unknown'
-        ffmpeg -i $video -i $sub \
-            -map 0:0 -map 0:1 -map 1:0 \
-            -c:v copy -c:a copy -c:s srt \
-            "${videoName}_formatted.$videoExtension"
-
-        # to add multiple subtitles with proper metadata use below script instead. Note that it is intended to run manually
-        # ffmpeg -i $video -i $sub1 -i$sub2 ... \
-        #     -map 0:v -map 0:a -map 1 -map 2 \
-        #     -c:v copy -c:a copy -c:s srt \
-        #     -metadata:s:s:0 language=$lang1 -metadata:s:s:1 language=$lang2 ...\
-        #     "${videoName}_formatted.$videoExtension"
-    }
-
-    _ffmpeg_add_hard_ass_sub_to_mp4_video() {
-        local video="$1"
-        local sub="$2"
-        local videoName=$(basename $video | cut -d '.' -f1)
-        local videoExtension=$(basename $video | cut -d '.' -f2)
-
-        ffmpeg -i $video -vf ass=$sub "${videoName}_formatted.$videoExtension"
-    }
-
-    _ffmpeg_add_sub_to_mp4_video() {
-        # adds the subtitles to the video as a separate optional (and user-controlled) subtitle track.
-        # create new video with embedded subtitle
-        #https://stackoverflow.com/a/33289845/1530178
-        # only support mkv video and srt sub
-
-        local video="$1"
-        local sub="$2"
-        local videoName=$(basename $video | cut -d '.' -f1)
-        local videoExtension=$(basename $video | cut -d '.' -f2)
-
-        # this will add an additional subtitle with metadata 'unknown'
-        ffmpeg -i $video -i $sub \
-            -map 0:0 -map 0:1 -map 1:0 \
-            -c:v copy -c:a copy -c:s mov_text \
-            "${videoName}_formatted.$videoExtension"
-
-        # to add multiple subtitles with proper metadata use below script instead. Note that it is intended to run manually
-        # ffmpeg -i $video -i $sub1 -i$sub2 ... \
-        #     -map 0:v -map 0:a -map 1 -map 2 \
-        #     -c:v copy -c:a copy -c:s srt \
-        #     -metadata:s:s:0 language=$lang1 -metadata:s:s:1 language=$lang2 ...\
-        #     "${videoName}_formatted.$videoExtension"
-    }
-
-    _ffmpeg_cut_video() {
-        local video="$1"
-        local videoName=$(basename $video | cut -d '.' -f1)
-        local videoExtension=$(basename $video | cut -d '.' -f2)
-        local outputVideo="${videoName}_cut.$videoExtension"
-
-        local from="$2" # ex: 00:01:16.500
-        local to="$3" # ex: 00:01:16.500
-
-        ffmpeg -i $video -ss $from -to $to -c:v copy -c:a copy $outputVideo
-    }
-fi
-
 if [ -x "$(command -v fzf)" ]; then
     _fzf_alias() { # show all alias
         alias | fzf | awk '{split($0,a,"="); print a[1]}'
@@ -203,7 +130,7 @@ if [ -x "$(command -v fzf)" ]; then
     }
 
     _fzf_git_alias() { # show list and can select single
-        git la | fzf | awk '{split($0,a,"="); print a[1]}'
+        git config -l | grep alias | cut -c 7- | fzf | awk '{split($0,a,"="); print a[1]}'
     }
 
     _fzf_git_branch() { # show list and can select multiple
@@ -408,190 +335,9 @@ if [ -x "$(command -v gcloud)" ]; then
         done
     }
 
-    _gcloud_deployment() { # list of gcloud compute instances and describe selected instance if possible
-        if [ -x "$(command -v fzf)" ]; then
-            gcloud deployment-manager deployments list | fzf | awk '{print $1}' | xargs -r gcloud compute instances describe
-        else
-            gcloud deployment instances list && return
-        fi
-    }
-
-    _gcloud_disk() {
-        local filter="$1"
-
-        if [ -z $filter ]; then
-            gcloud compute disks list
-        else
-            gcloud compute disks list --filter="$filter"
-        fi
-    }
-
-    _gcp_log_kevent() {
-        # Example
-        # _gcp_log_event_hpa \
-        #     "jsonPayload.involvedObject.name=<project_name>" \
-        #     "timestamp>=\"$(date --iso-8601=s --date='7 days ago')\""
-        local filter=(
-            "resource.type=gke_cluster"
-            "jsonPayload.kind=Event"
-            # "timestamp>=\"$(date --iso-8601=s --date='30 minutes ago')\"" # latest 30 minutes
-            # "jsonPayload.source.component=horizontal-pod-autoscaler"
-            # "severity=WARNING" # check for specific severity
-            # "resource.labels.cluster_name=vexere"
-            # "jsonPayload.metadata.name:<pod_name>" # check specific pod pattern
-            # "jsonPayload.reason=FailedGetResourceMetric" # check for specific reason
-            "$@"
-        )
-        local filterStr=$( _join_by ' ' "${filter[@]}" )
-
-        local resultField=(
-            "'resource.labels.cluster_name'"
-            # "'resource.labels.location'"
-            # "'resource.labels.project_id'"
-            # "'resource.type'"
-            "'jsonPayload.involvedObject.namespace'"
-            "'jsonPayload.involvedObject.kind'"
-            "'jsonPayload.involvedObject.name'"
-            # "'jsonPayload.metadata.name'"
-            "'jsonPayload.reason'"
-            "'jsonPayload.message'"
-            "'severity'"
-            "'timestamp'"
-            "'kind'"
-        )
-        local resultFieldStr=$(_join_by ',' "${resultField[@]}")
-
-        gcloud logging read "$filterStr" --limit 9000 --format json \
-        | fx ".map( x => [$resultFieldStr].reduce( (acc,cur) => { acc[cur] = require('lodash').get(x, cur); return acc }, {} ))"
-    }
-
-    _gcp_log_event_hpa() {
-        _gcp_log_kevent "jsonPayload.source.component=horizontal-pod-autoscaler" "$@"
-    }
-
-    _gcp_service_account_iam_policy() {
-        [ -z "$1" ] && { echo "missing serviceAccount argument"; exit 1; }
-        local serviceAccount="$1"
-
-        gcloud projects get-iam-policy $GCP_PROJECT_ID  \
-        --flatten="bindings[].members" \
-        --format='table(bindings.role)' \
-        --filter="bindings.members:$serviceAccount"
-    }
-
-    _gcloud_project() { # get current project
-        gcloud config get-value project -q
-    }
-
-    _gcloud_sql() { # list of gcloud sql instances and describe selected instance if possible
-        if [ -x "$(command -v fzf)" ]; then
-            local instance=$(gcloud sql instances list | fzf | awk '{print $1}')
-            if [ -n "${instance:+1}" ]; then
-                gcloud sql instances describe $instance
-            fi
-        else
-            gcloud sql instances list && return
-        fi
-    }
-
-    _gcloud_service() { # list all services offered by google
-        # use `gcloud sql instances list --format json` to check the json schema
-        if [ -x "$(command -v fzf)" ]; then
-            gcloud services list --format='table(config.name,config.title,config.documentation.summary)' | fzf
-        else
-            gcloud services list --format='table(config.name,config.title,config.documentation.summary)'
-        fi
-
-    }
 fi
 
-    # _gitlab_pr_create() {
-    #     # Create gitlab pr for
-    #     # * current branch (pwd git folder)
-    #     # * merge to default branch
-    #     # * in current repo (pwd git folder)
-
-    #     local endpoint="$GITLAB_HOST/api/$GITLAB_API_VERSION/projects"
-    #     local token="$GITLAB_TOKEN"
-
-    #     local headers=(
-    #        Authorization:"Bearer $token"
-    #     )
-
-    #     local branch="$(git br-current)" # get current git branch (git alias)
-    #     local repo="$(git repo)" # get current repo (git alias)
-    #     local encodedRepo="$(_urlencode $repo)" # get current repo (git alias)
-    #     local targetBranch="$(_gitlab_repo_get_default_branch $repo)" # get the default branch of repo
-    #     local assigneeId="$(_gitlab_repo_get_creator_id $repo)" # assign to creator by default
-    #     local title="$(_urlencode "$(git log-last-comment)")" # get comment from last commit (git alias)
-
-    #     local params=(
-    #         "source_branch=$branch"
-    #         "target_branch=$targetBranch"
-    #         "assignee_id=$assigneeId"
-    #         "title=$title"
-    #         "remove_source_branch=true"
-    #         "squash=true"
-    #         "$@"
-    #     )
-    #     local queryStr=$(_join_by '&' "${params[@]}")
-
-    #     local url="$endpoint/$encodedRepo/merge_requests?$queryStr"
-
-    #     http POST \
-    #         "$url" \
-    #         "${headers[@]}"
-    # }
-
 if [ -x "$(command -v kubectl)" ]; then
-    # setup alias based on kubeconfig
-
-    _kube_alias() {
-        local clusters=( $(kubectl config view -o jsonpath='{range .contexts[*]}{"\n"}{.name}' | tail -n +2) )
-
-        if [ -n "$clusters" ] && [ ${#clusters[@]} -gt 0 ]; then
-            for cluster in ${clusters[@]}; do
-                local namespaces=( $(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers --context $cluster) )
-                    # cluster <-- from variable foo
-                    # ##      <-- greedy front trim
-                    # *       <-- matches anything
-                    # _       <-- until the last '_'
-
-                # k9s alias for each cluster
-                alias kss_$cluster="k9s --context $cluster"
-
-                # echo ${clusters[@]}
-                # echo ${namespaces[@]}
-                for namespace in ${namespaces[@]}; do
-                    alias k_${cluster}_${namespace}="kubectl --context $cluster --namespace $namespace"
-                done
-            done
-        fi
-    }
-
-    _kube_get_list() {
-        local service="$1"
-        local mode="${2:-default}"
-
-        case "$mode" in
-            describe*) # describe the selected item
-                if [ -x "$(command -v fzf)" ]; then echo "fzf is not exist, this mode is not supported" && return; fi
-
-                kubectl get $service ${@:3} | fzf | awk '{print $1}' | xargs -r kubectl describe $service
-                ;;
-            name*) # copy name of selected item to clipboard
-                if [ -x "$(command -v fzf)" ]; then echo "fzf is not exist, this mode is not supported" && return; fi
-
-                kubectl get $service ${@:3} | fzf | awk '{print $1}' ORS='' | xclip -selection c
-                    # get list of items
-                    # select by fzf
-                    # get the value of 1 column and join lines (by default fzf will add an additional new line to selected item)
-                    # copy the selected item to clipboard
-                ;;
-            *)
-                kubectl get $service ${@:3} && return
-        esac
-    }
 
     _kube_config_current_context() {
         # example:
@@ -618,20 +364,8 @@ if [ -x "$(command -v kubectl)" ]; then
         esac
     }
 
-    _kube_deployment() { # list of kubernetes deployment and describe selected item if possible
-        local mode="$1"
-
-        _kube_get_list "deployment" $mode
-    }
-
     _kube_deployment_name() {
         kubectl get deployment -o custom-columns="NAME:metadata.name" --no-headers
-    }
-
-    _kube_event() { # list of kubernetes deployment and describe selected item if possible
-        local mode="$1"
-
-        _kube_get_list "event" $mode
     }
 
     _kube_event_hpa() {
@@ -656,12 +390,6 @@ if [ -x "$(command -v kubectl)" ]; then
             -o custom-columns="$resultFieldStr" \
             --field-selector="$filterStr" \
             --sort-by=.lastTimestamp # asc order, latest event in the bottom
-    }
-
-    _kube_hpa() {
-        local mode="$1"
-
-        _kube_get_list "hpa" $mode
     }
 
     _kube_hpa_multi_replica() {
@@ -715,18 +443,6 @@ if [ -x "$(command -v kubectl)" ]; then
         else
             kubectl get deployment --all-namespaces -o jsonpath="{..metadata.name}" | tr -s '[[:space:]]' '\n' | sort -u
         fi
-    }
-
-    _kube_ingress() { # list of kubernetes deployment and describe selected item if possible
-        local mode="$1"
-
-        _kube_get_list "ingress" $mode
-    }
-
-    _kube_node() { # list of kubernetes nodes and describe selected item if possible
-        local mode="$1"
-
-        _kube_get_list "node" $mode
     }
 
     _kube_node_reschedule() {
@@ -793,127 +509,6 @@ if [ -x "$(command -v kubectl)" ]; then
         done;
     }
 
-    # _kube_pod() { # list all pod in current context and current namespace
-    #     local mode="${1:-default}"
-
-    #     _kube_get_list "pod" $mode -owide --show-labels
-
-    #     # wip
-    #     # k get pod -o json | jq -r '(["NAME","STATUS"] | (., map(length*"-"))), (.items[] | [.metadata.name, .status.phase]) | @tsv'
-    # }
-
-    _kube_pod() {
-        local namespace=${1:default}
-        local skipHeader=${2:false}
-
-
-        if [ "$skipHeader" = "true" ]; then
-            kubectl get pod -o json --namespace=$namespace --no-headers \
-                | fx "x => x.items.map(item => {return {pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
-                | json2csv \
-                | csvformat -D ',' \
-                | column -t -s ',' \
-                | sort -k 1,1
-        else
-            kubectl get pod -o json --namespace=$namespace \
-                | fx "x => x.items.map(item => {return {pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
-                | json2csv \
-                | csvformat -D ',' \
-                | column -t -s ',' \
-                | sort -k 1,1
-        fi
-
-        # kubectl get pod -o json \
-        #     | fx "x => x.items.map(item => {return {namespace: item.metadata.namespace, pod: item.metadata.name, app: item.metadata.labels.app || 'null', node: item.spec.nodeName}})" \
-        #     | json2csv \
-        #     | csvformat -D ',' \
-        #     | column -t -s ','
-    }
-
-    _kube_top_pod() {
-        local namespace=${1:default}
-
-        local pod_usage="$(kubectl top pod --namespace=$namespace --no-headers | sort -k 1,1)"
-        local pod_detail="$(_kube_pod $namespace 'true')"
-
-        local header="NAMESPACE NAME CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM NODE"
-        local data="$(join -1 1 -2 2 -o '2.1,2.2,1.2,1.3,2.3,2.4,2.5,2.6,2.7' <(echo $pod_usage) <(echo $pod_detail) | sort -n -k 4,4 -k 2,2)"
-            # join 2 data from $pod_usage and $pod_detail on pod_usage.column1 = pod_detail.column1
-            # order columns with -o
-            # use `sort -k 4,4 -k 2,2` to sort by the 4rd column (RAM_USAGE), 2nd column (NAME)
-
-        ( echo $header ; echo $data ) | column -t
-    }
-
-    _kube_pod_all() { # list all pod in all context and all namespace
-        local mode="${1:-default}"
-        local current_context="$(kubectl config current-context)"
-        local contexts=( $(_kube_context 'name') )
-
-        local pod=$(
-            kubectl get pod -owide --all-namespaces | head -n 1 |  awk '{print "CONTEXT", $0}';
-                # get the header row
-                # add header 'CONTEXT' at the beginning
-
-            for c in ${contexts[@]}; do
-                kubectx $c >/dev/null && _kube_get_list "pod" $mode -owide --no-headers --all-namespaces | awk '{print "'$c'", $0}'
-                    # change context
-                    # get list of pod
-                    # add column context at the beginning
-            done
-        )
-        kubectx $current_context >/dev/null # change back to current context
-
-        echo $pod | column -t
-    }
-
-    _kube_pod_inactive() {
-        local mode="${1:-default}"
-
-        _kube_get_list "pod" $mode --field-selector="status.phase!=Running,status.phase!=Succeeded" --all-namespaces
-    }
-
-    _kube_pod_usage () {
-        # bash function to track k8s pod usage
-        # example output
-        #
-        # NAMESPACE NAME             CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM
-        # default   canary-ams       0m               61Mi             100m          128Mi         <none>       1Gi
-        # default   canary-ams-react 0m               22Mi             100m          <none>        <none>       <none>
-
-        local namespace="${1:-default}"
-        local pod_detail_custom_columns=(
-            'NAMESPACE:.metadata.namespace'
-            'NAME:.metadata.name'
-            'REQUESTED_CPU:.spec.containers[*].resources.requests.cpu'
-            'REQUESTED_RAM:.spec.containers[*].resources.requests.memory'
-            'LIMITTED_CPU:.spec.containers[*].resources.limits.cpu'
-            'LIMITTED_RAM:.spec.containers[*].resources.limits.memory'
-            'NODE:.spec.nodeName'
-            # 'created:.metadata.creationTimestamp'
-        )
-        local pod_defail_custom_columns_str=$(_join_by ',' ${pod_detail_custom_columns[@]})
-
-        local pod_usage="$(kubectl top pods --namespace=$namespace --no-headers | sort -k 1,1)" # sort first column to make sure rows are consistent
-        local pod_detail="$(kubectl get pods --namespace=$namespace --no-headers -o custom-columns="$pod_defail_custom_columns_str" | sort -k 2,2)" # sort first column to make sure rows are consistent
-
-        local header="NAMESPACE NAME CPU_USAGE(cores) RAM_USAGE(bytes) REQUESTED_CPU REQUESTED_RAM LIMITTED_CPU LIMITTED_RAM NODE"
-        local data="$(join -1 1 -2 2 -o '2.1,2.2,1.2,1.3,2.3,2.4,2.5,2.6,2.7' <(echo $pod_usage) <(echo $pod_detail) | sort -n -k 4,4 -k 2,2)"
-            # join 2 data from $pod_usage and $pod_detail on pod_usage.column1 = pod_detail.column1
-            # order columns with -o
-            # use `sort -k 4,4 -k 2,2` to sort by the 4rd column (RAM_USAGE), 2nd column (NAME)
-
-        ( echo $header ; echo $data ) | column -t
-            # combine header and data
-            # use `column -t` to align column for pretty output
-    }
-
-    _kube_service() { # list all kubernetes services and describe selected service if possible
-        local mode="$1"
-
-        _kube_get_list "services" $mode
-    }
-
     _kube_find_unused_pvc_more_detail() {
         kubectl describe pvc --all-namespaces | grep -E "^Name:.*$|^Namespace:.*$|^Used By:.*$" | grep -B 2 "<none>"
     }
@@ -937,61 +532,6 @@ if [ -x "$(command -v kubectl)" ]; then
     }
 
 fi
-
-if [ -x "$(command -v http)" ]; then
-    _get() {
-        echo $@
-        _http GET "$@"
-    }
-
-    _post_form() {
-        _http --form POST "$@"
-    }
-
-    _http()  {
-        # note that below are just cosmetic for output format, should be set only
-        # when running isolated request, do not use it for scripting
-        local result_type="${result_type:-body}" # should default body
-        local pretty="${pretty:-none}" # should default none
-        local pager="${pager:-''}"
-
-        local less_pager="less -RFX"
-        local vim_pager="vi -c 'set ft=json | set foldlevel=9' -" # should only use with result_type=body & pretty=format
-
-        if [ "$pager" = "vim" ]; then
-            http --$result_type --pretty="format" "$@" | eval "$vim_pager" # has to use eval or else vim does not work as expected
-        elif [ "$pager" = "less" ]; then
-            http --$result_type --pretty="all" "$@" | $less_pager
-        else
-            http --verbose --$result_type --pretty=$pretty "$@"
-        fi
-    }
-fi
-
-# _redis_copy_all(){
-#     # copy all redis keys from one server to another server
-#     local source_host="$1"
-#     local source_port="$2"
-
-#     local target_host="$3"
-#     local target_port="$4"
-
-#     local keys=( $(redis-cli -u $source_urikeys '*') )
-
-#     for key in ${keys[@]}; do
-
-#         local ttl=$(redis-cli -u $source_uri--raw TTL "$key") # expire time of the key
-
-#         if [ $ttl -gt 0 ]; then
-#             redis-cli -u $source_uri--raw DUMP "$key" | head -c-1 \
-#                 | redis-cli -u $target_uri -x RESTORE "$key" "$ttl" # restore key with expiration time
-#         else
-#             redis-cli -u $source_uri--raw DUMP "$key" | head -c-1 \
-#                 | redis-cli -u $target_uri -x RESTORE "$key" 0 # restore key with no expiration time
-#         fi
-
-#     done
-# }
 
 _redis_copy_all(){
     # copy all redis keys from one server to another server
@@ -1055,50 +595,4 @@ _redis_dump_one_key() {
         rg -g "$file_pattern" "$search_pattern" "${@:3}"
     }
 # fi
-
-if [ -x "$(command -v shnsplit)" ]; then
-    _splitFlac() {
-        [ -z "$1" ] && { echo  "missing cue file"; exit 1; }
-        [ -z "$2" ] && { echo  "missing flac file"; exit 1; }
-
-        local cueFile="$1"
-        local flacFile="$2"
-
-        shnsplit -f $cueFile -t %t-%p-%a -o flac $flacFile
-    }
-fi
-
-if [ -x "$(command -v ffmpeg)" ]; then
-    _vtt_to_srt() {
-        local file="$1"
-
-        ffmpeg -i $file "$(basename $file .srt)"
-    }
-fi
-
-if [ -x "$(command -v youtube-dl)" ]; then
-    _youtube_download_video_mkv() {
-        # download youtube video as mkv
-        local url="$1"
-            # youtube video url. ex: https://www.youtube.com/watch?v=LQRAfJyEsko
-
-        youtube-dl \
-            --format 'bestvideo[height=1080]+bestaudio' \
-            --write-sub --sub-lang en,en_US,en_GB,en-US,en-GB \
-            --merge-output-format mkv --embed-sub \
-            -o '%(title)s.%(ext)s' \
-            $url
-    }
-
-    _youtube_download_sub() {
-        # download youtube video subtitle only
-        local url="$1"
-        local subLanguage="${2:-en,en_US,en_GB,en-US,en-GB}" # default to download english sub
-
-        youtube-dl \
-            --write-sub --sub-lang $subLanguage \
-            --skip-download \
-            $url
-    }
-fi
 

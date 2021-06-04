@@ -27,7 +27,7 @@ Plug 'airblade/vim-gitgutter' " show git diff for each line
 
 " Markdown
 Plug 'vimwiki/vimwiki' " (though contain too much features, currently the best plugin to work with markdown) https://github.com/vimwiki/vimwiki
-Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': { -> mkdp#util#install() } } " https://github.com/iamcco/markdown-preview.nvim
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " https://github.com/iamcco/markdown-preview.nvim
 
 " Search
 Plug 'google/vim-searchindex'          " show search information for each search
@@ -56,9 +56,13 @@ Plug 'tpope/vim-abolish'              " Abbreviation & Coercion. Ex: crc-camel, 
 " Plug 'Yggdroot/indentLine'            " https://github.com/Yggdroot/indentLine#readme (conflict with vimwiki)
 Plug 'tpope/vim-unimpaired' " support some encode/decode functions. ex url encode/decode with '[u' and ']u' https://github.com/tpope/vim-unimpaired
 Plug 'will133/vim-dirdiff' " compare 2 folders https://github.com/will133/vim-dirdiff
+Plug 'hashivim/vim-terraform', { 'for': ['terraform'] } " terraform file syntax https://github.com/hashivim/vim-terraform
+
+" enable when needed, turn off as default
 Plug 'junegunn/goyo.vim' " toggle writing mode https://github.com/junegunn/goyo.vim
 Plug 'junegunn/limelight.vim' " integrate with goyo to dim the light https://github.com/junegunn/limelight.vim
-Plug 'hashivim/vim-terraform', { 'for': ['terraform'] } " terraform file syntax https://github.com/hashivim/vim-terraform
+
+Plug 'dbeniamine/cheat.sh-vim' " https://github.com/chubin/cheat.sh#vim
 
 " Utilities
 Plug 'sk1418/HowMuch'       " calculator for visual selection

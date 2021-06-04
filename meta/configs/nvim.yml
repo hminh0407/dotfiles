@@ -12,12 +12,12 @@
     - [./scripts/installation/nvim.sh, Installing NeoVim]
 
 - link:
-    ~/.config/nvim/init.vim               : nvim/init.vim
-    ~/.vim/conf                           : vim/conf
-    ~/.config/nvim/after/ftplugin         : vim/ftplugin
-    ~/.vim/snippets                       : vim/snippets
     ~/.config/coc/ultisnips               : vim/ultisnips # default folder for utilsnippets files
+    ~/.config/nvim/after/ftplugin         : vim/ftplugin
+    ~/.config/nvim/init.vim               : nvim/init.vim
     ~/.ctags                              : vim/conf/ctags
     ~/.vim/coc-settings.json              : vim/coc/coc-settings.json
+    ~/.vim/conf                           : vim/conf
+    ~/.vim/snippets                       : vim/snippets
     # ~/.config/TabNine/tabnine_config.json : vim/coc/extensions/tabnine_config.json # poor performance
 

@@ -53,6 +53,10 @@ autocmd BufWritePre * %s/\s\+$//e
 set mouse=a
 " }}
 
+" Files {{
+    set viminfo='100,n$HOME/.vim/files/info/viminfo
+" }}
+
 " Folding {{
 " map folding za to space
 nmap <space> za

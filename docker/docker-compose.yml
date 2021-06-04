@@ -2,10 +2,13 @@ version: "3.2"
 services:
     # create a container as an environment to test shell scripts
     ubuntu:
-        build: .
+        container_name: ubuntu
+        build:
+            context: .
+            dockerfile: ubuntu.Dockerfile
         working_dir: /dotfiles
         volumes:
-            - .:/dotfiles
+            - ../:/dotfiles
 
     # plantuml server to test uml render in local env
     plantuml:
@@ -112,10 +115,11 @@ services:
             - GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=init-inputs.json
             - GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true
             - GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks
+            # - GRAYLOG_TIMEZONE=Asia/Ho_Chi_Minh # does not work, should use config file to change timezone
         depends_on:
             - mongo
             - elasticsearch
-        restart: on-failure
+        # restart: on-failure
         ports:
             # Graylog web interface and REST API
             - 9000:9000

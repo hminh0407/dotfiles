@@ -242,3 +242,7 @@
 : 1591951498:0;ll ~/.dotfiles
 : 1591951507:0;./install-standalone.sh zsh
 : 1591951539:0;ll ~/.dotfiles/bin
+: 1622595362:0;ls -al ~/.zsh_history
+: 1622595366:0;ls -al ~/.zshrc
+: 1622595375:0;ls -al ~/.dotfiles/zshrc.d
+./install-standalone.sh zsh

@@ -31,7 +31,8 @@ install () {
     sudo groupadd docker
 
     # add current user to docker group
-    sudo gpasswd -a $USER docker
+    # sudo gpasswd -a $USER docker
+    sudo usermod -aG docker $USER
 }
 
 install
