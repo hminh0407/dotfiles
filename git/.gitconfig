@@ -43,7 +43,7 @@
     br-dl-local-untracked = "!git branch -D $(git br-ls-local)"
     br-dl-local-gone = "!git branch -D $(git br-ls-gone)"
     br-dl-local = branch -d
-    br-dl-remote = push -d
+    br-dl-remote = "!git push -d $(git remote)"
 
     br-ck-exist = "rev-parse --verify --quiet"
 

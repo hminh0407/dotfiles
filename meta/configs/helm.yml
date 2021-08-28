@@ -5,6 +5,7 @@
         quiet : false
 
 - shell:
-    # - [curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash, Installing helm]
-    - [snap install --channel=2.15/stable --classic helm, Installing helm2]
-    - [helm init --client-only, Initializing helm]
+    - [curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash, Installing helm]
+    - [helm plugin install https://github.com/databus23/helm-diff, Installing helm-diff plugin]
+    # - [snap install --channel=2.15/stable --classic helm, Installing helm2]
+    # - [helm init --client-only, Initializing helm]

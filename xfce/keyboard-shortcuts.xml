@@ -64,7 +64,6 @@
       <property name="&lt;Primary&gt;Escape" type="string" value="xfce4-popup-whiskermenu"/>
       <property name="&lt;Super&gt;1" type="string" value="parole"/>
       <property name="XF86Calculator" type="string" value="mate-calc"/>
-      <property name="&lt;Super&gt;t" type="string" value="exo-open --launch TerminalEmulator"/>
       <property name="XF86HomePage" type="string" value="exo-open --launch WebBrowser"/>
       <property name="&lt;Alt&gt;Print" type="string" value="xfce4-screenshooter -w"/>
       <property name="&lt;Super&gt;2" type="string" value="pidgin"/>
@@ -78,6 +77,8 @@
       <property name="&lt;Super&gt;3" type="string" value="libreoffice --writer"/>
       <property name="override" type="bool" value="true"/>
       <property name="&lt;Super&gt;h" type="string" value="xfce4-popup-clipman"/>
+      <property name="&lt;Super&gt;space" type="string" value="fcitx-remote -t"/>
+      <property name="&lt;Super&gt;t" type="string" value="xfce4-terminal --drop-down"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
@@ -214,3 +215,4 @@
     <value type="string" value="commands"/>
   </property>
 </channel>
+

@@ -32,7 +32,9 @@ installKrew() {
 installKrewPlugins() {
     kubectl krew install ctx
     kubectl krew install ns
-    kubectl krew install resource-capacity
+    kubectl krew install resource-capacity # check k8s resource usage (cpu, ram)
+    kubectl krew install unused-volumes
+    kubectl krew install deprecations
 }
 
 config() { # auto config kubectl (required gcloud init first)

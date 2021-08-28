@@ -84,7 +84,13 @@ alias disk_cleanup=_cleanup_disk_space
 
 # check {{{
 
-# some useful curl alias
+alias check_disk_size="du -h --max-depth=1"
+    # require to pass a dir
+alias check_file_system="df -h"
+
+alias check_mem="free -mh"
+alias check_cpu="mpstat"
+
 alias check_req_redirect="_check_redirect"
 alias check_req_status="curl --max-time 3 --location --silent --insecure --post301 --post302 --post303 --output /dev/null --write-out '%{http_code}'"
     # example: curl -L -s -o /dev/null -w '%{http_code}' google.com
@@ -131,6 +137,9 @@ if [ -x "$(command -v docker)" ]; then
     alias dk_rm_dangling_volume="docker volume ls -qf dangling=true | xargs -r docker volume rm"
     alias dk_stop_all_ps="docker stop \$(docker ps -q)"
     alias dk_rm_all_ps="docker rm -fv \$(docker ps -aq)"
+    alias dk_rm_all_image="docker rmi $(docker images -aq)"
+    alias dk_rabbitmq_erlang_cookie="docker run -d --name some-rabbit rabbitmq:3.8-alpine > /dev/null; sleep 5; docker exec -it some-rabbit cat /var/lib/rabbitmq/.erlang.cookie 2> /dev/null; echo; docker container rm some-rabbit -f > /dev/null"
+        # generate erlang cookie used for rabbitmq provision
 fi
 
 
@@ -200,6 +209,7 @@ if [ -x "$(command -v kubectl)" ]; then
     alias kgpi="kubectl get pod --field-selector='status.phase!=Running,status.phase!=Succeeded'"
         # get inactive pods
     alias kgp_crash="kubectl get pod --field-selector='status.phase==Failed' --all-namespaces"
+    alias kgp_crash_delete="kubectl delete pod --field-selector='status.phase==Failed' --all-namespaces"
 
     alias kgd="kubectl get deployment"
     alias ked="kubectl edit deployment"
@@ -230,7 +240,8 @@ if [ -x "$(command -v kubectl)" ]; then
 
     alias k_check_apiversion="k get all -o custom-columns='NAME:metadata.name,KIND:kind,VERSION:apiVersion' --all-namespaces"
 
-    alias k_resource="kubectl-resource_capacity --pods --util --sort cpu.request"
+    alias k_resource="kubectl-resource_capacity --util --sort cpu.request"
+    alias k_resource_with_pod="kubectl-resource_capacity --pods --util --sort cpu.request"
 
     alias k_event="kubectl get events --sort-by=.metadata.creationTimestamp"
 
@@ -238,6 +249,10 @@ if [ -x "$(command -v kubectl)" ]; then
         # https://github.com/nicolaka/netshoot
         # run a tmp pod to debug kubernetes network
     alias k_pods="get pods"
+
+    alias k_cost="kubectl cost"
+    alias k_cost_namespace="kubectl cost namespace --show-all-resources"
+    alias k_cost_label="kubectl cost label -l" # provide label
 
     # _kube_alias
 fi

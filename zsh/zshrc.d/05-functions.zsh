@@ -234,7 +234,38 @@ if [ -x "$(command -v gcloud)" ]; then
         echo $nodepools | column -t
     }
 
-    _gcloud_compute() { # list of gcloud compute instances and describe selected instance if possible
+    _gcloud_sql() { # list of gcloud compute instances and describe selected instance if possible
+        local fields=(
+            'name'
+            'databaseVersion'
+            'gceZone'
+            'settings.tier'
+            'ipAddresses[0].ipAddress:label=PRIMARY_IP'
+            'ipAddresses[1].ipAddress:label=NAT_IP'
+            'ipAddresses[2].ipAddress:label=INTERNAL_IP'
+            'settings.userLabels.list()'
+            'state'
+        )
+        local format_str="table($(_join_by ',' ${fields[@]}))"
+
+        gcloud sql instances list --format="$format_str"
+    }
+
+    _gcloud_compute_disk() { # list of gcloud compute instances and describe selected instance if possible
+        local fields=(
+            'name'
+            'sizeGb'
+            'type.basename()'
+            'status'
+            'labels.list()'
+            'users.basename().list()'
+        )
+        local format_str="table($(_join_by ',' ${fields[@]}))"
+
+        gcloud compute disks list --format="$format_str"
+    }
+
+    _gcloud_compute() {
         local fields=(
             'name'
             'zone.basename()'
@@ -255,6 +286,40 @@ if [ -x "$(command -v gcloud)" ]; then
         else
             gcloud compute instances list --format="$format_str" --filter="$filter"
         fi
+    }
+
+    _gcloud_compute_snapshot() {
+        local fields=(
+            'name'
+            'diskSizeGb'
+            'sourceDisk.basename()'
+            'status'
+            'labels.list()'
+            'creationTimestamp'
+        )
+        local format_str="table($(_join_by ',' ${fields[@]}))"
+
+        local filter="$1"
+
+        if [ -z $filter ]; then
+            gcloud compute snapshots list --format="$format_str"
+        else
+            gcloud compute snapshots list --format="$format_str" --filter="$filter"
+        fi
+    }
+
+    _gcloud_compute_disk() { # list of gcloud compute instances and describe selected instance if possible
+        local fields=(
+            'name'
+            'sizeGb'
+            'type.basename()'
+            'status'
+            'labels.list()'
+            'users.basename().list()'
+        )
+        local format_str="table($(_join_by ',' ${fields[@]}))"
+
+        gcloud compute disks list --format="$format_str"
     }
 
     _gcloud_compute_disk_find_unused() {
@@ -282,12 +347,28 @@ if [ -x "$(command -v gcloud)" ]; then
         fi
     }
 
+    _gcloud_compute_instance_filter_name() {
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+
+        local name="$1"
+
+        gcloud compute instances list --uri --filter="name~'.*$name.*'"
+    }
+
     _gcloud_compute_name_filter_no_label() { # return name list of all instances that do not have a specific label
         [ -z "$1" ] && { echo  "missing argument"; exit 1; }
 
         local label="$1"
 
         gcloud compute instances list --filter="-labels.${label}:*" --format="value(name)"
+    }
+
+    _gcloud_compute_disk_filter_no_label() { # return name list of all instances that do not have a specific label
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+
+        local label="$1"
+
+        gcloud compute disks list --filter="-labels.${label}:*" --format="value(name)"
     }
 
     _gcloud_compute_name_filter_with_label() { # return list of all instances that have a specific label
@@ -303,11 +384,53 @@ if [ -x "$(command -v gcloud)" ]; then
         [ -z "$2" ] && { echo  "missing argument"; exit 1; }
         [ -z "$3" ] && { echo  "missing argument"; exit 1; }
 
-        local instance="$1"
+        local pattern="$1"
         local label_key="$2"
         local label_value="$3"
 
-        gcloud compute instances add-labels "$instance" --labels="$label_key=$label_value"
+        for instance in $( gcloud compute instances list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute instances add-labels --labels="$label_key=$label_value" $instance
+        done
+    }
+
+    _gcloud_compute_disk_add_label() { # a label to an instance
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$2" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$3" ] && { echo  "missing argument"; exit 1; }
+
+        local pattern="$1"
+        local label_key="$2"
+        local label_value="$3"
+
+        for instance in $( gcloud compute disks list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute disks add-labels --labels="$label_key=$label_value" $instance
+        done
+    }
+
+    _gcloud_compute_snapshot_add_label() { # a label to an instance
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$2" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$3" ] && { echo  "missing argument"; exit 1; }
+
+        local pattern="$1"
+        local label_key="$2"
+        local label_value="$3"
+
+        for instance in $( gcloud compute snapshots list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute snapshots add-labels --labels="$label_key=$label_value" $instance
+        done
+    }
+
+    _gcloud_compute_snapshot_remove_label() { # a label to an instance
+        [ -z "$1" ] && { echo  "missing argument"; exit 1; }
+        [ -z "$2" ] && { echo  "missing argument"; exit 1; }
+
+        local pattern="$1"
+        local labels="$2"
+
+        for instance in $( gcloud compute snapshots list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute snapshots remove-labels --labels="$labels" $instance
+        done
     }
 
     _gcloud_compute_remove_label() { # remove a label from an instance
@@ -596,3 +719,8 @@ _redis_dump_one_key() {
     }
 # fi
 
+if [ -x "$(command -v wmctrl)" ]; then
+    _wm_current_desk() {
+        echo "$(wmctrl -d | grep \* | awk '{print $1}')"
+    }
+fi

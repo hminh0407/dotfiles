@@ -60,3 +60,4 @@ dotbot
 .venv
 local
 tmp
+.terraform

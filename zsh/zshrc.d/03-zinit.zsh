@@ -47,5 +47,5 @@ zinit light lukechilds/zsh-nvm
 ### oh-my-zsh plugins ###
 zinit snippet OMZP::urltools
 
-zinit ice load'[[ $GUI_SUPPORT = 1 ]]'
+zinit ice load'[[ $GUI_SUPPORT = 1 ]]' lucid atload"AUTO_NOTIFY_IGNORE+=('sleep' 'vi' 'dg'); AUTO_NOTIFY_THRESHOLD=30"
 zinit light MichaelAquilina/zsh-auto-notify
