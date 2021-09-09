@@ -48,7 +48,11 @@ alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
 alias untargz="tar -xvzf"
 alias targz="tar -cvzf"
 
-alias dot="cd ~/dotfiles"
+alias benchmark-shell="for i in \$(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done"
+
+alias dot_chezmoi="cd ~/.local/share/chezmoi"
+# alias dot="cd ~/dotfiles"
+alias dot="chezmoi"
 alias wp="cd ~/wiki/personal"
 alias wd="cd ~/wiki/development"
 
@@ -171,7 +175,7 @@ alias helm2="/snap/bin/helm"
 
 # gcloud {
 if [ -x "$(command -v gcloud)" ]; then
-    alias gcp="gcloud"
+    # alias gcp="gcloud"
     alias gcp_cluster="_gcloud_cluster"
     alias gcp_cluster_nodepool="_gcloud_cluster_nodepool"
     alias gcp_compute="gcloud compute"
@@ -277,9 +281,6 @@ if [ -x "$(command -v git)" ]; then
 
     alias gl_prs="gitlab prs --field title --field source_branch --field target_branch --field web_url --field author.username --field assignee.username --format table"
     alias gl_prs_usr="gl_prs --param author_id=\$(gitlab user | fx '.id') --format table"
-
-    # alias gl_pr_create="_gitlab_pr_create"
-    # alias gl_pr_update="_gitlab_pr_update"
 
     alias gl_usrs="gitlab users"
     alias gl_usr="gitlab user"

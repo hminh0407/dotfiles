@@ -9,7 +9,10 @@ declare KREW_PATH="${KREW_ROOT:-$HOME/.krew}/bin"
 declare MSSQL_PATH="/opt/mssql-tools/bin"
 declare GO_BIN="$DOTFILES_BIN_DIR/go/bin"
 declare GO_PATH="$HOME/go/bin"
-declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH $MSSQL_PATH $GO_BIN $GO_PATH)
+declare HOME_BIN_PATH="$HOME/bin"
+declare PATH_MODULES=($DOTFILES_BIN_DIR $KREW_PATH $MSSQL_PATH $GO_BIN $GO_PATH $HOME_BIN_PATH)
+
+declare CUSTOM_BASH_COMPLETION="$HOME/bash_completion.d"
 
 for module in ${PATH_MODULES[@]}; do
     if [ -d "$module" ] && [[ ":$EXPORT_PATH:" != *":$module:"* ]]; then
@@ -51,3 +54,6 @@ cd() { # override cd to add hook
 # seting env EDITOR=vim make zsh shell misbehave, it always use vi modes
 # do the trick to make it work as normal. Check for more detail http://matija.suklje.name/zsh-vi-and-emacs-modes
 bindkey -e
+
+# enable support for bash completion
+for f in ${CUSTOM_BASH_COMPLETION}/*.sh; do source $f; done

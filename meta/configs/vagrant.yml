@@ -12,4 +12,5 @@
     # install avahi to provide mDNS
     # https://manski.net/2016/09/vagrant-multi-machine-tutorial/
     - [sudo apt-fast install --no-install-recommends -y vagrant avahi-daemon libnss-mdns]
+    - [vagrant plugin install vagrant-timezone]
 

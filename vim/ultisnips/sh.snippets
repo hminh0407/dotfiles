@@ -300,6 +300,18 @@ echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 	# * echo it
 endsnippet
 
+snippet prompt "prompt for user input"
+echo "# ============================================================================= "
+echo -n "Do you want to continue (y/n)? "
+read -r -n 1 ans
+echo ""
+
+if [ "$ans" == "y" ]; then
+    $2
+fi
+endsnippet
+
+
 snippet str-split-last-el "split string by delimiter and get the last element"
 | awk '{n=split(\$1,A,"$1"); print A[n]}'
 endsnippet

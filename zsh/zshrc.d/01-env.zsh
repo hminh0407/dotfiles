@@ -23,7 +23,7 @@ if [ ! -d $CUSTOM_SCRIPTS_DIR ]; then
 fi
 
 # nvm zsh plugin config
-export NVM_LAZY_LOAD=false
+export NVM_LAZY_LOAD=true
 export NVM_LAZY_LOAD_EXTRA_COMMANDS=('vim' 'vi' 'nvim')
 export NVM_NO_USE=false
 export NVM_AUTO_USE=false

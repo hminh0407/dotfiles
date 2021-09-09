@@ -60,6 +60,17 @@ _join_by() {
     # '1''2''3'
 }
 
+# if extglob is not enabled, uncomment the line below
+# shopt -s extglob
+# The function returns status 0 if the array contains the element
+# check https://dev.to/meleu/checking-if-an-array-contains-an-element-in-bash-5bn1
+_element_in_array() {
+  local element="$1"
+  shift
+  local array=("$@")
+  [[ "$element" == @($(_join_by '|' "${array[@]//|/\\|}")) ]]
+}
+
 _rq_domain_ip_mapping() {
     # use in situation when we need to send request to a proxy with ip address with DNS resolve
     local domain="$1"
@@ -406,6 +417,31 @@ if [ -x "$(command -v gcloud)" ]; then
             gcloud compute disks add-labels --labels="$label_key=$label_value" $instance
         done
     }
+
+    _gcloud_compute_disk_remove_policy_attachment() {
+        [ -z "$1" ] && { echo  "need to provide disk name pattern"; exit 1; }
+        [ -z "$2" ] && { echo  "need to provide policy name"; exit 1; }
+
+        local pattern="$1"
+        local policy="$2"
+
+        for disk in $( gcloud compute disks list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute disks remove-resource-policies $disk --resource-policies=$policy
+        done
+    }
+
+    _gcloud_compute_disk_add_policy_attachment() {
+        [ -z "$1" ] && { echo  "need to provide disk name pattern"; exit 1; }
+        [ -z "$2" ] && { echo  "need to provide policy name"; exit 1; }
+
+        local pattern="$1"
+        local policy="$2"
+
+        for disk in $( gcloud compute disks list --uri --filter="name~'.*$pattern.*'" ); do
+            gcloud compute disks add-resource-policies $disk --resource-policies=$policy
+        done
+    }
+
 
     _gcloud_compute_snapshot_add_label() { # a label to an instance
         [ -z "$1" ] && { echo  "missing argument"; exit 1; }
