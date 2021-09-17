@@ -37,11 +37,13 @@ alias ram="sudo lshw -short -C memory"
 alias rm='rm --preserve-root' # safety
 alias services='systemctl list-units --type=service'
 alias t="touch"
-alias tl="tldr -p linux"
+alias tl="tealdeer"
 alias wget="wget -c"
 alias vii="vim -c ':PlugInstall!'"
 alias viu="vim -c ':PlugUpdate!' "
 alias vin="vim -u NONE"
+alias e="$EDITOR"
+#alias nvim="~/.zinit/plugins/neovim---neovim/nvim/bin/nvim"
 
 alias rn="rename" # ex: rename 's/{searchString}/{replaceString}/' *.sh
 alias rndryrun="rename -n" # rename -n 's/{searchString}/{replaceString}/' *.sh
@@ -77,6 +79,9 @@ if [ -x "$(command -v fzf)" ]; then
     # if [ -x "$(command -v enable-fzf-tab)" ]; then
     enable-fzf-tab
     # fi
+
+    alias ws="cd \$(ls -d $HOME/workspace/* | fzf)" # cd to project from workspace
+    alias wk="cd \$(ls -d $HOME/wiki/* | fzf)" # cd to project from workspace
 else
     alias ports="netstat -tulanp"
     alias psaux="ps aux"
@@ -330,6 +335,9 @@ if [ -x "$(command -v tmux)" ]; then
     # unbind all key (USE WITH CAUTION, use to remove cached bind-key)
     # note that all builtin bind key will be destroyed as well, should kill and restart tmux
     alias tmunbindallkeys="tmux unbind-key -a"
+
+    # fuzzy choose and kill tmux session
+    alias tkill="for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf); do tmux kill-session -t \$s; done;"
 fi
 if [ -x "$(command -v tmuxp)" ]; then
     alias tmp="tmuxp"

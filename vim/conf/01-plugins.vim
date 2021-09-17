@@ -75,7 +75,7 @@ endif
 
 if executable('tmux')
     " Plug 'wellle/tmux-complete.vim' " complete for tmux integration
-    Plug 'christoomey/vim-tmux-navigator' " tmux integration https://github.com/christoomey/vim-tmux-navigator
+    " Plug 'christoomey/vim-tmux-navigator' " tmux integration https://github.com/christoomey/vim-tmux-navigator
     " Plug 'wincent/terminus' " https://github.com/wincent/terminus, cursor shape change in insert and replace mode
 endif
 

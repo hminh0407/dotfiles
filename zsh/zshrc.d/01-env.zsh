@@ -30,13 +30,15 @@ export NVM_AUTO_USE=false
 
 # pager
 export PAGER='less -RFX'
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANPAGER="nvim -c 'set ft=man' -"
 
 # tmux
 export DISABLE_AUTO_TITLE='true' # tmuxp integration
 
 # vim
-export EDITOR='vi'
-export VISUAL='vi'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # fzf
 export FZF_DEFAULT_COMMAND="rg --files --hidden" # use ripgrep as default search

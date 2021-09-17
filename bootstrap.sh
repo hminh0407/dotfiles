@@ -3,8 +3,8 @@
 _installAptFast() {
     echo "... Installing apt-fast ..."
     sudo add-apt-repository -y ppa:apt-fast/stable
-    sudo apt-get update -y \
-        && sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y apt-fast
+    sudo apt-get update -y &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y apt-fast
 }
 
 _installEssentials() {

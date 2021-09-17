@@ -50,7 +50,6 @@ target/
 ######################
 .direnv
 bundle
-plugins
 oh-my-zsh
 s-doc
 .ropeproject
